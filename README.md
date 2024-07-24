@@ -19,7 +19,11 @@ Before you start, make sure you have the following installed on your machine:
 
 ### Customisations
 
-The included IdentityServer project has been customised to allow it to run automatic EF Core migrations on startup, for the `PersistedGrantStore` and the `OperationalDataStore` DB contexts.
+- Custom Options handler and types (`ICustomOptions`).
+- Customised `HostingExtensions.cs` (provides new `ConfigureServices()`, `InitializeDatabase()` and `ConfigurePipeline()` methods).
+- Custom `WebApplicationBuilder` extensions to provide configuration of IdentityServer and Redis.
+- Cleaned up `Config.cs` into `SeedConfig.cs`
+- Added Redis and SQL Server resources to the Aspire AppHost project for use in the IdentityServer application.
 
 ### Steps to Clone and Build the Project
 
