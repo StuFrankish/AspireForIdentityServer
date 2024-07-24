@@ -1,3 +1,69 @@
 [![.NET](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/dotnet.yml)
 
-# AspireForIdentityServer
+# Aspire for IdentityServer & Client
+This sample includes:
+- A standard instance of IdentityServer from Duende using version 7.0.5 configured to use SQL Server storage.
+- An MVC client application setup to use PAR (pushed authorisation requests) configured to use Redis cache.
+- A protected API resource, also configured to use Redis for output caching.
+- Serilog integration in the above projects, output to console.
+
+## Cloning and Building this project
+
+### Prerequisites
+
+Before you start, make sure you have the following installed on your machine:
+
+- **.NET 8 SDK**: Download and install from the [official .NET website](https://dotnet.microsoft.com/download/dotnet/8.0).
+- **IDE of Choice**: Preferably [Visual Studio](https://visualstudio.microsoft.com/) for its robust support for .NET development. Alternatively, you can use [Visual Studio Code](https://code.visualstudio.com/) or any other IDE that supports .NET.
+- **Docker**: Preferablly Docker Desktop, but any installation of Docker should work fine.
+
+### Customisations
+
+The included IdentityServer project has been customised to allow it to run automatic EF Core migrations on startup, for the `PersistedGrantStore` and the `OperationalDataStore` DB contexts.
+
+### Steps to Clone and Build the Project
+
+> [!IMPORTANT]  
+> If you do not already have the latest version of the Redis and MSSQL container images, it will take longer for them to provision, resulting in the IdentityServer project failing.
+> Allow the SQL and Redis images to load, then if necessary, restart the Aspire solution.
+
+1. **Clone the Repository**:
+
+    Open a terminal or command prompt and run the following command to clone the repository:
+
+    ```bash
+    git clone https://github.com/StuFrankish/AspireForIdentityServer.git
+    cd AspireForIdentityServer
+    ```
+
+2. **Restore the Dependencies**:
+
+    Navigate to the project directory and restore the dependencies using the .NET CLI:
+
+    ```bash
+    dotnet restore
+    ```
+
+3. **Build the Project**:
+
+    Build the project using the .NET CLI:
+
+    ```bash
+    dotnet build
+    ```
+
+4. **Run the Project**:
+
+    To run the project, use the following command:
+
+    ```bash
+    dotnet run
+    ```
+
+    The application will start and open the Aspire dashboard in your default browser, where you should see the projects listed as well as the SQL & Redis containers begin to provision.
+
+## Contributing
+
+If you'd like to contribute to the project, feel free to fork the repository, make your changes, and create a pull request.
+
+For any further questions or issues, please open an issue on the [GitHub repository](https://github.com/StuFrankish/AspireForIdentityServer/issues).
