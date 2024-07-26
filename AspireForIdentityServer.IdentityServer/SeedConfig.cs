@@ -13,6 +13,7 @@ public static class SeedConfig
     public static IEnumerable<ApiScope> ApiScopes =>
         [
             new ApiScope("api"),
+            new ApiScope("IdentityServerApi", "Identity Server API")
         ];
 
     public static IEnumerable<Client> Clients =>
@@ -42,7 +43,7 @@ public static class SeedConfig
 
                 AllowOfflineAccess = true,
 
-                AllowedScopes = { "openid", "profile", "api" }
+                AllowedScopes = { "openid", "profile", "api", "IdentityServerApi" }
             }
         ];
 }
