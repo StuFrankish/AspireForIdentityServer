@@ -1,4 +1,5 @@
-﻿using Duende.IdentityServer;
+﻿using Asp.Versioning;
+using Duende.IdentityServer;
 using IdentityServer.Configuration;
 using IdentityServer.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
@@ -12,8 +13,8 @@ public static class WebApplicationBuilderExtensions
         var connectionStrings = builder.GetCustomOptionsConfiguration<ConnectionStrings>(ConfigurationSections.ConnectionStrings);
         var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
 
-        //builder.Services.AddControllers();
-        
+        builder.Services.AddControllers();
+
         builder.Services.AddIdentityServer(options =>
         {
             // Allow unregistered redirect URIs for PAR clients
@@ -65,4 +66,16 @@ public static class WebApplicationBuilderExtensions
             options.Configuration = connectionStrings.Redis;
         });
     }
+
+    public static void AddAndConfigureApiVersioning(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddApiVersioning(options =>
+        {
+            options.ReportApiVersions = true;
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.DefaultApiVersion = new ApiVersion(majorVersion: 1, minorVersion: 0);
+            options.UnsupportedApiVersionStatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+        });
+    }
+
 }

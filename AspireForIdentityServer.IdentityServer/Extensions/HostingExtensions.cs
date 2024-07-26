@@ -13,6 +13,7 @@ internal static class HostingExtensions
         builder.Services.AddRazorPages();
         builder.AddAndConfigureRedisCache();
         builder.AddAndConfigureIdentityServer();
+        builder.AddAndConfigureApiVersioning();
 
         return builder.Build();
     }
