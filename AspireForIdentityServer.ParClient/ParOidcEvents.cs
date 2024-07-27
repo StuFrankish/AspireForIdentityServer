@@ -131,7 +131,7 @@ public class ParOidcEvents(HttpClient httpClient, IDiscoveryCache discoveryCache
         // Send our PAR request
         var requestBody = new FormUrlEncodedContent(context.ProtocolMessage.Parameters);
 
-        // Load the clientSecret (password) from appSettings
+        // Load the clientSecret from configuration using Options API
         _httpClient.SetBasicAuthentication(clientId, password: _idpOptions.ClientSecret);
 
         var disco = await _discoveryCache.GetAsync();

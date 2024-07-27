@@ -11,10 +11,10 @@ namespace IdentityServer.ApiControllers;
 [ApiVersion(version: 1)]
 [Authorize(LocalApi.PolicyName)]
 [ApiController, Route(template: "api/v{v:apiVersion}/samples")]
-public class SampleApiController(IDistributedCache distributedCache, ILogger<SampleApiController> logger, CancellationToken cancellationToken)
+public class SampleApiController(IDistributedCache distributedCache, ILogger<SampleApiController> logger)
     : ApiControllerBase
 {
-    private readonly CancellationToken _cancellationToken = cancellationToken;
+    private readonly CancellationToken _cancellationToken = CancellationToken.None;
     private readonly IDistributedCache _distributedCache = distributedCache;
     private readonly ILogger<SampleApiController> _logger = logger;
 

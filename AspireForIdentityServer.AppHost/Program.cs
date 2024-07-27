@@ -16,6 +16,7 @@ var identityServer = builder.AddProject<Projects.IdentityServer>("identityserver
 
 _ = builder.AddProject<Projects.Client>("clientapp")
     .WithExternalHttpEndpoints()
+    .WithReference(redis, connectionName: "Redis")
     .WithEnvironment("IdentityProvider__Authority", identityServer.GetEndpoint("https"))
     .WithEnvironment("IdentityProvider__ClientId", "mvc.par")
     .WithEnvironment("IdentityProvider__ClientSecret", "secret");
