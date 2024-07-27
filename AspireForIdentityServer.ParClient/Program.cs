@@ -1,46 +1,40 @@
-using Microsoft.AspNetCore.Hosting;
+using Client.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Events;
 using System;
 
-namespace Client;
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
 
-public class Program
+Log.Information("Starting application host...");
+
+try
 {
-    public static int Main(string[] args)
-    {
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Warning()
-            .MinimumLevel.Override("IdentityModel", LogEventLevel.Debug)
-            .MinimumLevel.Override("System.Net.Http", LogEventLevel.Information)
-            .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
-            .Enrich.FromLogContext()
-            .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
-            .CreateLogger();
+    var builder = WebApplication
+        .CreateBuilder(args);
 
-        try
-        {
-            Log.Information("Starting client host...");
-            CreateHostBuilder(args).Build().Run();
-            return 0;
-        }
-        catch (Exception ex)
-        {
-            Log.Fatal(ex, "Host terminated unexpectedly.");
-            return 1;
-        }
-        finally
-        {
-            Log.CloseAndFlush();
-        }
-    }
+    builder
+        .Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
+        .Enrich.FromLogContext()
+        .ReadFrom.Configuration(ctx.Configuration));
 
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<Startup>();
-            })
-            .UseSerilog();
+    builder
+        .AddServiceDefaults();
+
+    builder
+        .ConfigureServices()
+        .ConfigurePipeline()
+        .Run();
+}
+catch (Exception ex) when (ex.GetType().Name is not "HostAbortedException")
+{
+    Log.Fatal(ex, messageTemplate: "Unhandled exception");
+}
+finally
+{
+    Log.Information(messageTemplate: "Shut down complete");
+    Log.CloseAndFlush();
 }

@@ -1,15 +1,24 @@
 ﻿@using Microsoft.AspNetCore.Authentication
+@using Client.Dtos
 
 @{
     ViewData["Title"] = "Secure";
+    var sessionKeyValues = (List<KeyValuePair<string, object>>)ViewBag.SessionKeyValues;
+    var sampleData = (List<SampleDto>)ViewBag.SampleData;
 }
 
 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
     <li class="nav-item me-2" role="presentation">
         <button class="nav-link active" id="pills-claims-tab" data-bs-toggle="pill" data-bs-target="#pills-claims" type="button" role="tab" aria-controls="pills-claims" aria-selected="true">User Claims</button>
     </li>
-    <li class="nav-item" role="presentation">
+    <li class="nav-item me-2" role="presentation">
         <button class="nav-link" id="pills-properties-tab" data-bs-toggle="pill" data-bs-target="#pills-properties" type="button" role="tab" aria-controls="pills-properties" aria-selected="false">Properties</button>
+    </li>
+    <li class="nav-item me-2" role="presentation">
+        <button class="nav-link" id="pills-sessionkeys-tab" data-bs-toggle="pill" data-bs-target="#pills-sessionkeys" type="button" role="tab" aria-controls="pills-sessionkeys" aria-selected="false">Session KeyValues</button>
+    </li>
+    <li class="nav-item me-2" role="presentation">
+        <button class="nav-link" id="pills-sampledata-tab" data-bs-toggle="pill" data-bs-target="#pills-sampledata" type="button" role="tab" aria-controls="pills-sampledata" aria-selected="false">Sample API Data</button>
     </li>
 </ul>
 
@@ -32,6 +41,28 @@
             <div class="row border-bottom">
                 <div class="col-3 fw-bold">@prop.Key</div>
                 <div class="col-9 text-break">@prop.Value</div>
+            </div>
+        }
+
+    </div>
+    <div class="tab-pane fade" id="pills-sessionkeys" role="tabpanel" aria-labelledby="pills-sessionkeys-tab" tabindex="0">
+
+        @foreach (var prop in sessionKeyValues)
+        {
+            <div class="row border-bottom">
+                <div class="col-3 fw-bold">@prop.Key</div>
+                <div class="col-9 text-break">@prop.Value</div>
+            </div>
+        }
+
+    </div>
+    <div class="tab-pane fade" id="pills-sampledata" role="tabpanel" aria-labelledby="pills-sampledata-tab" tabindex="0">
+
+        @foreach (var entry in sampleData)
+        {
+            <div class="row border-bottom">
+                <div class="col-3 fw-bold">@entry.Id</div>
+                <div class="col-9 text-break">@entry.Name (@entry.GeneratedDate)</div>
             </div>
         }
 
