@@ -1,0 +1,39 @@
+﻿@using Microsoft.AspNetCore.Authentication
+
+@{
+    ViewData["Title"] = "Secure";
+}
+
+<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+    <li class="nav-item me-2" role="presentation">
+        <button class="nav-link active" id="pills-claims-tab" data-bs-toggle="pill" data-bs-target="#pills-claims" type="button" role="tab" aria-controls="pills-claims" aria-selected="true">User Claims</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="pills-properties-tab" data-bs-toggle="pill" data-bs-target="#pills-properties" type="button" role="tab" aria-controls="pills-properties" aria-selected="false">Properties</button>
+    </li>
+</ul>
+
+<div class="tab-content border border-light rounded p-3 bg-light-subtle shadow-sm" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-claims" role="tabpanel" aria-labelledby="pills-claims-tab" tabindex="0">
+
+        @foreach (var claim in User.Claims)
+        {
+            <div class="row border-bottom">
+                <div class="col-3 fw-bold">@claim.Type</div>
+                <div class="col-9 text-wrap">@claim.Value</div>
+            </div>
+        }
+
+    </div>
+    <div class="tab-pane fade" id="pills-properties" role="tabpanel" aria-labelledby="pills-properties-tab" tabindex="0">
+
+        @foreach (var prop in (await Context.AuthenticateAsync()).Properties.Items)
+        {
+            <div class="row border-bottom">
+                <div class="col-3 fw-bold">@prop.Key</div>
+                <div class="col-9 text-break">@prop.Value</div>
+            </div>
+        }
+
+    </div>
+</div>

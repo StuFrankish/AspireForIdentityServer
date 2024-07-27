@@ -38,8 +38,8 @@ public static class SeedConfig
                 RequirePushedAuthorization = true,
 
                 BackChannelLogoutSessionRequired = true,
-                BackChannelLogoutUri = "https://localhost:44320/bff/backchannel",
-                PostLogoutRedirectUris = { "https://localhost:44320/signout-callback-oidc" },
+                BackChannelLogoutUri = "https://localhost:5002/bff/backchannel",
+                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
 
                 AllowOfflineAccess = true,
 

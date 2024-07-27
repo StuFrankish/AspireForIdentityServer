@@ -2,13 +2,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35118.90
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspireForIdentityServer.AppHost", "AspireForIdentityServer.AppHost\AspireForIdentityServer.AppHost.csproj", "{1B678664-6766-44A9-90F6-4F32112201A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspireForIdentityServer.AppHost", "AspireForIdentityServer.AppHost\AspireForIdentityServer.AppHost.csproj", "{1B678664-6766-44A9-90F6-4F32112201A3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspireForIdentityServer.ServiceDefaults", "AspireForIdentityServer.ServiceDefaults\AspireForIdentityServer.ServiceDefaults.csproj", "{3F1D6508-C5FF-4AFE-B448-CF7D3D527442}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspireForIdentityServer.Tests", "AspireForIdentityServer.Tests\AspireForIdentityServer.Tests.csproj", "{ECB8EBF8-D0A4-4E7F-99AD-CBC591268CF8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer", "AspireForIdentityServer.IdentityServer\IdentityServer.csproj", "{CCC0BC49-592A-4B59-A02C-2B486EBAC251}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "AspireForIdentityServer.ParClient\Client.csproj", "{FEFD474F-986A-49B4-A5B0-E554CBB45C10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +34,10 @@ Global
 		{CCC0BC49-592A-4B59-A02C-2B486EBAC251}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCC0BC49-592A-4B59-A02C-2B486EBAC251}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCC0BC49-592A-4B59-A02C-2B486EBAC251}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEFD474F-986A-49B4-A5B0-E554CBB45C10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEFD474F-986A-49B4-A5B0-E554CBB45C10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEFD474F-986A-49B4-A5B0-E554CBB45C10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEFD474F-986A-49B4-A5B0-E554CBB45C10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

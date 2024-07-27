@@ -1,0 +1,8 @@
+﻿
+@{
+    string errorMessage = ViewBag.ErrorMessage ?? "An unknown issue occured trying to sign you in.";
+}
+
+<div class="alert alert-light px-2 py-1" role="alert">
+    AuthError - @errorMessage
+</div>
