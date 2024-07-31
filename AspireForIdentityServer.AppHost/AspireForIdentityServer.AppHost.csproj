@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AspireForIdentityServer.ApiResource\WeatherApi.csproj" />
     <ProjectReference Include="..\AspireForIdentityServer.IdentityServer\IdentityServer.csproj" />
     <ProjectReference Include="..\AspireForIdentityServer.ParClient\Client.csproj" />
   </ItemGroup>
