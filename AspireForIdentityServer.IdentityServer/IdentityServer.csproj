@@ -28,7 +28,7 @@
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.7" />
 
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.62.0" />
-		<PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
 		<PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
 		<PackageReference Include="System.Text.Json" Version="8.0.4" />
 	</ItemGroup>
