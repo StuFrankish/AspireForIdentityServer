@@ -20,6 +20,8 @@ identityServer
     .WithReference(redis, connectionName: "Redis");
 
 weatherApi
+    .WithExternalHttpEndpoints()
+    .WithReference(redis, connectionName: "Redis")
     .WithEnvironment(name: "IdentityProvider__Authority", endpointReference: identityServer.GetEndpoint(name: "https"));
 
 clientApplication

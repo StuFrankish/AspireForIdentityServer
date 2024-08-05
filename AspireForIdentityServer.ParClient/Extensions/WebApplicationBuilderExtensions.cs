@@ -30,7 +30,8 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddSingleton<IDiscoveryCache>(_ => new DiscoveryCache(identityProviderOptions.Authority));
 
         // Add PAR interaction httpClient
-        builder.Services.AddHttpClient<ParOidcEvents>(name: "par_interaction_client", options => {
+        builder.Services.AddHttpClient<ParOidcEvents>(name: "par_interaction_client", options =>
+        {
             options.BaseAddress = new Uri(uriString: identityProviderOptions.Authority);
         });
     }
@@ -38,6 +39,7 @@ public static class WebApplicationBuilderExtensions
     public static void AddAndConfigureRemoteApi(this WebApplicationBuilder builder)
     {
         var identityProviderOptions = builder.GetCustomOptionsConfiguration<IdentityProviderOptions>(ConfigurationSections.IdentityProvider);
+        var weatherApiOptions = builder.GetCustomOptionsConfiguration<WeatherApiOptions>(ConfigurationSections.WeatherApi);
         var resilienceOptions = builder.GetCustomOptionsConfiguration<PollyResilienceOptions>(ConfigurationSections.PollyResilience);
 
         // add automatic token management
@@ -52,6 +54,14 @@ public static class WebApplicationBuilderExtensions
             .AddTransientHttpErrorPolicy(policy => policy.CircuitBreakerAsync(resilienceOptions.AllowedEventsBeforeCircuitBreaker, TimeSpan.FromSeconds(value: resilienceOptions.DurationOfBreakSeconds)))
             .AddUserAccessTokenHandler();
 
+        // Add Weather httpClient
+        builder.Services.AddHttpClient(name: "WeatherApi", options =>
+        {
+            options.BaseAddress = new Uri(uriString: weatherApiOptions.BaseUrl);
+        })
+            .AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(retryCount: resilienceOptions.AllowedRetryCountBeforeFailure, retryAttempt => TimeSpan.FromMilliseconds(100 * Math.Pow(x: 2, retryAttempt))))
+            .AddTransientHttpErrorPolicy(policy => policy.CircuitBreakerAsync(resilienceOptions.AllowedEventsBeforeCircuitBreaker, TimeSpan.FromSeconds(value: resilienceOptions.DurationOfBreakSeconds)))
+            .AddUserAccessTokenHandler();
     }
 
     public static void AddAndConfigureSessionWithRedis(this WebApplicationBuilder builder)
@@ -74,7 +84,8 @@ public static class WebApplicationBuilderExtensions
             ConnectionMultiplexer.Connect(connectionStrings.Redis)
         );
 
-        builder.Services.AddStackExchangeRedisCache(o => {
+        builder.Services.AddStackExchangeRedisCache(o =>
+        {
             o.Configuration = connectionStrings.Redis;
         });
 
@@ -130,6 +141,7 @@ public static class WebApplicationBuilderExtensions
                 options.Scope.Add(OpenIdConnectScope.OfflineAccess);
                 options.Scope.Add("profile");
                 options.Scope.Add("IdentityServerApi");
+                options.Scope.Add("Weather.Read");
 
                 options.ClaimActions.ApplyCustomClaimsActions();
 

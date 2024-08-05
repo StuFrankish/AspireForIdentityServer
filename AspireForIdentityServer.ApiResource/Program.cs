@@ -23,6 +23,14 @@ builder.Services.AddAuthorizationBuilder()
 
 builder.Services.AddHealthChecks();
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddStackExchangeRedisCache(o =>
+{
+    o.Configuration = builder.Configuration.GetConnectionString("Redis");
+});
+
+
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();

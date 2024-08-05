@@ -5,6 +5,7 @@
     ViewData["Title"] = "Secure";
     var sessionKeyValues = (List<KeyValuePair<string, object>>)ViewBag.SessionKeyValues;
     var sampleData = (List<SampleDto>)ViewBag.SampleData;
+    var weatherForecast = (IEnumerable<WeatherForecastDto>)ViewBag.WeatherForecasts;
 }
 
 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -63,6 +64,16 @@
             <div class="row border-bottom">
                 <div class="col-3 fw-bold">@entry.Id</div>
                 <div class="col-9 text-break">@entry.Name (@entry.GeneratedDate)</div>
+            </div>
+        }
+
+        <hr />
+
+        @foreach (var item in weatherForecast)
+        {
+            <div class="row border-bottom">
+                <div class="col-3 fw-bold">@item.Date.ToLongDateString()</div>
+                <div class="col-9 text-break">@item.TemperatureC / @item.TemperatureF (@item.Summary)</div>
             </div>
         }
 

@@ -1,22 +1,31 @@
+using Client.Dtos;
 using Client.Services;
+using Duende.AccessTokenManagement.OpenIdConnect;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Client.Controllers;
 
 public class HomeController(
     ILogger<HomeController> logger,
+    IHttpClientFactory httpClientFactory,
+    IUserTokenManagementService userTokenManagementService,
     RedisUserSessionStore redisUserSessionStore,
     IdentityServerSamplesApiService IdentityServerSamplesApiService
 ) : Controller
 {
     private readonly ILogger<HomeController> _logger = logger;
+    private readonly HttpClient _weatherHttpClient = httpClientFactory.CreateClient("WeatherApi");
 
+    private readonly IUserTokenManagementService _userTokenManagementService = userTokenManagementService;
     private readonly IdentityServerSamplesApiService _identityServerSamplesApiService = IdentityServerSamplesApiService;
     private readonly RedisUserSessionStore _redisUserSessionStore = redisUserSessionStore;
 
@@ -53,6 +62,28 @@ public class HomeController(
         // The endpoint has caching enabled, so the first call will generate new data and cache it.
         var sampleData = await _identityServerSamplesApiService.GetSampleData();
         ViewBag.SampleData = sampleData;
+
+        #endregion
+
+        #region Using basic Weather API service
+
+        var token = await _userTokenManagementService.GetAccessTokenAsync(User);
+        _weatherHttpClient.SetBearerToken(token.AccessToken);
+
+        var request = new HttpRequestMessage(HttpMethod.Get, requestUri: "WeatherForecast");
+        var responseMessage = await _weatherHttpClient.SendAsync(request);
+
+        if (responseMessage.IsSuccessStatusCode)
+        {
+            string responseBody = await responseMessage.Content.ReadAsStringAsync();
+            var serializerOptions = new JsonSerializerOptions {
+                PropertyNameCaseInsensitive = true
+            };
+
+            var weatherForecasts = JsonSerializer.Deserialize<IEnumerable<WeatherForecastDto>>(responseBody, serializerOptions);
+
+            ViewBag.WeatherForecasts = weatherForecasts;
+        }
 
         #endregion
 
