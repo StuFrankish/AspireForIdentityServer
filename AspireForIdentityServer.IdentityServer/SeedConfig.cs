@@ -1,50 +1,74 @@
 ﻿using Duende.IdentityServer.Models;
+using System.Text.Json;
 
 namespace IdentityServer;
 
-public static class SeedConfig
+public class SeedConfig
 {
-    public static IEnumerable<IdentityResource> IdentityResources =>
+    private readonly string BasePath;
+
+    public SeedConfig(string seedingFileName)
+    {
+        BasePath = Path.Combine(AppContext.BaseDirectory, seedingFileName);
+
+        if (!File.Exists(BasePath))
+        {
+            throw new FileNotFoundException("Seeding file not found", BasePath);
+        }
+
+        if (new FileInfo(BasePath).Length == 0)
+        {
+            throw new FileLoadException("Seeding file is empty", BasePath);
+        }
+
+        if (Path.GetExtension(BasePath) != ".json")
+        {
+            throw new FileLoadException("Seeding file is not a JSON file", BasePath);
+        }
+
+        if (JsonDocument.Parse(File.ReadAllText(BasePath)).RootElement.ValueKind != JsonValueKind.Object)
+        {
+            throw new JsonException(message: "Seeding file is not a valid JSON object", path: BasePath, lineNumber: null, bytePositionInLine: null);
+        }
+
+
+        ApiScopes = LoadApiScopes();
+        Clients = LoadClients();
+    }
+
+    private string JsonSectionData(string sectionName)
+    {
+        JsonDocument doc = JsonDocument.Parse(File.ReadAllText(BasePath));
+        return doc.RootElement.GetProperty(sectionName).GetRawText();
+    }
+
+    private List<ApiScope> LoadApiScopes()
+    {
+        var json = JsonSectionData("ApiScopes");
+        return JsonSerializer.Deserialize<List<ApiScope>>(json);
+    }
+
+    private List<Client> LoadClients()
+    {
+        var json = JsonSectionData("Clients");
+        var clients = JsonSerializer.Deserialize<List<Client>>(json);
+
+        foreach (var client in clients)
+        {
+            foreach (var secret in client.ClientSecrets)
+            {
+                secret.Value = secret.Value.Sha256();
+            }
+        }
+
+        return clients;
+    }
+
+    public IEnumerable<ApiScope> ApiScopes { get; init; } = [];
+    public IEnumerable<Client> Clients { get; init; } = [];
+    public IEnumerable<IdentityResource> IdentityResources =>
         [
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
-        ];
-
-    public static IEnumerable<ApiScope> ApiScopes =>
-        [
-            new ApiScope("api"),
-            new ApiScope("IdentityServerApi", "Identity Server API"),
-            new ApiScope("Weather.Read", "Weather API Reader")
-        ];
-
-    public static IEnumerable<Client> Clients =>
-        [
-            // Push Authorization Request (PAR) client
-            new Client
-            {
-                ClientId = "mvc.par",
-                ClientName = "MVC PAR Client",
-
-                ClientSecrets =
-                {
-                    new Secret("secret".Sha256())
-                },
-
-                CoordinateLifetimeWithUserSession = true,
-
-                RequireConsent = true,
-                AllowedGrantTypes = GrantTypes.Code,
-                RequirePkce = true,
-
-                RequirePushedAuthorization = true,
-
-                BackChannelLogoutSessionRequired = true,
-                BackChannelLogoutUri = "https://localhost:5002/bff/backchannel",
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
-
-                AllowOfflineAccess = true,
-
-                AllowedScopes = { "openid", "profile", "api", "IdentityServerApi", "Weather.Read" }
-            }
         ];
 }

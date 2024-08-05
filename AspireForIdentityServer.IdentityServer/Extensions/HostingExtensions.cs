@@ -40,37 +40,44 @@ internal static class HostingExtensions
         {
             // Create an instance of the ConfigurationDbContext so we can seed data.
             var configurationContext = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+            var seedConfig = new SeedConfig("SeedingConfig.json");
+            bool saveChanges = false;
 
             // Seed clients
             if (!configurationContext.Clients.Any())
             {
-                foreach (var client in SeedConfig.Clients)
+                foreach (var client in seedConfig.Clients)
                 {
                     configurationContext.Clients.Add(client.ToEntity());
                 }
-                configurationContext.SaveChanges();
+
+                saveChanges = true;
             }
 
             // Seed resources
             if (!configurationContext.IdentityResources.Any())
             {
-                foreach (var resource in SeedConfig.IdentityResources)
+                foreach (var resource in seedConfig.IdentityResources)
                 {
                     configurationContext.IdentityResources.Add(resource.ToEntity());
                 }
-                configurationContext.SaveChanges();
+                
+                saveChanges = true;
             }
 
             // Seed API Scopes
             if (!configurationContext.ApiScopes.Any())
             {
-                foreach (var resource in SeedConfig.ApiScopes)
+                foreach (var resource in seedConfig.ApiScopes)
                 {
                     configurationContext.ApiScopes.Add(resource.ToEntity());
                 }
-                configurationContext.SaveChanges();
+
+                saveChanges = true;
             }
 
+            // Save changes if needed
+            if (saveChanges) configurationContext.SaveChanges();
         }
 
         return app;
