@@ -3,11 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Text.Json;
 using WeatherApi.Entities;
+using WeatherApi.Extensions;
 
 namespace WeatherApi.Controllers;
 
 [ApiController]
-[Authorize(policy: "WeatherReader")]
+[Authorize(policy: PolicyNames.WeatherReader)]
 [Route("[controller]")]
 public class WeatherForecastController(ILogger<WeatherForecastController> logger, IDistributedCache distributedCache) : ControllerBase
 {

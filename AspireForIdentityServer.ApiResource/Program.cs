@@ -1,5 +1,6 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using WeatherApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,11 +16,7 @@ builder.Services.AddAuthentication("Bearer")
     });
 
 builder.Services.AddAuthorizationBuilder()
-    .AddPolicy("WeatherReader", policy =>
-    {
-        policy.RequireAuthenticatedUser();
-        policy.RequireClaim("scope", "Weather.Read");
-    });
+    .AddAuthorizationPolicies();
 
 builder.Services.AddHealthChecks();
 
