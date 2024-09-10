@@ -22,7 +22,7 @@ try
     {
         // This is a hack to give the database time to start up in development
         Log.Information("Dev Only - Sleeping for 10 seconds");
-        //Thread.Sleep(10000);
+        Thread.Sleep(10000);
     }
 
     Log.Information("Configuring & Starting Application...");
