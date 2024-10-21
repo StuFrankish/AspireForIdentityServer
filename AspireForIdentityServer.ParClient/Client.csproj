@@ -10,14 +10,14 @@
 		<PackageReference Include="Duende.AccessTokenManagement.OpenIdConnect" Version="3.0.0" />
 		<PackageReference Include="Duende.BFF" Version="2.2.0" />
 		<PackageReference Include="HealthChecks.Uptime" Version="2.0.5" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.8" />
-		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.8" />
-		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.8" />
-		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
-		<PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.10" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.6" />
+		<PackageReference Include="Serilog.AspNetCore" Version="8.0.3" />
 		<PackageReference Include="StackExchange.Redis" Version="2.8.16" />
 		<PackageReference Include="System.Formats.Asn1" Version="8.0.1" />
-		<PackageReference Include="System.Text.Json" Version="8.0.4" />
+		<PackageReference Include="System.Text.Json" Version="8.0.5" />
 	</ItemGroup>
 
 	<ItemGroup>
