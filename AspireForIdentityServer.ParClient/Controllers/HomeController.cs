@@ -70,7 +70,7 @@ public class HomeController(
         var token = await _userTokenManagementService.GetAccessTokenAsync(User);
         _weatherHttpClient.SetBearerToken(token.AccessToken);
 
-        var request = new HttpRequestMessage(HttpMethod.Get, requestUri: "WeatherForecast");
+        var request = new HttpRequestMessage(HttpMethod.Get, requestUri: "weatherendpoints/getWeatherForecasts/gb");
         var responseMessage = await _weatherHttpClient.SendAsync(request);
 
         if (responseMessage.IsSuccessStatusCode)

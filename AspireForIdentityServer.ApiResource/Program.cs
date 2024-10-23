@@ -43,7 +43,6 @@ app.UseHealthChecks(path: "/_health", options: new HealthCheckOptions
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers()
-    .RequireAuthorization();
+app.MapEndpoints();
 
 app.Run();

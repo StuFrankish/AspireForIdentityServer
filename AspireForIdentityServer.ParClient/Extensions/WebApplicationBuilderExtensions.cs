@@ -57,7 +57,7 @@ public static class WebApplicationBuilderExtensions
         // Add Weather httpClient
         builder.Services.AddHttpClient(name: "WeatherApi", options =>
         {
-            options.BaseAddress = new Uri(uriString: weatherApiOptions.BaseUrl);
+            options.BaseAddress = new Uri(uriString: $"{weatherApiOptions.BaseUrl}/api/");
         })
             .AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(retryCount: resilienceOptions.AllowedRetryCountBeforeFailure, retryAttempt => TimeSpan.FromMilliseconds(100 * Math.Pow(x: 2, retryAttempt))))
             .AddTransientHttpErrorPolicy(policy => policy.CircuitBreakerAsync(resilienceOptions.AllowedEventsBeforeCircuitBreaker, TimeSpan.FromSeconds(value: resilienceOptions.DurationOfBreakSeconds)))
