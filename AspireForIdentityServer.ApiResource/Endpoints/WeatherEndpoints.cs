@@ -5,6 +5,7 @@ using WeatherApi.Extensions;
 
 namespace WeatherApi.Endpoints;
 
+[RoutePrefix("/weather")]
 public class WeatherEndpoints : EndpointGroupBase
 {
     private readonly DistributedCacheEntryOptions _defaultCacheOptions = new()
@@ -15,13 +16,13 @@ public class WeatherEndpoints : EndpointGroupBase
     public override void Map(WebApplication app)
     {
         // Map the group of endpoints to the application
-        var configuration = app.MapGroup(this);
+        var routeGroupBuilder = app.MapGroup(this);
 
         // Add authorization policy for the whole group
-        configuration.RequireAuthorization(PolicyNames.WeatherReader);
+        routeGroupBuilder.RequireAuthorization(PolicyNames.WeatherReader);
 
-        // Map the endpoints to the group
-        configuration
+        // Map the endpoints with their handlers
+        routeGroupBuilder
             .MapGet(pattern: "/getWeatherForecasts/{locale}", GetWeatherForecastsAsync);
     }
 
