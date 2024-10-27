@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using WeatherApi.CQRS.Queries.GetWeatherByLocation;
 using WeatherApi.Entities;
 using WeatherApi.Extensions;
@@ -21,9 +22,18 @@ public class WeatherEndpoints : EndpointGroupBase
             .MapGet(pattern: "/getWeatherForecasts/{locale}", GetWeatherForecastsAsync);
     }
 
-    public async Task<IEnumerable<WeatherForecast>> GetWeatherForecastsAsync(string locale, IMediator mediator, CancellationToken cancellationToken)
+    public async Task<Results<Ok<ICollection<WeatherForecast>>, ProblemHttpResult>> GetWeatherForecastsAsync(string locale, IMediator mediator, CancellationToken cancellationToken)
     {
-        var queryResponse = await mediator.Send(new GetWeatherByLocationQuery { Location = locale });
-        return queryResponse.WeatherForecasts;
+        try
+        {
+            // Get the weather forecast by location
+            var queryResponse = await mediator.Send(request: new GetWeatherByLocationQuery { Location = locale }, cancellationToken);
+            return TypedResults.Ok(queryResponse.WeatherForecasts);
+        }
+        catch (Exception ex)
+        {
+            // Return a problem response
+            return TypedResults.Problem(ex.Message);
+        }
     }
 }

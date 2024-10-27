@@ -5,8 +5,14 @@ using WeatherApi.Entities;
 
 namespace WeatherApi.CQRS.Queries.GetWeatherByLocation;
 
+/// <summary>
+/// Query to get weather information by location.
+/// </summary>
 public class GetWeatherByLocationQuery : IRequest<GetWeatherByLocationResponse>
 {
+    /// <summary>
+    /// Gets or sets the location for which to retrieve the weather.
+    /// </summary>
     public string Location { get; set; } = string.Empty;
 }
 
@@ -32,6 +38,9 @@ public class GetWeatherByLocationHandler(
         _logger.LogInformation(message: "Getting Weather Forecast");
         string cacheKey = $"weather_forecast_data_{request.Location}";
         var responseObject = new GetWeatherByLocationResponse();
+
+        // Ensure the locale is valid
+        EnsureValidLocale(request.Location, _logger);
 
         // Check if the data is in the cache
         var cachedData = await _distributedCache.GetStringAsync(
@@ -73,6 +82,32 @@ public class GetWeatherByLocationHandler(
         }
 
         return responseObject;
+    }
+
+    /// <summary>
+    /// Ensures the provided locale is valid.
+    /// </summary>
+    /// <param name="locale"></param>
+    /// <param name="logger"></param>
+    /// <exception cref="ArgumentException"></exception>
+    private static void EnsureValidLocale(string locale, ILogger logger)
+    {
+        // Ensure the provided string is not null or empty
+        if (string.IsNullOrWhiteSpace(locale))
+        {
+            logger.LogError(message: "Invalid locale - Empty Value");
+            throw new ArgumentException(message: "Invalid locale", paramName: nameof(locale));
+        }
+
+        // Get a list of valid locales
+        var validLocales = new[] { "gb", "fr" };
+
+        // Ensure the provided locale is valid
+        if (!validLocales.Contains(locale))
+        {
+            logger.LogError(message: "Invalid locale - Not Found");
+            throw new ArgumentException(message: "Invalid locale", paramName: nameof(locale));
+        }
     }
 
 }
