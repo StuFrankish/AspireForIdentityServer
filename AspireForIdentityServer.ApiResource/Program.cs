@@ -27,6 +27,11 @@ builder.Services.AddStackExchangeRedisCache(o =>
 });
 
 
+builder.Services.AddMediatR(options =>
+{
+    options.RegisterServicesFromAssemblies(typeof(Program).Assembly);
+});
+
 
 var app = builder.Build();
 
