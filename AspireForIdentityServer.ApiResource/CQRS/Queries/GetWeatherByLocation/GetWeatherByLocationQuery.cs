@@ -34,14 +34,21 @@ public class GetWeatherByLocationHandler(
         CancellationToken cancellationToken
     )
     {
-        // Start the request response
-        _logger.LogInformation(message: "Getting Weather Forecast");
-        string cacheKey = $"weather_forecast_data_{request.Location}";
+        // Create the response object
         var responseObject = new GetWeatherByLocationResponse();
 
-        // Ensure the locale is valid
-        EnsureValidLocale(request.Location, _logger);
+        // Start the request response
+        _logger.LogInformation(message: "Getting Weather Forecast");
 
+        // Ensure the locale is valid
+        var requestedLocale = EnsureValidLocale(request.Location, _logger);
+
+        // If the locale is invalid, return an empty response
+        if (string.IsNullOrWhiteSpace(requestedLocale)) return responseObject;
+
+        // Cache key for the weather forecast data
+        string cacheKey = $"weather_forecast_data_{requestedLocale}";
+        
         // Check if the data is in the cache
         var cachedData = await _distributedCache.GetStringAsync(
             key: cacheKey,
@@ -90,12 +97,12 @@ public class GetWeatherByLocationHandler(
     /// <param name="locale"></param>
     /// <param name="logger"></param>
     /// <exception cref="ArgumentException"></exception>
-    private static void EnsureValidLocale(string locale, ILogger logger)
+    private static string EnsureValidLocale(string locale, ILogger logger)
     {
         // Ensure the provided string is not null or empty
         if (string.IsNullOrWhiteSpace(locale))
         {
-            logger.LogError(message: "Invalid locale - Empty Value");
+            logger.LogError(message: "Invalid locale - Empty value");
             throw new ArgumentException(message: "Invalid locale", paramName: nameof(locale));
         }
 
@@ -105,9 +112,11 @@ public class GetWeatherByLocationHandler(
         // Ensure the provided locale is valid
         if (!validLocales.Contains(locale))
         {
-            logger.LogError(message: "Invalid locale - Not Found");
-            throw new ArgumentException(message: "Invalid locale", paramName: nameof(locale));
+            logger.LogError(message: "Invalid locale - Not found in valid list");
         }
+
+        // Return the locale from the list of valid locales if it is valid
+        return validLocales.FirstOrDefault(l => l == locale) ?? string.Empty;
     }
 
 }
