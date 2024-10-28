@@ -1,4 +1,5 @@
 [![.NET](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/dotnet.yml)
+[![CodeQL](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/github-code-scanning/codeql)
 
 # Aspire for IdentityServer & Client
 This sample includes:
