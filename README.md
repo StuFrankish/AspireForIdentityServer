@@ -3,10 +3,12 @@
 
 # Aspire for IdentityServer & Client
 This sample includes:
-- A standard instance of IdentityServer from Duende using version 7.0.5 configured to use SQL Server storage.
-- An MVC client application setup to use PAR (pushed authorisation requests) configured to use Redis cache.
+- A standard instance of IdentityServer from Duende using version 7.0.7 configured to use SQL Server storage.
+- An MVC client application setup to use PAR (pushed authorisation requests) and configured to use Redis cache.
 - A protected API resource, also configured to use Redis for output caching.
 - Serilog integration in the above projects, output to console.
+- Endpoint routing with MediatR.
+- Sample unit tests using Moq & FluentValidation.
 
 ## Cloning and Building this project
 
@@ -25,6 +27,7 @@ Before you start, make sure you have the following installed on your machine:
 - Custom `WebApplicationBuilder` extensions to provide configuration of IdentityServer and Redis.
 - Cleaned up `Config.cs` into `SeedConfig.cs`
 - Added Redis and SQL Server resources to the Aspire AppHost project for use in the IdentityServer application.
+- Endpoint routing with MediatR.
 
 ### Steps to Clone and Build the Project
 
