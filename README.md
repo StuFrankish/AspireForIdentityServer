@@ -3,7 +3,7 @@
 
 # Aspire for IdentityServer, Client & API
 This sample includes:
-- A standard instance of IdentityServer from Duende using version 7.0.7 configured to use SQL Server storage.
+- A standard instance of IdentityServer from Duende using version 7.0.8 configured to use SQL Server storage.
 - An MVC client application setup to use PAR (pushed authorisation requests) and configured to use Redis cache.
 - A protected API resource, also configured to use Redis for output caching.
 - Serilog integration in the above projects, output to console.
