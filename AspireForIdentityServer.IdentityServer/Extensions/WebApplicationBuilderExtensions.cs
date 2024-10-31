@@ -2,6 +2,7 @@
 using Duende.IdentityServer;
 using IdentityServer.Configuration;
 using IdentityServer.Extensions.Options;
+using IdentityServer.SharedRepositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer.Extensions;
@@ -54,6 +55,9 @@ public static class WebApplicationBuilderExtensions
 
         // Add support for local API authentication
         builder.Services.AddLocalApiAuthentication();
+
+        // Add support for additional shared repositories
+        builder.Services.AddScoped<IClientRepository, ClientRepository>();
     }
 
     public static void AddAndConfigureRedisCache(this IHostApplicationBuilder builder)

@@ -27,6 +27,7 @@
       "RequirePkce": true,
       "RequirePushedAuthorization": true,
       "BackChannelLogoutSessionRequired": true,
+      "InitiateLoginUri": "https://localhost:5002/home/secure",
       "BackChannelLogoutUri": "https://localhost:5002/bff/backchannel",
       "PostLogoutRedirectUris": [ "https://localhost:5002/signout-callback-oidc" ],
       "AllowOfflineAccess": true,
