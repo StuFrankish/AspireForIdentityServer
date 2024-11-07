@@ -7,7 +7,7 @@
 	<ItemGroup>
 		<PackageReference Include="AspNetCore.HealthChecks.OpenIdConnectServer" Version="8.0.1" />
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
-		<PackageReference Include="Duende.AccessTokenManagement.OpenIdConnect" Version="3.0.0" />
+		<PackageReference Include="Duende.AccessTokenManagement.OpenIdConnect" Version="3.0.1" />
 		<PackageReference Include="Duende.BFF" Version="2.2.0" />
 		<PackageReference Include="HealthChecks.Uptime" Version="2.0.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.10" />
