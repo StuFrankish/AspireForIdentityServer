@@ -17,12 +17,14 @@ var clientApplication = builder.AddProject<Projects.Client>(name: "clientapp");
 identityServer
     .WithExternalHttpEndpoints()
     .WithReference(identityServerDb, connectionName: "SqlServer")
-    .WithReference(redis, connectionName: "Redis");
+    .WithReference(redis, connectionName: "Redis")
+    .WaitFor(identityServerDb);
 
 weatherApi
     .WithExternalHttpEndpoints()
     .WithReference(redis, connectionName: "Redis")
-    .WithEnvironment(name: "IdentityProvider__Authority", endpointReference: identityServer.GetEndpoint(name: "https"));
+    .WithEnvironment(name: "IdentityProvider__Authority", endpointReference: identityServer.GetEndpoint(name: "https"))
+    .WaitFor(identityServer);
 
 clientApplication
     .WithExternalHttpEndpoints()
@@ -30,7 +32,8 @@ clientApplication
     .WithEnvironment(name: "WeatherApi__BaseUrl", endpointReference: weatherApi.GetEndpoint(name: "https"))
     .WithEnvironment(name: "IdentityProvider__Authority", endpointReference: identityServer.GetEndpoint(name: "https"))
     .WithEnvironment(name: "IdentityProvider__ClientId", value: "mvc.par")
-    .WithEnvironment(name: "IdentityProvider__ClientSecret", value: "secret");
+    .WithEnvironment(name: "IdentityProvider__ClientSecret", value: "secret")
+    .WaitFor(identityServer);
 
 
 // Build and run the distributed application

@@ -3,7 +3,7 @@
 
 # Aspire for IdentityServer, Client & API
 This sample includes:
-- A standard instance of IdentityServer from Duende using version 7.0.8 configured to use SQL Server storage.
+- A standard instance of IdentityServer from Duende using version 7.1.0-Preview.1 configured to use SQL Server storage.
 - An MVC client application setup to use PAR (pushed authorisation requests) and configured to use Redis cache.
 - A protected API resource, also configured to use Redis for output caching.
 - Serilog integration in the above projects, output to console.
@@ -16,9 +16,9 @@ This sample includes:
 
 Before you start, make sure you have the following installed on your machine:
 
-- **.NET 8 SDK**: Download and install from the [official .NET website](https://dotnet.microsoft.com/download/dotnet/8.0).
+- **.NET 9 SDK**: Download and install from the [official .NET website](https://dotnet.microsoft.com/download/dotnet/9.0).
 - **IDE of Choice**: Preferably [Visual Studio](https://visualstudio.microsoft.com/) for its robust support for .NET development. Alternatively, you can use [Visual Studio Code](https://code.visualstudio.com/) or any other IDE that supports .NET.
-- **Docker**: Preferablly Docker Desktop, but any installation of Docker should work fine.
+- **Docker**: Preferablly Docker Desktop or Rancher for ease of use, but any installation of Docker should work fine.
 
 ### Customisations
 
@@ -32,8 +32,8 @@ Before you start, make sure you have the following installed on your machine:
 ### Steps to Clone and Build the Project
 
 > [!IMPORTANT]  
-> If you do not already have the latest version of the Redis and MSSQL container images, it will take longer for them to provision, resulting in the IdentityServer project failing.
-> Allow the SQL and Redis images to load, then if necessary, restart the Aspire solution.
+> With the update to Aspire v9, the solution now makes use of the `.WaitFor()` helpers, ensuring that the Identity Server, Client and API projects wait for the containers to finish loading and enter a healthy state before loading.
+> If you do not already have the latest version of the Redis and MSSQL container images, it will take longer for them to provision while the images are downloaded.
 
 1. **Clone the Repository**:
 

@@ -29,6 +29,9 @@ public class IdentityServerApiServiceBase(
         var response = await ExecuteApiCall(httpMethod, endpoint, payload);
         string responseBody = await response.Content.ReadAsStringAsync();
 
+        if (!response.IsSuccessStatusCode)
+            return default;
+
         return JsonSerializer.Deserialize<T>(responseBody, _defaultJsonSerializerOptions) ?? default!;
     }
 
