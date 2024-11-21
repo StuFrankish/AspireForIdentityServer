@@ -38,46 +38,49 @@ internal static class HostingExtensions
         // If in Development, run test data seeding
         if (app.Environment.IsDevelopment())
         {
-            // Create an instance of the ConfigurationDbContext so we can seed data.
-            var configurationContext = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+            // Create the seedinig configuration from JSON
             var seedConfig = new SeedConfig("SeedingConfig.json");
             bool saveChanges = false;
 
+            // Create an instance of the Configuration & Identity Db Contexts
+            var configurationDbContext = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+            
+            
             // Seed clients
-            if (!configurationContext.Clients.Any())
+            if (!configurationDbContext.Clients.Any())
             {
                 foreach (var client in seedConfig.Clients)
                 {
-                    configurationContext.Clients.Add(client.ToEntity());
+                    configurationDbContext.Clients.Add(client.ToEntity());
                 }
 
                 saveChanges = true;
             }
 
             // Seed resources
-            if (!configurationContext.IdentityResources.Any())
+            if (!configurationDbContext.IdentityResources.Any())
             {
                 foreach (var resource in seedConfig.IdentityResources)
                 {
-                    configurationContext.IdentityResources.Add(resource.ToEntity());
+                    configurationDbContext.IdentityResources.Add(resource.ToEntity());
                 }
                 
                 saveChanges = true;
             }
 
             // Seed API Scopes
-            if (!configurationContext.ApiScopes.Any())
+            if (!configurationDbContext.ApiScopes.Any())
             {
                 foreach (var resource in seedConfig.ApiScopes)
                 {
-                    configurationContext.ApiScopes.Add(resource.ToEntity());
+                    configurationDbContext.ApiScopes.Add(resource.ToEntity());
                 }
 
                 saveChanges = true;
             }
 
             // Save changes if needed
-            if (saveChanges) configurationContext.SaveChanges();
+            if (saveChanges) configurationDbContext.SaveChanges();
         }
 
         return app;

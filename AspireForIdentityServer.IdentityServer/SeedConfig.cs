@@ -1,4 +1,5 @@
 ﻿using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Test;
 using System.Text.Json;
 
 namespace IdentityServer;
@@ -31,7 +32,7 @@ public class SeedConfig
             throw new JsonException(message: "Seeding file is not a valid JSON object", path: BasePath, lineNumber: null, bytePositionInLine: null);
         }
 
-
+        Users = LoadTestUsers();
         ApiScopes = LoadApiScopes();
         Clients = LoadClients();
     }
@@ -40,6 +41,12 @@ public class SeedConfig
     {
         JsonDocument doc = JsonDocument.Parse(File.ReadAllText(BasePath));
         return doc.RootElement.GetProperty(sectionName).GetRawText();
+    }
+
+    private List<TestUser> LoadTestUsers()
+    {
+        var json = JsonSectionData("Users");
+        return JsonSerializer.Deserialize<List<TestUser>>(json);
     }
 
     private List<ApiScope> LoadApiScopes()
@@ -64,6 +71,7 @@ public class SeedConfig
         return clients;
     }
 
+    public IEnumerable<TestUser> Users { get; init; } = [];
     public IEnumerable<ApiScope> ApiScopes { get; init; } = [];
     public IEnumerable<Client> Clients { get; init; } = [];
     public IEnumerable<IdentityResource> IdentityResources =>
