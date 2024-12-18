@@ -1,7 +1,7 @@
 using Client.Dtos;
 using Client.Services;
 using Duende.AccessTokenManagement.OpenIdConnect;
-using IdentityModel.Client;
+using Duende.IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;

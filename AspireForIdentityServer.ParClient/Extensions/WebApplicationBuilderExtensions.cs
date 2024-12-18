@@ -1,10 +1,9 @@
 ﻿using Client.Options;
 using Client.Services;
-using IdentityModel;
-using IdentityModel.Client;
+using Duende.IdentityModel;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,24 +17,6 @@ namespace Client.Extensions;
 
 public static class WebApplicationBuilderExtensions
 {
-    public static void AddAndConfigurePushedAuthorizationSupport(this WebApplicationBuilder builder)
-    {
-        var identityProviderOptions = builder.GetCustomOptionsConfiguration<IdentityProviderOptions>(ConfigurationSections.IdentityProvider);
-
-        // Register the IdentityProviderOptions for DI
-        builder.Services.Configure<IdentityProviderOptions>(builder.Configuration.GetSection(ConfigurationSections.IdentityProvider));
-
-        // Setup the rest of the client.
-        builder.Services.AddTransient<ParOidcEvents>();
-        builder.Services.AddSingleton<IDiscoveryCache>(_ => new DiscoveryCache(identityProviderOptions.Authority));
-
-        // Add PAR interaction httpClient
-        builder.Services.AddHttpClient<ParOidcEvents>(name: "par_interaction_client", options =>
-        {
-            options.BaseAddress = new Uri(uriString: identityProviderOptions.Authority);
-        });
-    }
-
     public static void AddAndConfigureRemoteApi(this WebApplicationBuilder builder)
     {
         var identityProviderOptions = builder.GetCustomOptionsConfiguration<IdentityProviderOptions>(ConfigurationSections.IdentityProvider);
@@ -125,7 +106,7 @@ public static class WebApplicationBuilderExtensions
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 // Needed to add PAR support
-                options.EventsType = typeof(ParOidcEvents);
+                //options.EventsType = typeof(ParOidcEvents);
 
                 // Setup Client
                 options.Authority = identityProviderOptions.Authority;

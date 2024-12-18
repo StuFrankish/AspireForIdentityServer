@@ -11,7 +11,6 @@ public static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         // Add custom services
-        builder.AddAndConfigurePushedAuthorizationSupport();
         builder.AddAndConfigureRemoteApi();
         builder.AddAndConfigureSessionWithRedis();
         builder.AddAndConfigureAuthorization();

@@ -1,5 +1,5 @@
 ﻿using Client.Common;
-using IdentityModel;
+using Duende.IdentityModel;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using System.Collections.Generic;
