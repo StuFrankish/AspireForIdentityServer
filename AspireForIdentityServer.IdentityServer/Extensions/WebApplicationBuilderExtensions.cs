@@ -12,7 +12,11 @@ public static class WebApplicationBuilderExtensions
     public static void AddAndConfigureIdentityServer(this IHostApplicationBuilder builder)
     {
         var connectionStrings = builder.GetCustomOptionsConfiguration<ConnectionStrings>(ConfigurationSections.ConnectionStrings);
-        var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
+
+        void ConfigureDbContext(DbContextOptionsBuilder builder) => builder.UseSqlServer(
+            connectionString: connectionStrings.SqlServer,
+            sql => sql.MigrationsAssembly(typeof(Program).Assembly.GetName().Name)
+        );
 
         builder.Services.AddControllers();
 
@@ -31,11 +35,11 @@ public static class WebApplicationBuilderExtensions
         })
             .AddConfigurationStore(options =>
             {
-                options.ConfigureDbContext = builder => builder.UseSqlServer(connectionStrings.SqlServer, sql => sql.MigrationsAssembly(migrationsAssembly));
+                options.ConfigureDbContext = ConfigureDbContext;
             })
             .AddOperationalStore(options =>
             {
-                options.ConfigureDbContext = builder => builder.UseSqlServer(connectionStrings.SqlServer, sql => sql.MigrationsAssembly(migrationsAssembly));
+                options.ConfigureDbContext = ConfigureDbContext;
             })
             .AddServerSideSessions()
             .AddTestUsers(TestUsers.Users);

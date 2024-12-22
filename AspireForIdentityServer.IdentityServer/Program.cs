@@ -20,12 +20,11 @@ try
 
     Log.Information("Configuring & Starting Application...");
 
-    builder
-        .AddServiceDefaults();
+    builder.AddServiceDefaults();
 
     builder
         .ConfigureServices()
-        .InitializeDatabase()
+        .MigrateAndSeedDatabase()
         .ConfigurePipeline()
         .Run();
 }

@@ -18,8 +18,10 @@ internal static class HostingExtensions
         return builder.Build();
     }
 
-    public static WebApplication InitializeDatabase(this WebApplication app)
+    public static WebApplication MigrateAndSeedDatabase(this WebApplication app)
     {
+        if (app.Environment.IsProduction()) return app;
+
         // Create a usable service scope
         using var serviceScope = app.Services.GetService<IServiceScopeFactory>().CreateScope();
 
@@ -35,53 +37,49 @@ internal static class HostingExtensions
             dbContext.Database.Migrate();
         }
 
-        // If in Development, run test data seeding
-        if (app.Environment.IsDevelopment())
+        // Create the seedinig configuration from JSON
+        var seedConfig = new SeedConfig("SeedingConfig.json");
+        bool saveChanges = false;
+
+        // Create an instance of the Configuration & Identity Db Contexts
+        var configurationDbContext = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
+
+
+        // Seed clients
+        if (!configurationDbContext.Clients.Any())
         {
-            // Create the seedinig configuration from JSON
-            var seedConfig = new SeedConfig("SeedingConfig.json");
-            bool saveChanges = false;
-
-            // Create an instance of the Configuration & Identity Db Contexts
-            var configurationDbContext = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-            
-            
-            // Seed clients
-            if (!configurationDbContext.Clients.Any())
+            foreach (var client in seedConfig.Clients)
             {
-                foreach (var client in seedConfig.Clients)
-                {
-                    configurationDbContext.Clients.Add(client.ToEntity());
-                }
-
-                saveChanges = true;
+                configurationDbContext.Clients.Add(client.ToEntity());
             }
 
-            // Seed resources
-            if (!configurationDbContext.IdentityResources.Any())
-            {
-                foreach (var resource in seedConfig.IdentityResources)
-                {
-                    configurationDbContext.IdentityResources.Add(resource.ToEntity());
-                }
-                
-                saveChanges = true;
-            }
-
-            // Seed API Scopes
-            if (!configurationDbContext.ApiScopes.Any())
-            {
-                foreach (var resource in seedConfig.ApiScopes)
-                {
-                    configurationDbContext.ApiScopes.Add(resource.ToEntity());
-                }
-
-                saveChanges = true;
-            }
-
-            // Save changes if needed
-            if (saveChanges) configurationDbContext.SaveChanges();
+            saveChanges = true;
         }
+
+        // Seed resources
+        if (!configurationDbContext.IdentityResources.Any())
+        {
+            foreach (var resource in seedConfig.IdentityResources)
+            {
+                configurationDbContext.IdentityResources.Add(resource.ToEntity());
+            }
+
+            saveChanges = true;
+        }
+
+        // Seed API Scopes
+        if (!configurationDbContext.ApiScopes.Any())
+        {
+            foreach (var resource in seedConfig.ApiScopes)
+            {
+                configurationDbContext.ApiScopes.Add(resource.ToEntity());
+            }
+
+            saveChanges = true;
+        }
+
+        // Save changes if needed
+        if (saveChanges) configurationDbContext.SaveChanges();
 
         return app;
     }
