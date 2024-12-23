@@ -7,12 +7,12 @@ namespace WeatherApi.CQRS.Queries.GetWeatherByLocation;
 /// <summary>
 /// Query to get weather information by location.
 /// </summary>
-public class GetWeatherByLocationQuery : IRequest<GetWeatherByLocationResponse>
+public class GetWeatherByLocationQuery(string location) : IRequest<GetWeatherByLocationResponse>
 {
     /// <summary>
     /// Gets or sets the location for which to retrieve the weather.
     /// </summary>
-    public string Location { get; set; } = string.Empty;
+    public string Location { get; } = location;
 }
 
 public class GetWeatherByLocationHandler(HybridCache hybridCache,ILogger<GetWeatherByLocationQuery> logger)

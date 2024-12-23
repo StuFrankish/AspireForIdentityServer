@@ -27,7 +27,7 @@ public class WeatherEndpoints : EndpointGroupBase
         try
         {
             // Get the weather forecast by location
-            var queryResponse = await mediator.Send(request: new GetWeatherByLocationQuery { Location = locale }, cancellationToken);
+            var queryResponse = await mediator.Send(request: new GetWeatherByLocationQuery(locale), cancellationToken);
             return TypedResults.Ok(queryResponse.WeatherForecasts);
         }
         catch (Exception ex)

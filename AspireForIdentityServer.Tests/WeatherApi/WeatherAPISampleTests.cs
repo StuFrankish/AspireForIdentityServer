@@ -50,7 +50,7 @@ public class WeatherAPISampleTests
             .ReturnsAsync(mockWeatherData);
 
         // Setup the Weather API Mediator Request
-        var request = new GetWeatherByLocationQuery { Location = locale };
+        var request = new GetWeatherByLocationQuery(locale);
         var handler = new GetWeatherByLocationHandler(
             hybridCache: mockHybridCache.Object,
             logger: mockLogger.Object
