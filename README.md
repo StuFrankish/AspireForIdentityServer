@@ -1,9 +1,11 @@
 [![.NET](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/dotnet.yml)
 [![CodeQL](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/github-code-scanning/codeql)
 
+
+
 # Aspire for IdentityServer, Client & API
 This sample includes:
-- A standard instance of IdentityServer from Duende using version 7.1.0-Preview.1 configured to use SQL Server storage.
+- A standard instance of IdentityServer from Duende using version 7.1.0-rc.1 configured to use SQL Server storage.
 - An MVC client application setup to use PAR (pushed authorisation requests) and configured to use Redis cache.
 - A protected API resource, also configured to use Redis for output caching.
 - Serilog integration in the above projects, output to console.
