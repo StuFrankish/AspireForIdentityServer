@@ -3,7 +3,7 @@
 
 > [!IMPORTANT]  
 > This repo is for experimental and example use only and it not intended as a "best current practice" on production solution architecture.
-> Solution strucutre, features, code style etc are all likely to change on the fly and may contain errors and/or unsupported preview/prerelease packages.
+> Solution structure, features, code style etc are all likely to change on the fly and may contain errors and/or unsupported preview/prerelease packages.
 
 # Aspire for IdentityServer, Client & API
 This sample includes:
