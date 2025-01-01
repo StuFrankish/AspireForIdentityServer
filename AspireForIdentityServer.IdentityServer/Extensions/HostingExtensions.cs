@@ -11,9 +11,11 @@ internal static class HostingExtensions
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddRazorPages();
+
         builder.AddAndConfigureRedisCache();
         builder.AddAndConfigureIdentityServer();
         builder.AddAndConfigureApiVersioning();
+        builder.AddAndConfigureDataProtection();
 
         return builder.Build();
     }
