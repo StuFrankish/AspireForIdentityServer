@@ -11,6 +11,7 @@ var identityServerDb = sqlServer
 
 var redis = builder
     .AddRedis(name: "RedisCache", port: 6379)
+    .WithRedisInsight()
     .WithLifetime(ContainerLifetime.Persistent);
 
 // Add projects to the distributed application

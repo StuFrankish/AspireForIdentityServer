@@ -3,7 +3,9 @@ using Duende.IdentityServer;
 using IdentityServer.Configuration;
 using IdentityServer.Extensions.Options;
 using IdentityServer.SharedRepositories;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace IdentityServer.Extensions;
 
@@ -84,6 +86,20 @@ public static class WebApplicationBuilderExtensions
             options.DefaultApiVersion = new ApiVersion(majorVersion: 1, minorVersion: 0);
             options.UnsupportedApiVersionStatusCode = (int)System.Net.HttpStatusCode.BadRequest;
         });
+    }
+
+    public static void AddAndConfigureDataProtection(this IHostApplicationBuilder builder)
+    {
+        // Get connection strings  
+        var connectionStrings = builder.GetCustomOptionsConfiguration<ConnectionStrings>(ConfigurationSections.ConnectionStrings);
+
+        // Add Data Protection  
+        builder.Services.AddDataProtection()
+            .SetApplicationName(applicationName: "IdentityServer")
+            .PersistKeysToStackExchangeRedis(
+                databaseFactory: () => ConnectionMultiplexer.Connect(connectionStrings.Redis).GetDatabase(),
+                key: "DataProtection-Keys"
+            );
     }
 
 }
