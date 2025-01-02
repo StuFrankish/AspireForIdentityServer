@@ -35,7 +35,7 @@ Before you start, make sure you have the following installed on your machine:
 
 ### Steps to Clone and Build the Project
 
-> [!IMPORTANT]  
+> [!NOTE]  
 > With the update to Aspire v9, the solution now makes use of the `.WaitFor()` helpers, ensuring that the Identity Server, Client and API projects wait for the containers to finish loading and enter a healthy state before loading.
 > If you do not already have the latest version of the Redis and MSSQL container images, it will take longer for them to provision while the images are downloaded.
 
