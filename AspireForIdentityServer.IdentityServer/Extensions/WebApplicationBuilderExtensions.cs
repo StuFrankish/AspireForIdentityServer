@@ -9,15 +9,18 @@ using StackExchange.Redis;
 
 namespace IdentityServer.Extensions;
 
-public static class WebApplicationBuilderExtensions
+internal static class WebApplicationBuilderExtensions
 {
     public static void AddAndConfigureIdentityServer(this IHostApplicationBuilder builder)
     {
         var connectionStrings = builder.GetCustomOptionsConfiguration<ConnectionStrings>(ConfigurationSections.ConnectionStrings);
 
-        void ConfigureDbContext(DbContextOptionsBuilder builder) => builder.UseSqlServer(
+        void ConfigureSqlDbContext(DbContextOptionsBuilder builder) => builder.UseSqlServer(
             connectionString: connectionStrings.SqlServer,
-            sql => sql.MigrationsAssembly(typeof(Program).Assembly.GetName().Name)
+            sql => {
+                sql.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+                sql.EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+            }
         );
 
         builder.Services.AddControllers();
@@ -28,20 +31,17 @@ public static class WebApplicationBuilderExtensions
             options.PushedAuthorization.AllowUnregisteredPushedRedirectUris = true;
 
             options.Events.RaiseErrorEvents = true;
-            options.Events.RaiseInformationEvents = true;
             options.Events.RaiseFailureEvents = true;
-            options.Events.RaiseSuccessEvents = true;
-
-            // see https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/
-            options.EmitStaticAudienceClaim = true;
         })
             .AddConfigurationStore(options =>
             {
-                options.ConfigureDbContext = ConfigureDbContext;
+                options.ConfigureDbContext = ConfigureSqlDbContext;
+                options.EnablePooling = true;
             })
             .AddOperationalStore(options =>
             {
-                options.ConfigureDbContext = ConfigureDbContext;
+                options.ConfigureDbContext = ConfigureSqlDbContext;
+                options.EnablePooling = true;
             })
             .AddServerSideSessions()
             .AddTestUsers(TestUsers.Users);
@@ -98,7 +98,7 @@ public static class WebApplicationBuilderExtensions
             .SetApplicationName(applicationName: "IdentityServer")
             .PersistKeysToStackExchangeRedis(
                 databaseFactory: () => ConnectionMultiplexer.Connect(connectionStrings.Redis).GetDatabase(),
-                key: "DataProtection-Keys"
+                key: "IdentityServer:DataProtection-Keys"
             );
     }
 

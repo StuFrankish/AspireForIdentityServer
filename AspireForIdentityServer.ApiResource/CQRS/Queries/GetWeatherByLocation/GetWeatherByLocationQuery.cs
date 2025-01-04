@@ -18,7 +18,7 @@ public class GetWeatherByLocationQuery(string location) : IRequest<GetWeatherByL
 public class GetWeatherByLocationHandler(HybridCache hybridCache,ILogger<GetWeatherByLocationQuery> logger)
     : IRequestHandler<GetWeatherByLocationQuery, GetWeatherByLocationResponse>
 {
-    public async Task<GetWeatherByLocationResponse> Handle(GetWeatherByLocationQuery request,CancellationToken cancellationToken)
+    public async Task<GetWeatherByLocationResponse> Handle(GetWeatherByLocationQuery request, CancellationToken cancellationToken)
     {
         // Create the response object
         var responseObject = new GetWeatherByLocationResponse();
@@ -34,7 +34,7 @@ public class GetWeatherByLocationHandler(HybridCache hybridCache,ILogger<GetWeat
 
         // Get the data from cache
         responseObject.WeatherForecasts = await hybridCache.GetOrCreateAsync(
-            key: $"weather_forecast_data_{requestedLocale}",
+            key: $"WeatherApi:ForecastData:{requestedLocale}",
             async cancelToken => await getMockedDataAsync(cancelToken),
             cancellationToken: cancellationToken
         );

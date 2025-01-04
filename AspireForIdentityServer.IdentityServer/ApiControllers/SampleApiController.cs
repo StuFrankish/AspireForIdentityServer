@@ -29,7 +29,7 @@ public class SampleApiController(IDistributedCache distributedCache, ILogger<Sam
         _logger.LogInformation("GetSampleCollectionV1 called");
         List<SampleDto> dataToReturn;
 
-        var cacheKey = "querycache:sampledata";
+        var cacheKey = "IdentityServer:QueryCache:SampleData";
         var cachedData = await _distributedCache.GetStringAsync(cacheKey, _cancellationToken);
 
         if (cachedData is null)

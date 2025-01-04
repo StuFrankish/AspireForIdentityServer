@@ -14,14 +14,15 @@ public class RedisUserSessionStore(IDistributedCache cache, IConnectionMultiplex
 {
     private readonly IDistributedCache _cache = cache;
     private readonly IConnectionMultiplexer _connectionMultiplexer = connectionMultiplexer;
+    private const string cacheKeyPrefix = "ClientApp";
 
     private readonly DistributedCacheEntryOptions _defaultCacheOptions = new()
     {
         SlidingExpiration = TimeSpan.FromHours(6)
     };
 
-    private static string UserSessionCacheKey(string userSession) => $"user-session:{userSession}";
-    private static string UserStorageCacheKey(string subjectId, string customKey) => $"user-storage:{subjectId}:{customKey}";
+    private static string UserSessionCacheKey(string userSession) => $"{cacheKeyPrefix}:UserSession:{userSession}";
+    private static string UserStorageCacheKey(string subjectId, string customKey) => $"{cacheKeyPrefix}:UserStorage:{subjectId}:{customKey}";
 
     public void SetString(string SubjectId, string key, string value)
     {
@@ -52,7 +53,7 @@ public class RedisUserSessionStore(IDistributedCache cache, IConnectionMultiplex
     public IEnumerable<string> GetUserStorageKeys(string subjectId)
     {
         var server = _connectionMultiplexer.GetServer(_connectionMultiplexer.GetEndPoints()[0]);
-        var allKeys = server.Keys(pattern: $"user-storage:{subjectId}:*").ToList();
+        var allKeys = server.Keys(pattern: $"{cacheKeyPrefix}:UserStorage:{subjectId}:*").ToList();
         return allKeys.Select(k => k.ToString().Split(":").Last());
     }
 
@@ -94,7 +95,7 @@ public class RedisUserSessionStore(IDistributedCache cache, IConnectionMultiplex
         filter.Validate();
 
         var server = _connectionMultiplexer.GetServer(_connectionMultiplexer.GetEndPoints()[0]);
-        var allKeys = (server.Keys(pattern: "user-session:*") ?? []).ToList();
+        var allKeys = (server.Keys(pattern: $"{cacheKeyPrefix}:UserSession:*") ?? []).ToList();
         var sessions = new HashSet<UserSession>();
 
         foreach (var item in allKeys)
