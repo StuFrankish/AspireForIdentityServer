@@ -79,3 +79,6 @@ Before you start, make sure you have the following installed on your machine:
 If you'd like to contribute to the project, feel free to fork the repository, make your changes, and create a pull request.
 
 For any further questions or issues, please open an issue on the [GitHub repository](https://github.com/StuFrankish/AspireForIdentityServer/issues).
+
+## Repo Activity
+![Alt](https://repobeats.axiom.co/api/embed/7914339b8262ec71aeb9e9a34d9cd09f7ec36d23.svg "Repobeats analytics image")
