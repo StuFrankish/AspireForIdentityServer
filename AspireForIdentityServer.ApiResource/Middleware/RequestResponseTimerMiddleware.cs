@@ -22,7 +22,7 @@ internal class RequestResponseTimerMiddleware(RequestDelegate next, ILogger<Requ
 
         if (elapsedMilliseconds > MaxMilliseconds)
         {
-            logger.LogWarning("Long Running Request: {Path} - {ElapsedMilliseconds} milliseconds", context.Request.Path, elapsedMilliseconds);
+            logger.LogWarning("Long Running Request: {Path} - {ElapsedMilliseconds} milliseconds", Uri.EscapeDataString(context.Request.Path), elapsedMilliseconds);
         }
     }
 }
