@@ -17,7 +17,10 @@ internal static class WebApplicationBuilderExtensions
 
         void ConfigureSqlDbContext(DbContextOptionsBuilder builder) => builder.UseSqlServer(
             connectionString: connectionStrings.SqlServer,
-            sql => sql.MigrationsAssembly(typeof(Program).Assembly.GetName().Name)
+            sql => {
+                sql.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+                sql.EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+            }
         );
 
         builder.Services.AddControllers();
@@ -33,10 +36,12 @@ internal static class WebApplicationBuilderExtensions
             .AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext = ConfigureSqlDbContext;
+                options.EnablePooling = true;
             })
             .AddOperationalStore(options =>
             {
                 options.ConfigureDbContext = ConfigureSqlDbContext;
+                options.EnablePooling = true;
             })
             .AddServerSideSessions()
             .AddTestUsers(TestUsers.Users);
