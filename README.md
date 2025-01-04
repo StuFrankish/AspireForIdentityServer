@@ -1,5 +1,5 @@
 [![.NET](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/dotnet.yml/badge.svg)](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/dotnet.yml)
-[![CodeQL](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/github-code-scanning/codeql)
+[![CodeQL](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/codeql.yml/badge.svg)](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/codeql.yml)
 
 > [!IMPORTANT]  
 > This repo is for experimental and example use only and it not intended as a "best current practice" on production solution architecture.
@@ -35,7 +35,7 @@ Before you start, make sure you have the following installed on your machine:
 
 ### Steps to Clone and Build the Project
 
-> [!IMPORTANT]  
+> [!NOTE]  
 > With the update to Aspire v9, the solution now makes use of the `.WaitFor()` helpers, ensuring that the Identity Server, Client and API projects wait for the containers to finish loading and enter a healthy state before loading.
 > If you do not already have the latest version of the Redis and MSSQL container images, it will take longer for them to provision while the images are downloaded.
 
@@ -79,3 +79,6 @@ Before you start, make sure you have the following installed on your machine:
 If you'd like to contribute to the project, feel free to fork the repository, make your changes, and create a pull request.
 
 For any further questions or issues, please open an issue on the [GitHub repository](https://github.com/StuFrankish/AspireForIdentityServer/issues).
+
+## Repo Activity
+![Alt](https://repobeats.axiom.co/api/embed/7914339b8262ec71aeb9e9a34d9cd09f7ec36d23.svg "Repobeats analytics image")
