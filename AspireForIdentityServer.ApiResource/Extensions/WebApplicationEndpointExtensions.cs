@@ -2,7 +2,7 @@
 
 namespace WeatherApi.Extensions;
 
-public static class WebApplicationExtensions
+internal static class WebApplicationEndpointExtensions
 {
     /// <summary>
     /// Maps the specified endpoint group and applies a computed route prefix
@@ -10,7 +10,7 @@ public static class WebApplicationExtensions
     /// <param name="webApplication"></param>
     /// <param name="endpointGroup"></param>
     /// <returns></returns>
-    public static RouteGroupBuilder MapGroup(this WebApplication webApplication, EndpointGroupBase endpointGroup)
+    public static RouteGroupBuilder MapGroup(this WebApplication webApplication, IEndpointGroup endpointGroup)
     {
         // Retrieve the RoutePrefix attribute from the endpoint group
         var routePrefixAttribute = endpointGroup.GetType().GetCustomAttribute<RoutePrefixAttribute>();
@@ -35,7 +35,7 @@ public static class WebApplicationExtensions
 
         var endpointGroupTypes = assembly.GetExportedTypes()
             .Where(type =>
-                type.IsSubclassOf(typeof(EndpointGroupBase)) && !type.IsAbstract
+                typeof(IEndpointGroup).IsAssignableFrom(type) && !type.IsAbstract
             );
 
         foreach (var endpointGroupType in endpointGroupTypes)
@@ -44,7 +44,7 @@ public static class WebApplicationExtensions
                 message: $"Endpoint group {endpointGroupType.Name} must have a parameterless constructor"
             );
 
-            if (Activator.CreateInstance(endpointGroupType) is EndpointGroupBase instance)
+            if (Activator.CreateInstance(endpointGroupType) is IEndpointGroup instance)
             {
                 instance.Map(webApplication);
             }

@@ -4,13 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer.SharedRepositories;
 
-public class ClientRepository(IConfigurationDbContext dbContext) : IClientRepository
+internal class ClientRepository(IConfigurationDbContext dbContext) : IClientRepository
 {
-    private readonly IConfigurationDbContext _dbContext = dbContext;
-
     public async Task<List<Client>> GetClientsWithInitiateLoginUris()
     {
-        var clientQuery = _dbContext.Clients
+        var clientQuery = dbContext.Clients
             .AsNoTracking()
             .Where(client =>
                 client.InitiateLoginUri != null &&
@@ -19,5 +17,4 @@ public class ClientRepository(IConfigurationDbContext dbContext) : IClientReposi
 
         return await clientQuery.ToListAsync();
     }
-
 }

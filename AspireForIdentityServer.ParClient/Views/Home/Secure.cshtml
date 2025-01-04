@@ -5,7 +5,7 @@
     ViewData["Title"] = "Secure";
     var sessionKeyValues = (List<KeyValuePair<string, object>>)ViewBag.SessionKeyValues;
     var sampleData = (List<SampleDto>)ViewBag.SampleData;
-    var weatherForecast = (IEnumerable<WeatherForecastDto>)ViewBag.WeatherForecasts;
+    var weatherForecast = (WeatherForecastResponse)ViewBag.WeatherForecasts;
 }
 
 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
@@ -71,7 +71,7 @@
 
         <h5 style="margin-top: 2rem;">Weather Service API</h5>
 
-        @foreach (var item in weatherForecast)
+        @foreach (var item in weatherForecast.WeatherForecasts)
         {
             <div class="row border-bottom">
                 <div class="col-3 fw-bold">@item.Date.ToLongDateString()</div>

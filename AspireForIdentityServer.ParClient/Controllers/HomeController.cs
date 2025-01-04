@@ -80,7 +80,7 @@ public class HomeController(
                 PropertyNameCaseInsensitive = true
             };
 
-            var weatherForecasts = JsonSerializer.Deserialize<IEnumerable<WeatherForecastDto>>(responseBody, serializerOptions);
+            var weatherForecasts = JsonSerializer.Deserialize<WeatherForecastResponse>(responseBody, serializerOptions);
 
             ViewBag.WeatherForecasts = weatherForecasts;
         }

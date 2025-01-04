@@ -105,9 +105,6 @@ public static class WebApplicationBuilderExtensions
             })
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
-                // Needed to add PAR support
-                //options.EventsType = typeof(ParOidcEvents);
-
                 // Setup Client
                 options.Authority = identityProviderOptions.Authority;
                 options.ClientId = identityProviderOptions.ClientId;

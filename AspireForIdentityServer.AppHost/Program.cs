@@ -25,12 +25,14 @@ identityServer
     .WithExternalHttpEndpoints()
     .WithReference(identityServerDb, connectionName: "SqlServer")
     .WithReference(redis, connectionName: "Redis")
+    .WithHttpsHealthCheck(path: "/.well-known/openid-configuration")
     .WaitFor(identityServerDb);
 
 weatherApi
     .WithExternalHttpEndpoints()
     .WithReference(redis, connectionName: "Redis")
     .WithEnvironment(name: "IdentityProvider__Authority", endpointReference: identityServer.GetEndpoint(name: "https"))
+    .WithHttpsHealthCheck(path: "/_health")
     .WaitFor(identityServer);
 
 clientApplication

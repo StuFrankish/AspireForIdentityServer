@@ -1,6 +1,8 @@
-﻿namespace WeatherApi.Extensions;
+﻿using System.Diagnostics;
 
-public static class IEnumerableExtensions
+namespace WeatherApi.Extensions;
+
+internal static class IEnumerableExtensions
 {
     /// <summary>
     /// Determines whether the collection is null or contains no elements.
@@ -10,6 +12,7 @@ public static class IEnumerableExtensions
     /// <returns>
     ///     <c>true</c> if the IEnumerable is null or empty; otherwise, <c>false</c>.
     /// </returns>
+    [DebuggerStepThrough]
     public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
     {
         if (enumerable == null)
