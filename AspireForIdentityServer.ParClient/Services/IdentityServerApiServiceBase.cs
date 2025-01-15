@@ -12,13 +12,9 @@ namespace Client.Services;
 public class IdentityServerApiServiceBase(
     IUserTokenManagementService userTokenManagementService,
     IHttpContextAccessor contextAccessor,
-    IHttpClientFactory httpClientFactory
+    HttpClient httpClient
 )
 {
-    private readonly IUserTokenManagementService _userTokenManagementServicee = userTokenManagementService;
-    private readonly IHttpContextAccessor _contextAccessor = contextAccessor;
-    private readonly HttpClient _httpClient = httpClientFactory.CreateClient(name: nameof(IdentityServerApiServiceBase));
-
     private readonly JsonSerializerOptions _defaultJsonSerializerOptions = new()
     {
         PropertyNameCaseInsensitive = true
@@ -43,8 +39,8 @@ public class IdentityServerApiServiceBase(
 
     private async Task<HttpResponseMessage> ExecuteApiCall(HttpMethod method, string requesturl, object requestContent = null)
     {
-        var token = await _userTokenManagementServicee.GetAccessTokenAsync(_contextAccessor!.HttpContext!.User);
-        _httpClient.SetBearerToken(token.AccessToken ?? "");
+        var token = await userTokenManagementService.GetAccessTokenAsync(contextAccessor!.HttpContext!.User);
+        httpClient.SetBearerToken(token.AccessToken ?? string.Empty);
 
         var request = new HttpRequestMessage(method, requesturl);
         if (requestContent != null)
@@ -52,6 +48,6 @@ public class IdentityServerApiServiceBase(
             request.Content = JsonContent.Create(requestContent);
         }
 
-        return await _httpClient.SendAsync(request);
+        return await httpClient.SendAsync(request);
     }
 }

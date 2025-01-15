@@ -17,7 +17,6 @@ public static class HostingExtensions
 
         // Add DI Services
         builder.Services.AddScoped<IdentityServerSamplesApiService>();
-        builder.Services.AddTransient<IdentityServerApiServiceBase>();
         builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
         // Add MVC

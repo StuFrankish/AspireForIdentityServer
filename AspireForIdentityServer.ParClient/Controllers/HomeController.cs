@@ -22,12 +22,7 @@ public class HomeController(
     IdentityServerSamplesApiService IdentityServerSamplesApiService
 ) : Controller
 {
-    private readonly ILogger<HomeController> _logger = logger;
     private readonly HttpClient _weatherHttpClient = httpClientFactory.CreateClient("WeatherApi");
-
-    private readonly IUserTokenManagementService _userTokenManagementService = userTokenManagementService;
-    private readonly IdentityServerSamplesApiService _identityServerSamplesApiService = IdentityServerSamplesApiService;
-    private readonly RedisUserSessionStore _redisUserSessionStore = redisUserSessionStore;
 
     [AllowAnonymous]
     public IActionResult Index() => View();
@@ -36,19 +31,19 @@ public class HomeController(
     {
         #region Example of using the RedisUserSessionStore
 
-        var hasBeenSecured = _redisUserSessionStore.GetString(User.FindFirst("sub").Value, "secure_page");
+        var hasBeenSecured = redisUserSessionStore.GetString(User.FindFirst("sub").Value, "secure_page");
 
         if (string.IsNullOrWhiteSpace(hasBeenSecured))
         {
-            _redisUserSessionStore.SetString(User.FindFirst("sub").Value, "secure_page", "visited");
+            redisUserSessionStore.SetString(User.FindFirst("sub").Value, "secure_page", "visited");
         }
 
-        var sessionKeys = _redisUserSessionStore.GetUserStorageKeys(User.FindFirst("sub").Value);
+        var sessionKeys = redisUserSessionStore.GetUserStorageKeys(User.FindFirst("sub").Value);
         var sessionItems = new List<KeyValuePair<string, object>>();
 
         foreach (var key in sessionKeys)
         {
-            var value = _redisUserSessionStore.GetString(User.FindFirst("sub").Value, key);
+            var value = redisUserSessionStore.GetString(User.FindFirst("sub").Value, key);
             sessionItems.Add(new KeyValuePair<string, object>(key, value));
         }
 
@@ -60,14 +55,14 @@ public class HomeController(
 
         // Call the IdentityServerSamplesApiService to get sample data
         // The endpoint has caching enabled, so the first call will generate new data and cache it.
-        var sampleData = await _identityServerSamplesApiService.GetSampleData();
+        var sampleData = await IdentityServerSamplesApiService.GetSampleData();
         ViewBag.SampleData = sampleData;
 
         #endregion
 
         #region Using basic Weather API service
 
-        var token = await _userTokenManagementService.GetAccessTokenAsync(User);
+        var token = await userTokenManagementService.GetAccessTokenAsync(User);
         _weatherHttpClient.SetBearerToken(token.AccessToken);
 
         var request = new HttpRequestMessage(HttpMethod.Get, requestUri: "weather/getWeatherForecasts/gb");
@@ -86,7 +81,6 @@ public class HomeController(
         }
 
         #endregion
-
 
         return View();
     }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Client.Controllers;
 
-public class ErrorController() : Controller
+public class ErrorController : Controller
 {
     [HttpGet, AllowAnonymous]
     public IActionResult AuthError()

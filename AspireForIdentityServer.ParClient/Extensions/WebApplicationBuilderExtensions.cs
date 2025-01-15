@@ -27,7 +27,7 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddOpenIdConnectAccessTokenManagement();
 
         // Add IdentityServerApi httpClient
-        builder.Services.AddHttpClient(name: nameof(IdentityServerApiServiceBase), options =>
+        builder.Services.AddHttpClient<IdentityServerApiServiceBase>(options =>
         {
             options.BaseAddress = new Uri(uriString: identityProviderOptions.Authority + "/api/v1/");
         })
@@ -65,16 +65,14 @@ public static class WebApplicationBuilderExtensions
             ConnectionMultiplexer.Connect(connectionStrings.Redis)
         );
 
-        builder.Services.AddStackExchangeRedisCache(o =>
-        {
-            o.Configuration = connectionStrings.Redis;
-        });
-
-        builder.Services.AddBff()
-            .AddServerSideSessions<RedisUserSessionStore>();
+        builder.Services.AddStackExchangeRedisCache(o => o.Configuration = connectionStrings.Redis);
 
         // Register the RedisUserSessionStore
         builder.Services.AddSingleton<RedisUserSessionStore>();
+
+        builder.Services
+            .AddBff()
+            .AddServerSideSessions<RedisUserSessionStore>();
     }
 
     public static void AddAndConfigureAuthorization(this WebApplicationBuilder builder)
@@ -117,7 +115,7 @@ public static class WebApplicationBuilderExtensions
                 options.Scope.Clear();
                 options.Scope.Add(OpenIdConnectScope.OpenId);
                 options.Scope.Add(OpenIdConnectScope.OfflineAccess);
-                options.Scope.Add("profile");
+                options.Scope.Add(OpenIdConnectScope.Profile);
                 options.Scope.Add("IdentityServerApi");
                 options.Scope.Add("Weather.Read");
 
