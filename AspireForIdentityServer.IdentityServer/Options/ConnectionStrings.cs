@@ -2,6 +2,6 @@
 
 public class ConnectionStrings : ICustomOptions
 {
-    public string SqlServer { get; set; } = String.Empty;
-    public string Redis { get; set; } = String.Empty;
+    public string SqlServer { get; init; } = String.Empty;
+    public string Redis { get; init; } = String.Empty;
 }

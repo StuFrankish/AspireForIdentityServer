@@ -19,8 +19,12 @@ internal static class WebApplicationBuilderExtensions
         // Register the interceptor in the DI container
         builder.Services.AddSingleton<IInterceptor, CustomCommandInterceptor>();
 
+        // Add DbContexts
+        builder.Services.AddDbContext<ConfigurationDbContext>(configuredSqlOptions());
+        builder.Services.AddDbContext<PersistedGrantDbContext>(configuredSqlOptions());
+
         // Configure DbContext options
-        static Action<IServiceProvider, DbContextOptionsBuilder> sqlDbContextOptions() => (serviceProvider, optionsBuilder) =>
+        static Action<IServiceProvider, DbContextOptionsBuilder> configuredSqlOptions() => (serviceProvider, optionsBuilder) =>
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             var connectionStrings = configuration.GetSection(ConfigurationSections.ConnectionStrings).Get<ConnectionStrings>();
@@ -38,13 +42,9 @@ internal static class WebApplicationBuilderExtensions
                         );
                     })
 
-                // Register the interceptors
-                .AddInterceptors([.. serviceProvider.GetServices<IInterceptor>()]);
+                // Resolve the interceptors and add them to the optionsBuilder
+                .AddInterceptors([.. serviceProvider.GetServices<IInterceptor>().OfType<ICustomInterceptor>()]);
         };
-
-        // Add DbContexts
-        builder.Services.AddDbContext<ConfigurationDbContext>(sqlDbContextOptions());
-        builder.Services.AddDbContext<PersistedGrantDbContext>(sqlDbContextOptions());
     }
 
     public static void AddAndConfigureIdentityServer(this IHostApplicationBuilder builder)
