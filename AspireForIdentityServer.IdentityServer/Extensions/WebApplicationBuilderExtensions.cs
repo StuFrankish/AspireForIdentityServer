@@ -26,11 +26,13 @@ internal static class WebApplicationBuilderExtensions
         static Action<IServiceProvider, DbContextOptionsBuilder> configuredSqlOptions() => (serviceProvider, optionsBuilder) =>
         {
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
             var connectionStrings = configuration.GetSection(ConfigurationSections.ConnectionStrings).Get<ConnectionStrings>();
+            var databaseSettings = configuration.GetSection(ConfigurationSections.DatabaseSettings).Get<DatabaseSettings>();
 
             optionsBuilder
                 .UseSqlServer(
-                    connectionString: connectionStrings.SqlServer,
+                    connectionString: $"{connectionStrings.SqlServer};Pooling=true;Min Pool Size={databaseSettings.MinPoolSize};Max Pool Size={databaseSettings.MaxPoolSize}",
                     sql =>
                     {
                         sql.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
