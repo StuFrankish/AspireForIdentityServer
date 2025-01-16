@@ -1,8 +1,10 @@
 ﻿using Asp.Versioning;
 using Duende.IdentityServer;
+using Duende.IdentityServer.EntityFramework.DbContexts;
 using IdentityServer.Configuration;
 using IdentityServer.Extensions.Options;
 using IdentityServer.SharedRepositories;
+using IdentityServer.SqlInterceptors;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
@@ -11,18 +13,40 @@ namespace IdentityServer.Extensions;
 
 internal static class WebApplicationBuilderExtensions
 {
+    public static void AddAndConfigureSqlServer(this IHostApplicationBuilder builder)
+    {
+        // Register the interceptor in the DI container
+        builder.Services.AddSingleton<CustomCommandInterceptor>();
+
+        // Configure DbContext options
+        static Action<IServiceProvider, DbContextOptionsBuilder> sqlDbContextOptions() => (serviceProvider, optionsBuilder) =>
+        {
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+            var connectionStrings = configuration.GetSection(ConfigurationSections.ConnectionStrings).Get<ConnectionStrings>();
+
+            optionsBuilder
+                .UseSqlServer(
+                    connectionString: connectionStrings.SqlServer,
+                    sql =>
+                    {
+                        sql.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+                        sql.EnableRetryOnFailure(
+                            maxRetryCount: 3,
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null);
+                    })
+                .AddInterceptors(
+                    serviceProvider.GetRequiredService<CustomCommandInterceptor>()
+                );
+        };
+
+        // Add DbContexts
+        builder.Services.AddDbContext<ConfigurationDbContext>(sqlDbContextOptions());
+        builder.Services.AddDbContext<PersistedGrantDbContext>(sqlDbContextOptions());
+    }
+
     public static void AddAndConfigureIdentityServer(this IHostApplicationBuilder builder)
     {
-        var connectionStrings = builder.GetCustomOptionsConfiguration<ConnectionStrings>(ConfigurationSections.ConnectionStrings);
-
-        void ConfigureSqlDbContext(DbContextOptionsBuilder builder) => builder.UseSqlServer(
-            connectionString: connectionStrings.SqlServer,
-            sql => {
-                sql.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
-                sql.EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-            }
-        );
-
         builder.Services.AddControllers();
 
         builder.Services.AddIdentityServer(options =>
@@ -33,16 +57,8 @@ internal static class WebApplicationBuilderExtensions
             options.Events.RaiseErrorEvents = true;
             options.Events.RaiseFailureEvents = true;
         })
-            .AddConfigurationStore(options =>
-            {
-                options.ConfigureDbContext = ConfigureSqlDbContext;
-                options.EnablePooling = true;
-            })
-            .AddOperationalStore(options =>
-            {
-                options.ConfigureDbContext = ConfigureSqlDbContext;
-                options.EnablePooling = true;
-            })
+            .AddConfigurationStore()
+            .AddOperationalStore()
             .AddServerSideSessions()
             .AddTestUsers(TestUsers.Users);
 

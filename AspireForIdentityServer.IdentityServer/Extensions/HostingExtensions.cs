@@ -12,6 +12,7 @@ internal static class HostingExtensions
     {
         builder.Services.AddRazorPages();
 
+        builder.AddAndConfigureSqlServer();
         builder.AddAndConfigureRedisCache();
         builder.AddAndConfigureIdentityServer();
         builder.AddAndConfigureApiVersioning();
