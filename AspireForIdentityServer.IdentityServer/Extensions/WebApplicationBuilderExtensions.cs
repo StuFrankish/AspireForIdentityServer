@@ -7,7 +7,6 @@ using IdentityServer.SharedRepositories;
 using IdentityServer.SqlInterceptors;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using StackExchange.Redis;
 
 namespace IdentityServer.Extensions;
@@ -17,7 +16,7 @@ internal static class WebApplicationBuilderExtensions
     public static void AddAndConfigureSqlServer(this IHostApplicationBuilder builder)
     {
         // Register the interceptor in the DI container
-        builder.Services.AddSingleton<IInterceptor, CustomCommandInterceptor>();
+        builder.Services.AddSingleton<ICustomInterceptor, CustomCommandInterceptor>();
 
         // Add DbContexts
         builder.Services.AddDbContext<ConfigurationDbContext>(configuredSqlOptions());
@@ -43,7 +42,7 @@ internal static class WebApplicationBuilderExtensions
                     })
 
                 // Resolve the interceptors and add them to the optionsBuilder
-                .AddInterceptors([.. serviceProvider.GetServices<IInterceptor>().OfType<ICustomInterceptor>()]);
+                .AddInterceptors([.. serviceProvider.GetServices<ICustomInterceptor>()]);
         };
     }
 
