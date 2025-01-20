@@ -1,8 +1,10 @@
 ﻿using Asp.Versioning;
 using Duende.IdentityServer;
+using Duende.IdentityServer.EntityFramework.DbContexts;
 using IdentityServer.Configuration;
 using IdentityServer.Extensions.Options;
 using IdentityServer.SharedRepositories;
+using IdentityServer.SqlInterceptors;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
@@ -11,18 +13,43 @@ namespace IdentityServer.Extensions;
 
 internal static class WebApplicationBuilderExtensions
 {
+    public static void AddAndConfigureSqlServer(this IHostApplicationBuilder builder)
+    {
+        // Register the interceptor in the DI container
+        builder.Services.AddSingleton<ICustomInterceptor, CustomCommandInterceptor>();
+
+        // Add DbContexts
+        builder.Services.AddDbContext<ConfigurationDbContext>(configuredSqlOptions());
+        builder.Services.AddDbContext<PersistedGrantDbContext>(configuredSqlOptions());
+
+        // Configure DbContext options
+        static Action<IServiceProvider, DbContextOptionsBuilder> configuredSqlOptions() => (serviceProvider, optionsBuilder) =>
+        {
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+
+            var connectionStrings = configuration.GetSection(ConfigurationSections.ConnectionStrings).Get<ConnectionStrings>();
+            var databaseSettings = configuration.GetSection(ConfigurationSections.DatabaseSettings).Get<DatabaseSettings>();
+
+            optionsBuilder
+                .UseSqlServer(
+                    connectionString: $"{connectionStrings.SqlServer};Pooling=true;Min Pool Size={databaseSettings.MinPoolSize};Max Pool Size={databaseSettings.MaxPoolSize}",
+                    sql =>
+                    {
+                        sql.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+                        sql.EnableRetryOnFailure(
+                            maxRetryCount: 3,
+                            maxRetryDelay: TimeSpan.FromSeconds(30),
+                            errorNumbersToAdd: null
+                        );
+                    })
+
+                // Resolve the interceptors and add them to the optionsBuilder
+                .AddInterceptors([.. serviceProvider.GetServices<ICustomInterceptor>()]);
+        };
+    }
+
     public static void AddAndConfigureIdentityServer(this IHostApplicationBuilder builder)
     {
-        var connectionStrings = builder.GetCustomOptionsConfiguration<ConnectionStrings>(ConfigurationSections.ConnectionStrings);
-
-        void ConfigureSqlDbContext(DbContextOptionsBuilder builder) => builder.UseSqlServer(
-            connectionString: connectionStrings.SqlServer,
-            sql => {
-                sql.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
-                sql.EnableRetryOnFailure(maxRetryCount: 3, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-            }
-        );
-
         builder.Services.AddControllers();
 
         builder.Services.AddIdentityServer(options =>
@@ -33,16 +60,8 @@ internal static class WebApplicationBuilderExtensions
             options.Events.RaiseErrorEvents = true;
             options.Events.RaiseFailureEvents = true;
         })
-            .AddConfigurationStore(options =>
-            {
-                options.ConfigureDbContext = ConfigureSqlDbContext;
-                options.EnablePooling = true;
-            })
-            .AddOperationalStore(options =>
-            {
-                options.ConfigureDbContext = ConfigureSqlDbContext;
-                options.EnablePooling = true;
-            })
+            .AddConfigurationStore()
+            .AddOperationalStore()
             .AddServerSideSessions()
             .AddTestUsers(TestUsers.Users);
 
