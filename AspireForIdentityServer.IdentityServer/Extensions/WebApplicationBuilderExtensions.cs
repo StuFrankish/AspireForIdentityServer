@@ -2,10 +2,13 @@
 using Duende.IdentityServer;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using IdentityServer.Configuration;
+using IdentityServer.Data;
 using IdentityServer.Extensions.Options;
+using IdentityServer.Models;
 using IdentityServer.SharedRepositories;
 using IdentityServer.SqlInterceptors;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -21,6 +24,7 @@ internal static class WebApplicationBuilderExtensions
         // Add DbContexts
         builder.Services.AddDbContext<ConfigurationDbContext>(configuredSqlOptions());
         builder.Services.AddDbContext<PersistedGrantDbContext>(configuredSqlOptions());
+        builder.Services.AddDbContext<ApplicationDbContext>(configuredSqlOptions());
 
         // Configure DbContext options
         static Action<IServiceProvider, DbContextOptionsBuilder> configuredSqlOptions() => (serviceProvider, optionsBuilder) =>
@@ -52,6 +56,10 @@ internal static class WebApplicationBuilderExtensions
     {
         builder.Services.AddControllers();
 
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
         builder.Services.AddIdentityServer(options =>
         {
             // Allow unregistered redirect URIs for PAR clients
@@ -63,7 +71,7 @@ internal static class WebApplicationBuilderExtensions
             .AddConfigurationStore()
             .AddOperationalStore()
             .AddServerSideSessions()
-            .AddTestUsers(TestUsers.Users);
+            .AddAspNetIdentity<ApplicationUser>();
 
         // Add optional support for Google authentication
         builder.Services.AddAuthentication()
@@ -91,7 +99,8 @@ internal static class WebApplicationBuilderExtensions
         var connectionStrings = builder.GetCustomOptionsConfiguration<ConnectionStrings>(ConfigurationSections.ConnectionStrings);
 
         // Add Redis Cache
-        builder.Services.AddStackExchangeRedisCache(options => {
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
             options.Configuration = connectionStrings.Redis;
         });
     }

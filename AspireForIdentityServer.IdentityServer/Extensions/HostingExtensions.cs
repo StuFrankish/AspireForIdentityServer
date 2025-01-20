@@ -1,5 +1,6 @@
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
+using IdentityServer.Data;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -31,7 +32,8 @@ internal static class HostingExtensions
         // Create a list of contexts to loop through and migrate.
         List<Type> contexts = [
             typeof(PersistedGrantDbContext),
-            typeof(ConfigurationDbContext)
+            typeof(ConfigurationDbContext),
+            typeof(ApplicationDbContext)
         ];
 
         foreach (var context in contexts)
