@@ -53,23 +53,16 @@ public class Index(
         var context = await _interaction.GetAuthorizationContextAsync(Input.ReturnUrl);
 
         // the user clicked the "cancel" button
-        if (Input.Button != "login")
+        if (Input.Button is not "login")
         {
-            if (context != null)
+            if (context is null)
             {
-                // This "can't happen", because if the ReturnUrl was null, then the context would be null
                 ArgumentNullException.ThrowIfNull(Input.ReturnUrl, nameof(Input.ReturnUrl));
 
-                // if the user cancels, send a result back into IdentityServer as if they 
-                // denied the consent (even if this client does not require consent).
-                // this will send back an access denied OIDC error response to the client.
                 await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
 
-                // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
                 if (context.IsNativeClient())
                 {
-                    // The client is native, so this change in how to
-                    // return the response is for better UX for the end user.
                     return this.LoadingPage(Input.ReturnUrl);
                 }
 
@@ -77,7 +70,6 @@ public class Index(
             }
             else
             {
-                // since we don't have a valid context, then we just go back to the home page
                 return Redirect("~/");
             }
         }
@@ -92,17 +84,13 @@ public class Index(
 
                 if (context != null)
                 {
-                    // This "can't happen", because if the ReturnUrl was null, then the context would be null
                     ArgumentNullException.ThrowIfNull(Input.ReturnUrl, nameof(Input.ReturnUrl));
 
                     if (context.IsNativeClient())
                     {
-                        // The client is native, so this change in how to
-                        // return the response is for better UX for the end user.
                         return this.LoadingPage(Input.ReturnUrl);
                     }
 
-                    // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
                     return Redirect(Input.ReturnUrl ?? "~/");
                 }
 
@@ -120,6 +108,18 @@ public class Index(
                     // user might have clicked on a malicious link - should be logged
                     throw new ArgumentException("invalid return URL");
                 }
+            }
+
+            if (result.RequiresTwoFactor)
+            {
+                //return RedirectToRoute("./LoginWith2FA", new { rememberMe = Input.RememberLogin, returnUrl = Input.ReturnUrl });
+
+                return RedirectToPage("./LoginWith2FA", new { Input.ReturnUrl, RememberMe = Input.RememberLogin });
+            }
+
+            if (result.IsLockedOut)
+            {
+                return RedirectToPage("./Lockout");
             }
 
             const string error = "invalid credentials";
