@@ -1,6 +1,5 @@
 #nullable disable
 
-using IdentityServer;
 using IdentityServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

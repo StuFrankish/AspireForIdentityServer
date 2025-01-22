@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages.Admin.Users;
 
-[Authorize(Roles = "Admin")]
 public class IndexModel(UserManager<ApplicationUser> userManager) : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;

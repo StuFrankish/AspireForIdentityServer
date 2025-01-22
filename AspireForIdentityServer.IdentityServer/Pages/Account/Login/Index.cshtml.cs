@@ -57,21 +57,19 @@ public class Index(
         {
             if (context is null)
             {
-                ArgumentNullException.ThrowIfNull(Input.ReturnUrl, nameof(Input.ReturnUrl));
-
-                await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
-
-                if (context.IsNativeClient())
-                {
-                    return this.LoadingPage(Input.ReturnUrl);
-                }
-
-                return Redirect(Input.ReturnUrl ?? "~/");
-            }
-            else
-            {
                 return Redirect("~/");
             }
+
+            ArgumentNullException.ThrowIfNull(Input.ReturnUrl, nameof(Input.ReturnUrl));
+
+            await _interaction.DenyAuthorizationAsync(context, AuthorizationError.AccessDenied);
+
+            if (context.IsNativeClient())
+            {
+                return this.LoadingPage(Input.ReturnUrl);
+            }
+
+            return Redirect(Input.ReturnUrl ?? "~/");
         }
 
         if (ModelState.IsValid)
@@ -112,14 +110,7 @@ public class Index(
 
             if (result.RequiresTwoFactor)
             {
-                //return RedirectToRoute("./LoginWith2FA", new { rememberMe = Input.RememberLogin, returnUrl = Input.ReturnUrl });
-
-                return RedirectToPage("./LoginWith2FA", new { Input.ReturnUrl, RememberMe = Input.RememberLogin });
-            }
-
-            if (result.IsLockedOut)
-            {
-                return RedirectToPage("./Lockout");
+                return RedirectToPage("./mfa", new { Input.ReturnUrl, RememberMe = Input.RememberLogin });
             }
 
             const string error = "invalid credentials";
