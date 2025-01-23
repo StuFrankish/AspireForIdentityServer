@@ -2,17 +2,30 @@
 [![CodeQL](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/codeql.yml/badge.svg)](https://github.com/StuFrankish/AspireForIdentityServer/actions/workflows/codeql.yml)
 
 > [!IMPORTANT]  
-> This repo is for experimental and example use only and it not intended as a "best current practice" on production solution architecture.
+> This repo is for experimental and example use only and it not intended as a "best current practice" for production solution architecture.
 > Solution structure, features, code style etc are all likely to change on the fly and may contain errors and/or unsupported preview/prerelease packages.
 
-# Aspire for IdentityServer, Client & API
-This sample includes:
-- A standard instance of IdentityServer from Duende using version 7.1.0-rc.1 configured to use SQL Server storage.
+# Solution Overview
+This Aspire based project contains and manages:
+- SQL Server & Database (Persisted)
+- Redis Cache (Persisted)
+- Redis Insight (Preconfigured to the Redis Cache instance)
+- App Projects (IdentityServer, Client app, API Resource)
+
+### Customisations
+- Custom Options handler and types (`ICustomOptions`).
+- Customised `HostingExtensions.cs` (provides new `ConfigureServices()`, `InitializeDatabase()` and `ConfigurePipeline()` methods).
+- Custom `WebApplicationBuilder` extensions to provide configuration of IdentityServer and Redis.
+- Cleaned up `Config.cs` into `SeedConfig.cs`
+- Added Redis and SQL Server resources to the Aspire AppHost project for use in the IdentityServer application.
+- Endpoint routing with MediatR.
+  A customised instance of IdentityServer from Duende using version 7.1.0 configured to use SQL Server storage.
+- ASP.Net Identity with Two-Factor Authentication.
 - An MVC client application setup to use PAR (pushed authorisation requests) and configured to use Redis cache.
 - A protected API resource, also configured to use Redis for output caching.
 - Serilog integration in the above projects, output to console.
 - Endpoint routing with MediatR.
-- Sample unit tests using Moq & FluentValidation.
+- Sample unit tests using Moq & FluentAssertions.
 
 ## Cloning and Building this project
 
@@ -24,14 +37,9 @@ Before you start, make sure you have the following installed on your machine:
 - **IDE of Choice**: Preferably [Visual Studio](https://visualstudio.microsoft.com/) for its robust support for .NET development. Alternatively, you can use [Visual Studio Code](https://code.visualstudio.com/) or any other IDE that supports .NET.
 - **Docker**: Preferablly Docker Desktop or Rancher for ease of use, but any installation of Docker should work fine.
 
-### Customisations
-
-- Custom Options handler and types (`ICustomOptions`).
-- Customised `HostingExtensions.cs` (provides new `ConfigureServices()`, `InitializeDatabase()` and `ConfigurePipeline()` methods).
-- Custom `WebApplicationBuilder` extensions to provide configuration of IdentityServer and Redis.
-- Cleaned up `Config.cs` into `SeedConfig.cs`
-- Added Redis and SQL Server resources to the Aspire AppHost project for use in the IdentityServer application.
-- Endpoint routing with MediatR.
+### Planned Customisations
+- Passwordless Signin using WebAuthn
+- UI Refresh
 
 ### Steps to Clone and Build the Project
 
