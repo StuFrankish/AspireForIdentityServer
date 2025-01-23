@@ -1,10 +1,11 @@
 @using Duende.IdentityServer.Extensions
+@using Microsoft.AspNetCore.Identity
+@using IdentityServer.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 @{
-    string name = null;
-    if (!true.Equals(ViewData["signed-out"]))
-    {
-        name = Context.User?.GetDisplayName();
-    }
 }
 
 <div class="nav-page">
@@ -15,19 +16,25 @@
             Duende IdentityServer
         </a>
 
-        @if (!string.IsNullOrWhiteSpace(name))
+        @if (SignInManager.IsSignedIn(User))
         {
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@name <b class="caret"></b></a>
-                    
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Hello @UserManager.GetUserName(User)! <b class="caret"></b></a>
+
                     <div class="dropdown-menu">
                         <a class="dropdown-item" asp-page="/Account/Manage/TwoFactorAuthentication">Manage MFA</a>
                         <a class="dropdown-item" asp-page="/Account/Logout/Index">Logout</a>
                     </div>
-              </li>
+                </li>
             </ul>
+        } else
+        {
+            <div class="col-md-3 text-end">
+                <a class="text-light" id="login" asp-page="/Account/Login/Index">Login</a>
+                <a class="text-light" id="register" asp-page="/Account/Create/Index">Register</a>
+            </div>
         }
-    
+
     </nav>
 </div>
