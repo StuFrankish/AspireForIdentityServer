@@ -19,6 +19,7 @@ public class Index(
     IAuthenticationSchemeProvider schemeProvider,
     IIdentityProviderStore identityProviderStore,
     IEventService events,
+    IClientStore clientStore,
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager) : PageModel
 {
@@ -26,6 +27,7 @@ public class Index(
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly IIdentityServerInteractionService _interaction = interaction;
     private readonly IEventService _events = events;
+    private readonly IClientStore _clientStore = clientStore;
     private readonly IAuthenticationSchemeProvider _schemeProvider = schemeProvider;
     private readonly IIdentityProviderStore _identityProviderStore = identityProviderStore;
 
@@ -37,6 +39,13 @@ public class Index(
     public async Task<IActionResult> OnGet(string? returnUrl)
     {
         await BuildModelAsync(returnUrl);
+
+        // check if we are in the context of an authorization request
+        var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
+        if (context is not null && context.Client is not null)
+        {
+            View.ClientContext = context.Client;
+        }
 
         if (View.IsExternalLoginOnly)
         {
@@ -123,7 +132,7 @@ public class Index(
         return Page();
     }
 
-    private async Task BuildModelAsync(string? returnUrl)
+    private async Task BuildModelAsync(string returnUrl)
     {
         Input = new InputModel
         {
@@ -141,11 +150,11 @@ public class Index(
                 EnableLocalLogin = local,
             };
 
-            Input.Username = context.LoginHint;
+            Input.Username = context?.LoginHint;
 
             if (!local)
             {
-                View.ExternalProviders = [new ViewModel.ExternalProvider(authenticationScheme: context.IdP)];
+                View.ExternalProviders = [new ViewModel.ExternalProvider(context.IdP)];
             }
 
             return;
@@ -155,30 +164,27 @@ public class Index(
 
         var providers = schemes
             .Where(x => x.DisplayName != null)
-            .Select(x => new ViewModel.ExternalProvider
-            (
-                authenticationScheme: x.Name,
-                displayName: x.DisplayName ?? x.Name
-            )).ToList();
+            .Select(x => new ViewModel.ExternalProvider(x.Name, x.DisplayName))
+            .ToList();
 
-        var dynamicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
+        var dyanmicSchemes = (await _identityProviderStore.GetAllSchemeNamesAsync())
             .Where(x => x.Enabled)
-            .Select(x => new ViewModel.ExternalProvider
-            (
-                authenticationScheme: x.Scheme,
-                displayName: x.DisplayName ?? x.Scheme
-            ));
-        providers.AddRange(dynamicSchemes);
+            .Select(x => new ViewModel.ExternalProvider(x.Scheme, x.DisplayName));
 
+        providers.AddRange(dyanmicSchemes);
 
         var allowLocal = true;
-        var client = context?.Client;
-        if (client != null)
+        if (context?.Client.ClientId != null)
         {
-            allowLocal = client.EnableLocalLogin;
-            if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Count != 0)
+            var client = await _clientStore.FindEnabledClientByIdAsync(context.Client.ClientId);
+            if (client != null)
             {
-                providers = [.. providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme))];
+                allowLocal = client.EnableLocalLogin;
+
+                if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Count != 0)
+                {
+                    providers = providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
+                }
             }
         }
 

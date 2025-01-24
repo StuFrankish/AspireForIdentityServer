@@ -1,5 +1,7 @@
 #nullable disable
 
+using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Services;
 using IdentityServer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,10 +14,12 @@ namespace IdentityServer.Pages.Account.Mfa;
 [AllowAnonymous]
 public class Index(
     SignInManager<ApplicationUser> signInManager,
+    IIdentityServerInteractionService interaction,
     ILogger<Index> logger) : PageModel
 {
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly ILogger<Index> _logger = logger;
+    private readonly IIdentityServerInteractionService _interaction = interaction;
 
     [BindProperty]
     public InputModel Input { get; set; }
@@ -33,6 +37,8 @@ public class Index(
 
         [Display(Name = "Remember this machine")]
         public bool RememberMachine { get; set; }
+
+        public string Button { get; set; }
     }
 
     public async Task<IActionResult> OnGetAsync(bool rememberMe, string returnUrl = null)
@@ -49,6 +55,27 @@ public class Index(
 
     public async Task<IActionResult> OnPostAsync(bool rememberMe, string returnUrl = null)
     {
+        var request = await _interaction.GetAuthorizationContextAsync(returnUrl);
+
+        if (Input.Button == "decline")
+        {
+            if (request is null)
+            {
+                return Redirect("~/");
+            }
+
+            ArgumentNullException.ThrowIfNull(returnUrl, nameof(returnUrl));
+
+            await _interaction.DenyAuthorizationAsync(request, AuthorizationError.AccessDenied);
+
+            if (request.IsNativeClient())
+            {
+                return this.LoadingPage(returnUrl);
+            }
+
+            return Redirect(returnUrl ?? "~/");
+        }
+
         if (!ModelState.IsValid)
         {
             return Page();
@@ -80,4 +107,5 @@ public class Index(
             return Page();
         }
     }
+
 }

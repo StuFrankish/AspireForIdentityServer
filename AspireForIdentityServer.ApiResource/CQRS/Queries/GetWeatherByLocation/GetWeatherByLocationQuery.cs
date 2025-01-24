@@ -15,7 +15,7 @@ public class GetWeatherByLocationQuery(string location) : IRequest<GetWeatherByL
     public string Location { get; } = location;
 }
 
-public class GetWeatherByLocationHandler(HybridCache hybridCache,ILogger<GetWeatherByLocationQuery> logger)
+public class GetWeatherByLocationHandler(HybridCache hybridCache, ILogger<GetWeatherByLocationQuery> logger)
     : IRequestHandler<GetWeatherByLocationQuery, GetWeatherByLocationResponse>
 {
     public async Task<GetWeatherByLocationResponse> Handle(GetWeatherByLocationQuery request, CancellationToken cancellationToken)

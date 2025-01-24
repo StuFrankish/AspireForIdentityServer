@@ -5,36 +5,43 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-@{
-}
+<div class="bg-white fixed-top border-bottom border-body m-3 p-2 rounded-5 shadow-sm">
+    <div class="row">
+        <div class="col-1">
+            <a href="~/">
+                <img src="~/logo_long.png" class="me-2 nav-logo" alt="Logo">
+            </a>
+        </div>
+        <div class="col">
 
-<div class="nav-page">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <div class="flex-shrink-0 dropdown float-end p-1">
+                    <a href="#" class="d-block link-body-emphasis d-flex flex-row align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="me-2">@UserManager.GetUserName(User)</div>
+                        <img src="~/avatar.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
+                    </a>
+                    <ul class="dropdown-menu text-small shadow">
+                        <li><a class="dropdown-item" asp-page="/Account/Manage/Index">Manage Account</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" asp-page="/Account/Logout/Index">Logout</a></li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="flex-shrink-0 float-end p-1">
+                    <a class="btn btn-sm btn-light rounded-start-5" id="login" asp-page="/Account/Login/Index">
+                        <i class="fa-solid fa-key text-muted"></i>
+                        Login
+                    </a>
+                    <a class="btn btn-sm btn-light rounded-end-5" id="register" asp-page="/Account/Create/Index">
+                        <i class="fa-solid fa-user-plus text-muted"></i>
+                        Register
+                    </a>
+                </div>
+            }
 
-        <a href="~/" class="navbar-brand">
-            <img src="~/duende-logo.svg" class="icon-banner">
-            Duende IdentityServer
-        </a>
-
-        @if (SignInManager.IsSignedIn(User))
-        {
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Hello @UserManager.GetUserName(User)! <b class="caret"></b></a>
-
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-page="/Account/Manage/TwoFactorAuthentication">Manage MFA</a>
-                        <a class="dropdown-item" asp-page="/Account/Logout/Index">Logout</a>
-                    </div>
-                </li>
-            </ul>
-        } else
-        {
-            <div class="col-md-3 text-end">
-                <a class="text-light" id="login" asp-page="/Account/Login/Index">Login</a>
-                <a class="text-light" id="register" asp-page="/Account/Create/Index">Register</a>
-            </div>
-        }
-
-    </nav>
+        </div>
+    </div>
 </div>

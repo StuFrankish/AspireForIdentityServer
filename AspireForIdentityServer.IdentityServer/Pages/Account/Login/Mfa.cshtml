@@ -2,37 +2,59 @@
 @model IdentityServer.Pages.Account.Mfa.Index
 @{
     ViewData["Title"] = "Two-factor authentication";
+    Layout = "_LayoutLogin";
 }
 
-<h1>@ViewData["Title"]</h1>
-<hr />
-<p>Your login is protected with an authenticator app. Enter your authenticator code below.</p>
-<div class="row">
-    <div class="col-md-4">
-        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
-            <input asp-for="RememberMe" type="hidden" />
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
-                <input asp-for="Input.TwoFactorCode" class="form-control" autocomplete="off" />
-                <label asp-for="Input.TwoFactorCode" class="form-label"></label>
-                <span asp-validation-for="Input.TwoFactorCode" class="text-danger"></span>
-            </div>
-            <div class="checkbox mb-3">
-                <label asp-for="Input.RememberMachine" class="form-label">
-                    <input asp-for="Input.RememberMachine" />
-                    @Html.DisplayNameFor(m => m.Input.RememberMachine)
-                </label>
-            </div>
-            <div>
-                <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-            </div>
-        </form>
+<div class="row mb-1">
+    <div class="col">
+        <img src="~/logo_long.png" class="login-logo" />
     </div>
 </div>
-<p>
-    Don't have access to your authenticator device? You can
-    <a id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">log in with a recovery code</a>.
-</p>
+
+<div class="row">
+
+    <div class="col-12 col-md-6 mb-3 mb-md-0">
+        <span class="fs-2 d-block mb-1">MFA</span>
+        <span class="d-block">Please enter your MFA Passcode to continue</span>
+    </div>
+
+    <div class="col-12 col-md-6">
+
+        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+            <input type="hidden" asp-for="@Model.ReturnUrl" />
+
+            <div class="form-floating mb-5">
+                <input type="text"
+                       autocomplete="one-time-code"
+                       class="form-control"
+                       asp-for="Input.TwoFactorCode"
+                       id="tokenInput"
+                       pattern="[0-9]{6}"
+                       inputmode="numeric"
+                       title="Please enter a 6-digit passcode"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                       maxlength="6">
+
+                <label asp-for="Input.TwoFactorCode">One-Time Passcode</label>
+
+                Having trouble?
+                <a class="mx-1 rounded-5 text-decoration-none" id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">
+                    Use a recovery code
+                </a>
+
+                <partial name="_ValidationSummary" />
+
+            </div>
+
+            <div class="my-3 mt-3">
+                <button class="btn btn-primary float-end mx-1 rounded-5" name="Input.Button" value="confirm">Confirm MFA</button>
+                <button class="btn float-end mx-3 text-muted" name="Input.Button" value="decline">Decline MFA</button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

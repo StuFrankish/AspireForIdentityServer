@@ -86,6 +86,15 @@ internal static class WebApplicationBuilderExtensions
                     options.ClientSecret = "copy client secret from Google here";
                 });
 
+        // Add optional support for Microsoft authentication
+        builder.Services.AddAuthentication()
+                .AddMicrosoftAccount(options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.ClientId = "copy client ID from Microsoft here";
+                    options.ClientSecret = "copy client secret from Microsoft here";
+                });
+
         // Add support for local API authentication
         builder.Services.AddLocalApiAuthentication();
 

@@ -11,7 +11,8 @@ internal static class HostingExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddRazorPages();
+        builder.Services.AddRazorPages()
+            .AddRazorRuntimeCompilation();
 
         builder.AddAndConfigureSqlServer();
         builder.AddAndConfigureRedisCache();

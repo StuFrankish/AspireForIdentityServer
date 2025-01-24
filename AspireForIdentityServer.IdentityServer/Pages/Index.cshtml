@@ -1,52 +1,57 @@
 @page
 @model IdentityServer.Pages.Home.Index
 
-<div class="welcome-page">
-    <h1>
-        <img src="~/duende-logo.svg" class="logo">
-        Welcome to Duende IdentityServer
-        <small class="text-muted">(version @Model.Version)</small>
-    </h1>
+<div class="d-flex flex-nowrap">
 
-    <ul>
-        <li>
-            IdentityServer publishes a
-            <a href="~/.well-known/openid-configuration">discovery document</a>
-            where you can find metadata and links to all the endpoints, key material, etc.
-        </li>
-        <li>
-            Click <a href="~/diagnostics">here</a> to see the claims for your current session.
-        </li>
-        <li>
-            Click <a href="~/grants">here</a> to manage your stored grants.
-        </li>
-        <li>
-            Click <a href="~/serversidesessions">here</a> to view the server side sessions.
-        </li>
-        <li>
-            Click <a href="~/ciba/all">here</a> to view your pending CIBA login requests.
-        </li>
-        <li>
-            Click <a href="~/portal">here</a> to view the client application portal.
-        </li>
-        <li>
-            Click <a href="~/account/create">here</a> to register.
-        </li>
-        <li>
-            Here are links to the
-            <a href="https://github.com/duendesoftware/IdentityServer">source code repository</a>,
-            and <a href="https://github.com/duendesoftware/samples">ready to use samples</a>.
-        </li>
-    </ul>
+    <div class="flex-grow-1 p-3">
 
-    @if (Model.License != null)
-    {
-        <h2>License</h2>
-        <dl>
-            <dt>Serial Number</dt>
-            <dd>@Model.License.SerialNumber</dd>
-            <dt>Expiration</dt>
-            <dd>@Model.License.Expiration!.Value.ToLongDateString()</dd>
-        </dl>
-    }
+        <div class="welcome-page">
+            <h1 class="d-flex align-items-center">
+                <img src="~/duende-logo.svg" class="me-2 logo" alt="Logo">
+                <div class="d-flex flex-column justify-content-center">
+                    <span>Welcome to IdentityServer</span>
+                    <span class="text-muted fs-6">Version @Model.Version</span>
+                </div>
+            </h1>
+
+            <hr />
+
+            <ul>
+                <li>
+                    IdentityServer publishes a
+                    <a href="~/.well-known/openid-configuration">discovery document</a>
+                    where you can find metadata and links to all the endpoints, key material, etc.
+                </li>
+                <li>
+                    Click <a href="~/diagnostics">here</a> to see the claims for your current session.
+                </li>
+                <li>
+                    Click <a href="~/serversidesessions">here</a> to view the server side sessions.
+                </li>
+                <li>
+                    Click <a href="~/grants">here</a> to manage your stored grants.
+                </li>
+                <li>
+                    Click <a href="~/ciba/all">here</a> to view your pending CIBA login requests.
+                </li>
+                <li>
+                    Click <a href="~/_health">here</a> to access the healthchecks data.
+                </li>
+            </ul>
+
+            @if (Model.License != null)
+            {
+                <h2>License</h2>
+                <dl>
+                    <dt>Serial Number</dt>
+                    <dd>@Model.License.SerialNumber</dd>
+                    <dt>Expiration</dt>
+                    <dd>@Model.License.Expiration!.Value.ToLongDateString()</dd>
+                </dl>
+            }
+
+        </div>
+
+    </div>
+
 </div>

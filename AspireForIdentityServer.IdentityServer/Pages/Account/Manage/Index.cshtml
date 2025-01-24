@@ -1,0 +1,60 @@
+﻿@page
+@model IdentityServer.Pages.Account.Manage.ManageAccountModel
+@{
+    ViewData["Title"] = "Manage Account";
+}
+
+<h2 class="pb-2 border-bottom">Manage Account</h2>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <span class="h5">Two-factor Authentication</span>
+        @if (Model.HasAuthenticator)
+        {
+            <span>(Enabled)</span>
+        }
+    </div>
+    <div class="card-body">
+        
+        @if (Model.RecoveryCodesLeft == 0)
+        {
+            <div class="alert alert-danger">
+                <strong>You have no recovery codes left.</strong>
+                <div>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</div>
+            </div>
+        }
+        else if (Model.RecoveryCodesLeft == 1)
+        {
+            <div class="alert alert-danger">
+                <strong>You have 1 recovery code left.</strong>
+                <div>You can <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</div>
+            </div>
+        }
+        else if (Model.RecoveryCodesLeft <= 3)
+        {
+            <div class="alert alert-warning">
+                <strong>You have @Model.RecoveryCodesLeft recovery codes left.</strong>
+                <div>You should <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</div>
+            </div>
+        }
+
+        @if (!Model.HasAuthenticator)
+        {
+            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Add authenticator app</a>
+        }
+        else
+        {
+            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Set up authenticator app</a>
+            <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">Reset authenticator key</a>
+        }
+
+        @if (Model.Is2faEnabled)
+        {
+            <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
+            <a asp-page="./Disable2fa" class="btn btn-danger">Disable 2FA</a>
+        }
+
+        
+
+    </div>
+</div>
