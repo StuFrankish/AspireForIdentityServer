@@ -17,7 +17,7 @@ public class ShowRecoveryCodesModel : PageModel
     {
         if (RecoveryCodes == null || RecoveryCodes.Length == 0)
         {
-            return RedirectToPage("./TwoFactorAuthentication");
+            return RedirectToPage("./Index");
         }
 
         return Page();

@@ -21,23 +21,27 @@
     <div class="col-12 col-md-6">
 
         <form asp-page="/Account/Create/Index">
+
             <input type="hidden" asp-for="Input.ReturnUrl" />
 
-            <div class="form-group">
-                <label asp-for="Input.Username"></label>
-                <input class="form-control" placeholder="Username" asp-for="Input.Username" autofocus>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" asp-for="Input.Username" placeholder="Username" autofocus>
+                <label asp-for="Input.Username">Username</label>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password" autocomplete="off">
+
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" asp-for="Input.Password" placeholder="Password" autocomplete="off">
+                <label asp-for="Input.Password">Password</label>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.Name"></label>
-                <input type="text" class="form-control" placeholder="Name" asp-for="Input.Name">
+
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" asp-for="Input.Name" placeholder="Display Name">
+                <label asp-for="Input.Name">Display Name</label>
             </div>
-            <div class="form-group">
+
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" asp-for="Input.Email" placeholder="Email">
                 <label asp-for="Input.Email"></label>
-                <input type="email" class="form-control" placeholder="Email" asp-for="Input.Email">
             </div>
 
             <partial name="_ValidationSummary" />

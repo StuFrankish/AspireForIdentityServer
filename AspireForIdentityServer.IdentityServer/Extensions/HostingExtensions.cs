@@ -17,6 +17,7 @@ internal static class HostingExtensions
         builder.AddAndConfigureSqlServer();
         builder.AddAndConfigureRedisCache();
         builder.AddAndConfigureIdentityServer();
+        builder.AddAndConfigurePolicyAuthorization();
         builder.AddAndConfigureApiVersioning();
         builder.AddAndConfigureDataProtection();
 

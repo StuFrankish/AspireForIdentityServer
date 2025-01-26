@@ -99,7 +99,7 @@ public class EnableAuthenticatorModel(
         }
         else
         {
-            return RedirectToPage("./TwoFactorAuthentication");
+            return RedirectToPage("./Index");
         }
     }
 

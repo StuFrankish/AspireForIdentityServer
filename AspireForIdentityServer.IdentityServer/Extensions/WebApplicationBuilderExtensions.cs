@@ -62,9 +62,14 @@ internal static class WebApplicationBuilderExtensions
 
         builder.Services.AddIdentityServer(options =>
         {
+            // Configure Cookie
+            options.Authentication.CookieLifetime = TimeSpan.FromHours(8);
+            options.Authentication.CookieSlidingExpiration = true;
+
             // Allow unregistered redirect URIs for PAR clients
             options.PushedAuthorization.AllowUnregisteredPushedRedirectUris = true;
 
+            // Events
             options.Events.RaiseErrorEvents = true;
             options.Events.RaiseFailureEvents = true;
         })
@@ -78,12 +83,15 @@ internal static class WebApplicationBuilderExtensions
                 .AddGoogle(options =>
                 {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                    // register your IdentityServer with Google at https://console.developers.google.com
-                    // enable the Google+ API
-                    // set the redirect URI to https://localhost:5001/signin-google
                     options.ClientId = "copy client ID from Google here";
                     options.ClientSecret = "copy client secret from Google here";
+                    options.CallbackPath = "/signin-google";
+
+                    options.Events.OnRedirectToAuthorizationEndpoint = context =>
+                    {
+                        context.Response.Redirect(context.RedirectUri + "&prompt=select_account");
+                        return Task.CompletedTask;
+                    };
                 });
 
         // Add optional support for Microsoft authentication
@@ -100,6 +108,15 @@ internal static class WebApplicationBuilderExtensions
 
         // Add support for additional shared repositories
         builder.Services.AddScoped<IClientRepository, ClientRepository>();
+    }
+
+    public static void AddAndConfigurePolicyAuthorization(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("Superuser", policy => {
+                policy.RequireRole("superuser");
+                policy.RequireClaim("permission", "admin");
+            });
     }
 
     public static void AddAndConfigureRedisCache(this IHostApplicationBuilder builder)

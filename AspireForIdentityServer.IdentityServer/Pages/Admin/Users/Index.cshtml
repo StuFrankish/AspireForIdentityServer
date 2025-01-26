@@ -21,7 +21,7 @@
                 <td>@user.UserName</td>
                 <td>@user.Email</td>
                 <td>
-                    <a asp-page="./Details" asp-route-id="@user.Id" class="btn btn-info">View</a>
+                    <a asp-page="/Admin/UserDetails/Index" asp-route-id="@user.Id" class="btn btn-info">View</a>
                 </td>
             </tr>
         }

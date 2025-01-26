@@ -2,7 +2,6 @@ using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using IdentityServer.Models;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,9 +13,11 @@ namespace IdentityServer.Pages.Create;
 [AllowAnonymous]
 public class Index(
     IIdentityServerInteractionService interaction,
-    UserManager<ApplicationUser> userManager) : PageModel
+    UserManager<ApplicationUser> userManager,
+    SignInManager<ApplicationUser> signinManager) : PageModel
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
+    private readonly SignInManager<ApplicationUser> _signInManager = signinManager ?? throw new ArgumentNullException(nameof(signinManager));
     private readonly IIdentityServerInteractionService _interaction = interaction ?? throw new ArgumentNullException(nameof(interaction));
 
     [BindProperty]
@@ -80,13 +81,9 @@ public class Index(
             return Page();
         }
 
-        // Issue authentication cookie with subject ID and username
-        var isUser = new IdentityServerUser(userToCreate.Id)
-        {
-            DisplayName = userToCreate.UserName
-        };
+        await _userManager.AddClaimAsync(userToCreate, new System.Security.Claims.Claim("display_name", Input.Name));
 
-        await HttpContext.SignInAsync(isUser);
+        await _signInManager.SignInAsync(userToCreate, false);
 
         // Handle return URL logic
         if (context != null)

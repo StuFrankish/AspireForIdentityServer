@@ -88,3 +88,17 @@ div.page-consent {
         top: -10px;
     }
 }
+
+/*
+    Content
+*/
+
+svg.signin-partner-icon,
+img.signin-partner-icon {
+    max-height: 24px;
+    max-width: 24px;
+
+    &.rotate-90 {
+        transform: rotate(90deg);
+    }
+}

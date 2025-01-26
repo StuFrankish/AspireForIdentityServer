@@ -5,6 +5,10 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
+@{
+    string displayName = User?.FindFirst("display_name")?.Value ?? UserManager.GetUserName(User);
+}
+
 <div class="bg-white fixed-top border-bottom border-body m-3 p-2 rounded-5 shadow-sm">
     <div class="row">
         <div class="col-1">
@@ -18,7 +22,7 @@
             {
                 <div class="flex-shrink-0 dropdown float-end p-1">
                     <a href="#" class="d-block link-body-emphasis d-flex flex-row align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                        <div class="me-2">@UserManager.GetUserName(User)</div>
+                        <div class="me-2">@displayName</div>
                         <img src="~/avatar.jpg" alt="mdo" width="32" height="32" class="rounded-circle">
                     </a>
                     <ul class="dropdown-menu text-small shadow">

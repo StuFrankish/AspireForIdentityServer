@@ -78,3 +78,16 @@ div.page-consent span.section-description {
   position: relative;
   top: -10px;
 }
+
+/*
+    Content
+*/
+svg.signin-partner-icon,
+img.signin-partner-icon {
+  max-height: 24px;
+  max-width: 24px;
+}
+svg.signin-partner-icon.rotate-90,
+img.signin-partner-icon.rotate-90 {
+  transform: rotate(90deg);
+}

@@ -6,55 +6,132 @@
 
 <h2 class="pb-2 border-bottom">Manage Account</h2>
 
-<div class="card mb-3">
-    <div class="card-header">
-        <span class="h5">Two-factor Authentication</span>
-        @if (Model.HasAuthenticator)
-        {
-            <span>(Enabled)</span>
-        }
+<div class="d-flex">
+
+    <div class="w-25">
+        <ul class="nav flex-column" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">User Properties</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="accounts-tab" data-bs-toggle="tab" data-bs-target="#accounts-tab-pane" type="button" role="tab" aria-controls="accounts-tab-pane" aria-selected="false">Linked Accounts</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Two-factor Authentication</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Additional Claims</button>
+            </li>
+        </ul>
     </div>
-    <div class="card-body">
-        
-        @if (Model.RecoveryCodesLeft == 0)
-        {
-            <div class="alert alert-danger">
-                <strong>You have no recovery codes left.</strong>
-                <div>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</div>
+    <div class="w-75">
+        <div class="tab-content bg-white border rounded p-3" id="myTabContent">
+            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>User ID:</strong> @Model.ProfileDataModel.Id</p>
+                        <p><strong>Username:</strong> @Model.ProfileDataModel.UserName</p>
+                        <p><strong>Email:</strong> @Model.ProfileDataModel.Email</p>
+                        <p>
+                            <strong>Email Confirmed:</strong>
+                            <span class="badge @(Model.ProfileDataModel.EmailConfirmed ? "bg-success" : "bg-danger")">
+                                @(Model.ProfileDataModel.EmailConfirmed ? "Yes" : "No")
+                            </span>
+                        </p>
+                        <p><strong>Phone Number:</strong> @(Model.ProfileDataModel.PhoneNumber ?? "N/A")</p>
+                        <p>
+                            <strong>Phone Confirmed:</strong>
+                            <span class="badge @(Model.ProfileDataModel.PhoneNumberConfirmed ? "bg-success" : "bg-danger")">
+                                @(Model.ProfileDataModel.PhoneNumberConfirmed ? "Yes" : "No")
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+
+                        <p>
+                            <strong>Two-Factor Enabled:</strong>
+                            <span class="badge @(Model.ProfileDataModel.TwoFactorEnabled ? "bg-success" : "bg-danger")">
+                                @(Model.ProfileDataModel.TwoFactorEnabled ? "Yes" : "No")
+                            </span>
+                        </p>
+                        <p><strong>Lockout End:</strong> @(Model.ProfileDataModel.LockoutEnd?.ToString("g") ?? "Never")</p>
+                        <p>
+                            <strong>Lockout Enabled:</strong>
+                            <span class="badge @(Model.ProfileDataModel.LockoutEnabled ? "bg-warning" : "bg-secondary")">
+                                @(Model.ProfileDataModel.LockoutEnabled ? "Yes" : "No")
+                            </span>
+                        </p>
+                        <p><strong>Access Failed Count:</strong> @Model.ProfileDataModel.AccessFailedCount</p>
+                    </div>
+                </div>
             </div>
-        }
-        else if (Model.RecoveryCodesLeft == 1)
-        {
-            <div class="alert alert-danger">
-                <strong>You have 1 recovery code left.</strong>
-                <div>You can <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</div>
+            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+                @if (Model.TwoFactorAuthModel.Is2faEnabled)
+                {
+                    if (Model.TwoFactorAuthModel.RecoveryCodesLeft == 0)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>You have no recovery codes left.</strong>
+                            <div>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</div>
+                        </div>
+                    }
+                    else if (Model.TwoFactorAuthModel.RecoveryCodesLeft == 1)
+                    {
+                        <div class="alert alert-danger">
+                            <strong>You have 1 recovery code left.</strong>
+                            <div>You can <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</div>
+                        </div>
+                    }
+                    else if (Model.TwoFactorAuthModel.RecoveryCodesLeft <= 3)
+                    {
+                        <div class="alert alert-warning">
+                            <strong>You have @Model.TwoFactorAuthModel.RecoveryCodesLeft recovery codes left.</strong>
+                            <div>You should <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</div>
+                        </div>
+                    }
+
+                    <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
+                    <a asp-page="./Disable2fa" class="btn btn-danger">Disable 2FA</a>
+                }
+                else
+                {
+                    <div class="alert alert-light">
+                        <strong>You have not enabled Two-factor Authentication.</strong>
+                    </div>
+
+                    <a asp-page="./EnableAuthenticator" class="btn btn-primary">Configure Authenticator App</a>
+                }
+
+                @if (Model.TwoFactorAuthModel.HasAuthenticator)
+                {
+                    <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">Reset authenticator key</a>
+                }
             </div>
-        }
-        else if (Model.RecoveryCodesLeft <= 3)
-        {
-            <div class="alert alert-warning">
-                <strong>You have @Model.RecoveryCodesLeft recovery codes left.</strong>
-                <div>You should <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</div>
+            <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Claim Type</th>
+                            <th>Claim Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var claim in Model.UserClaimsModel.Claims)
+                        {
+                            <tr>
+                                <td>@claim.Type</td>
+                                <td>@claim.Value</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
-        }
-
-        @if (!Model.HasAuthenticator)
-        {
-            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Add authenticator app</a>
-        }
-        else
-        {
-            <a id="enable-authenticator" asp-page="./EnableAuthenticator" class="btn btn-primary">Set up authenticator app</a>
-            <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">Reset authenticator key</a>
-        }
-
-        @if (Model.Is2faEnabled)
-        {
-            <a asp-page="./GenerateRecoveryCodes" class="btn btn-primary">Reset recovery codes</a>
-            <a asp-page="./Disable2fa" class="btn btn-danger">Disable 2FA</a>
-        }
-
-        
-
+            <div class="tab-pane fade" id="accounts-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+                Linked Accounts
+            </div>
+        </div>
     </div>
+
 </div>
+
+
