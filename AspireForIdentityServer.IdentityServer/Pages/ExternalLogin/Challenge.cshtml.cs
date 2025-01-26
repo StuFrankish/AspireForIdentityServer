@@ -4,43 +4,37 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace IdentityServer.Pages.ExternalLogin
+namespace IdentityServer.Pages.ExternalLogin;
+
+[AllowAnonymous]
+[SecurityHeaders]
+public class Challenge(IIdentityServerInteractionService interactionService) : PageModel
 {
-    [AllowAnonymous]
-    [SecurityHeaders]
-    public class Challenge : PageModel
+    private readonly IIdentityServerInteractionService _interactionService = interactionService;
+
+    public IActionResult OnGet(string scheme, string returnUrl)
     {
-        private readonly IIdentityServerInteractionService _interactionService;
+        if (string.IsNullOrEmpty(returnUrl)) returnUrl = "~/";
 
-        public Challenge(IIdentityServerInteractionService interactionService)
+        // validate returnUrl - either it is a valid OIDC URL or back to a local page
+        if (Url.IsLocalUrl(returnUrl) == false && _interactionService.IsValidReturnUrl(returnUrl) == false)
         {
-            _interactionService = interactionService;
+            // user might have clicked on a malicious link - should be logged
+            throw new Exception("invalid return URL");
         }
 
-        public IActionResult OnGet(string scheme, string returnUrl)
+        // start challenge and roundtrip the return URL and scheme 
+        var props = new AuthenticationProperties
         {
-            if (string.IsNullOrEmpty(returnUrl)) returnUrl = "~/";
+            RedirectUri = Url.Page("/externallogin/callback"),
 
-            // validate returnUrl - either it is a valid OIDC URL or back to a local page
-            if (Url.IsLocalUrl(returnUrl) == false && _interactionService.IsValidReturnUrl(returnUrl) == false)
+            Items =
             {
-                // user might have clicked on a malicious link - should be logged
-                throw new Exception("invalid return URL");
+                { "returnUrl", returnUrl },
+                { "scheme", scheme },
             }
+        };
 
-            // start challenge and roundtrip the return URL and scheme 
-            var props = new AuthenticationProperties
-            {
-                RedirectUri = Url.Page("/externallogin/callback"),
-
-                Items =
-                {
-                    { "returnUrl", returnUrl },
-                    { "scheme", scheme },
-                }
-            };
-
-            return Challenge(props, scheme);
-        }
+        return Challenge(props, scheme);
     }
 }

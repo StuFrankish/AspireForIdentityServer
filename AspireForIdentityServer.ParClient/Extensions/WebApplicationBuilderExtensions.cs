@@ -12,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using Polly;
 using StackExchange.Redis;
 using System;
+using System.Threading.Tasks;
 
 namespace Client.Extensions;
 
@@ -107,6 +108,14 @@ public static class WebApplicationBuilderExtensions
                 options.Authority = identityProviderOptions.Authority;
                 options.ClientId = identityProviderOptions.ClientId;
                 options.ClientSecret = identityProviderOptions.ClientSecret;
+
+                // Events
+                options.Events.OnAccessDenied = context =>
+                {
+                    context.HandleResponse();
+                    context.Response.Redirect("/Error/AccessDenied");
+                    return Task.CompletedTask;
+                };
 
                 // code flow + PKCE (PKCE is turned on by default and required by the identity provider in this sample)
                 options.ResponseType = OpenIdConnectResponseType.Code;

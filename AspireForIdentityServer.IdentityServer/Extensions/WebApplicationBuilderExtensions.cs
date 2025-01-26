@@ -2,10 +2,13 @@
 using Duende.IdentityServer;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using IdentityServer.Configuration;
+using IdentityServer.Data;
 using IdentityServer.Extensions.Options;
+using IdentityServer.Models;
 using IdentityServer.SharedRepositories;
 using IdentityServer.SqlInterceptors;
 using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 
@@ -21,6 +24,7 @@ internal static class WebApplicationBuilderExtensions
         // Add DbContexts
         builder.Services.AddDbContext<ConfigurationDbContext>(configuredSqlOptions());
         builder.Services.AddDbContext<PersistedGrantDbContext>(configuredSqlOptions());
+        builder.Services.AddDbContext<ApplicationDbContext>(configuredSqlOptions());
 
         // Configure DbContext options
         static Action<IServiceProvider, DbContextOptionsBuilder> configuredSqlOptions() => (serviceProvider, optionsBuilder) =>
@@ -52,30 +56,51 @@ internal static class WebApplicationBuilderExtensions
     {
         builder.Services.AddControllers();
 
+        builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
         builder.Services.AddIdentityServer(options =>
         {
+            // Configure Cookie
+            options.Authentication.CookieLifetime = TimeSpan.FromHours(8);
+            options.Authentication.CookieSlidingExpiration = true;
+
             // Allow unregistered redirect URIs for PAR clients
             options.PushedAuthorization.AllowUnregisteredPushedRedirectUris = true;
 
+            // Events
             options.Events.RaiseErrorEvents = true;
             options.Events.RaiseFailureEvents = true;
         })
             .AddConfigurationStore()
             .AddOperationalStore()
             .AddServerSideSessions()
-            .AddTestUsers(TestUsers.Users);
+            .AddAspNetIdentity<ApplicationUser>();
 
         // Add optional support for Google authentication
         builder.Services.AddAuthentication()
                 .AddGoogle(options =>
                 {
                     options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-
-                    // register your IdentityServer with Google at https://console.developers.google.com
-                    // enable the Google+ API
-                    // set the redirect URI to https://localhost:5001/signin-google
                     options.ClientId = "copy client ID from Google here";
                     options.ClientSecret = "copy client secret from Google here";
+                    options.CallbackPath = "/signin-google";
+
+                    options.Events.OnRedirectToAuthorizationEndpoint = context =>
+                    {
+                        context.Response.Redirect(context.RedirectUri + "&prompt=select_account");
+                        return Task.CompletedTask;
+                    };
+                });
+
+        // Add optional support for Microsoft authentication
+        builder.Services.AddAuthentication()
+                .AddMicrosoftAccount(options =>
+                {
+                    options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    options.ClientId = "copy client ID from Microsoft here";
+                    options.ClientSecret = "copy client secret from Microsoft here";
                 });
 
         // Add support for local API authentication
@@ -85,13 +110,23 @@ internal static class WebApplicationBuilderExtensions
         builder.Services.AddScoped<IClientRepository, ClientRepository>();
     }
 
+    public static void AddAndConfigurePolicyAuthorization(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy("Superuser", policy => {
+                policy.RequireRole("superuser");
+                policy.RequireClaim("permission", "admin");
+            });
+    }
+
     public static void AddAndConfigureRedisCache(this IHostApplicationBuilder builder)
     {
         // Get connection strings
         var connectionStrings = builder.GetCustomOptionsConfiguration<ConnectionStrings>(ConfigurationSections.ConnectionStrings);
 
         // Add Redis Cache
-        builder.Services.AddStackExchangeRedisCache(options => {
+        builder.Services.AddStackExchangeRedisCache(options =>
+        {
             options.Configuration = connectionStrings.Redis;
         });
     }

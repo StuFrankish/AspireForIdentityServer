@@ -1,78 +1,72 @@
 @page
 @model IdentityServer.Pages.Consent.Index
 @{
+    Layout = "_LayoutLogin";
 }
 
-<div class="page-consent">
-    <div class="lead">
-        @if (Model.View.ClientLogoUrl != null)
-        {
-            <div class="client-logo"><img src="@Model.View.ClientLogoUrl"></div>
-        }
-        <h1>
-            @Model.View.ClientName
-            <small class="text-muted">is requesting your permission</small>
-        </h1>
-        <p>Uncheck the permissions you do not wish to grant.</p>
+<div class="row mb-1">
+    <div class="col">
+        <img src="~/logo_long.png" class="login-logo" />
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-12 col-md-6 mb-3 mb-md-0">
+        <span class="fs-2 d-block mb-1">Consent needed</span>
+        <span class="d-block"><strong>@Model.View.ClientName</strong> is requesting your permission</span>
     </div>
 
-    <div class="row">
-        <div class="col-sm-8">
+    <div class="col-12 col-md-6">
+        <div class="page-consent">
+
             <partial name="_ValidationSummary" />
-        </div>
-    </div>
 
-    <form asp-page="/Consent/Index">
-        <input type="hidden" asp-for="Input.ReturnUrl" />
-        <div class="row">
-            <div class="col-sm-8">
+            <form asp-page="/Consent/Index">
+                <input type="hidden" asp-for="Input.ReturnUrl" />
+                <input type="hidden" asp-for="Input.Description" />
+
                 @if (Model.View.IdentityScopes.Any())
                 {
-                    <div class="form-group">
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="glyphicon glyphicon-user"></span>
-                                Personal Information
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                @foreach (var scope in Model.View.IdentityScopes)
-                                {
-                                    <partial name="_ScopeListItem" model="@scope" />
-                                }
-                            </ul>
+                    <div class="mb-3">
+                        <div class="px-2 mb-1">
+                            <span class="d-block fw-bold fs-5">
+                                <i class="fa-light fa-fw fa-user"></i>
+                                <span>Personal Information</span>
+                            </span>
+                            <span class="section-description text-muted">
+                                The following information will be shared with the application:
+                            </span>
+                        </div>
+                        <div class="list-group">
+                            @foreach (var scope in Model.View.IdentityScopes.OrderByDescending(i => i.Required).ThenByDescending(i => i.Emphasize))
+                            {
+                                <partial name="_ScopeListItem" model="scope" />
+                            }
                         </div>
                     </div>
                 }
 
                 @if (Model.View.ApiScopes.Any())
                 {
-                    <div class="form-group">
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="glyphicon glyphicon-tasks"></span>
-                                Application Access
-                            </div>
-                            <ul class="list-group list-group-flush">
-                                @foreach (var scope in Model.View.ApiScopes)
-                                {
-                                    <partial name="_ScopeListItem" model="scope" />
-                                }
-                            </ul>
+                    <div class="mb-3">
+                        <div class="px-2 mb-1 fs-5 fw-bold">
+                            <span class="d-block fw-bold fs-5">
+                                <i class="fa-light fa-fw fa-list-check"></i>
+                                <span>Application Access</span>
+                            </span>
+                            <span class="section-description text-muted">
+                                The application will have access to the following:
+                            </span>
+                        </div>
+                        <div class="list-group">
+                            @foreach (var scope in Model.View.ApiScopes.OrderByDescending(i => i.Required).ThenByDescending(i => i.Emphasize))
+                            {
+                                <partial name="_ScopeListItem" model="scope" />
+                            }
                         </div>
                     </div>
                 }
-
-                <div class="form-group">
-                    <div class="card">
-                        <div class="card-header">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                            Description
-                        </div>
-                        <div class="card-body">
-                            <input class="form-control" placeholder="Description or name of device" asp-for="Input.Description" autofocus>
-                        </div>
-                    </div>
-                </div>
 
                 @if (Model.View.AllowRememberConsent)
                 {
@@ -85,23 +79,14 @@
                         </div>
                     </div>
                 }
-            </div>
-        </div>
 
-        <div class="row">
-            <div class="col-sm-4">
-                <button name="Input.button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
-                <button name="Input.button" value="no" class="btn btn-secondary">No, Do Not Allow</button>
-            </div>
-            <div class="col-sm-4 col-lg-auto">
-                @if (Model.View.ClientUrl != null)
-                {
-                    <a class="btn btn-outline-info" href="@Model.View.ClientUrl">
-                        <span class="glyphicon glyphicon-info-sign"></span>
-                        <strong>@Model.View.ClientName</strong>
-                    </a>
-                }
-            </div>
+                <div class="my-3 mt-5">
+                    <button name="Input.button" value="yes" class="btn btn-primary float-end rounded-5">Allow</button>
+                    <button name="Input.button" value="no" class="btn float-end mx-3">Don't Allow</button>
+                </div>
+
+            </form>
         </div>
-    </form>
+    </div>
+
 </div>
