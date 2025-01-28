@@ -11,19 +11,21 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row d-flex justify-content-center">
 
-    <div class="col-12 col-md-6 mb-3 mb-md-0">
-        <span class="fs-2 d-block mb-1">MFA</span>
-        <span class="d-block">Please enter your MFA Passcode to continue</span>
-    </div>
+    <div class="col-12 col-md-8">
 
-    <div class="col-12 col-md-6">
+        <div class="mb-4">
+            <span class="fs-2">Two-Factor Authentication</span>
+            <p class="text-muted">
+                Your sign in is protected by two-factor authentication. Enter the one-time-passcode from your authenticator to continue.
+            </p>
+        </div>
 
         <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
             <input type="hidden" asp-for="@Model.ReturnUrl" />
 
-            <div class="form-floating mb-5">
+            <div class="form-floating">
                 <input type="text"
                        autocomplete="one-time-code"
                        class="form-control"
@@ -36,24 +38,30 @@
                        maxlength="6">
 
                 <label asp-for="Input.TwoFactorCode">One-Time Passcode</label>
+                <span asp-validation-for="Input.TwoFactorCode" class="text-danger"></span>
 
-                Having trouble?
-                <a class="mx-1 rounded-5 text-decoration-none" id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">
-                    Use a recovery code
-                </a>
-
-                <partial name="_ValidationSummary" />
+                <div class="login-supplementary-text">
+                    <p>
+                        Having trouble?
+                        <a class="mx-1 rounded-5 text-decoration-none" id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">
+                            Use a recovery code
+                        </a>
+                    </p>
+                </div>
 
             </div>
 
-            <div class="my-3 mt-3">
-                <button class="btn btn-primary float-end mx-1 rounded-5" name="Input.Button" value="confirm">Confirm MFA</button>
-                <button class="btn float-end mx-3 text-muted" name="Input.Button" value="decline">Decline MFA</button>
+            <div class="d-flex gap-2 my-3">
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary mx-1 rounded-pill" name="Input.Button" value="confirm">Confirm</button>
+                    <button class="btn btn-light text-muted rounded-pill" name="Input.Button" value="decline">Cancel</button>
+                </div>
             </div>
 
         </form>
 
     </div>
+
 </div>
 
 @section Scripts {

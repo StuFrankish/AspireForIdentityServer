@@ -5,24 +5,43 @@
     Layout = "_LayoutLogin";
 }
 
-<h1>@ViewData["Title"]</h1>
-<hr />
-<p>
-    You have requested to log in with a recovery code. This login will not be remembered until you provide
-    an authenticator app code at log in or disable 2FA and log in again.
-</p>
-<div class="row">
-    <div class="col-md-4">
+<div class="row mb-1">
+    <div class="col">
+        <img src="~/logo_long.png" class="login-logo" />
+    </div>
+</div>
+
+<div class="row d-flex justify-content-center">
+
+    <div class="col-12 col-md-8">
+
+        <div class="mb-4">
+            <span class="fs-2">Recovery Code Verification</span>
+            <p class="text-muted">
+                You have requested to log in with a recovery code. This login will not be remembered until you provide
+                an authenticator app code at log in or disable 2FA and log in again.
+            </p>
+        </div>
+
         <form method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-            <div class="form-floating mb-3">
+            
+            <div class="form-floating">
                 <input asp-for="Input.RecoveryCode" class="form-control" autocomplete="off" placeholder="RecoveryCode" />
                 <label asp-for="Input.RecoveryCode" class="form-label"></label>
                 <span asp-validation-for="Input.RecoveryCode" class="text-danger"></span>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+            
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="d-flex gap-2 my-3">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary rounded-pill">Log in</button>
+                </div>
+            </div>
         </form>
+
     </div>
+
 </div>
 
 @section Scripts {

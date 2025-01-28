@@ -11,26 +11,23 @@
     <div class="w-25">
         <ul class="nav flex-column" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">User Properties</button>
+                <button class="nav-link active" id="user-tab" data-bs-toggle="tab" data-bs-target="#user-tab-pane" type="button" role="tab" aria-controls="user-tab-pane" aria-selected="true">User Properties</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="accounts-tab" data-bs-toggle="tab" data-bs-target="#accounts-tab-pane" type="button" role="tab" aria-controls="accounts-tab-pane" aria-selected="false">Linked Accounts</button>
+                <button class="nav-link" id="2fa-tab" data-bs-toggle="tab" data-bs-target="#2fa-tab-pane" type="button" role="tab" aria-controls="2fa-tab-pane" aria-selected="false">Two-factor Authentication</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Two-factor Authentication</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">Additional Claims</button>
+                <button class="nav-link" id="claims-tab" data-bs-toggle="tab" data-bs-target="#claims-tab-pane" type="button" role="tab" aria-controls="claims-tab-pane" aria-selected="false">Additional Claims</button>
             </li>
         </ul>
     </div>
     <div class="w-75">
         <div class="tab-content bg-white border rounded p-3" id="myTabContent">
-            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+            <div class="tab-pane fade show active" id="user-tab-pane" role="tabpanel" aria-labelledby="user-tab" tabindex="0">
                 <div class="row">
                     <div class="col-md-6">
-                        <p><strong>User ID:</strong> @Model.ProfileDataModel.Id</p>
                         <p><strong>Username:</strong> @Model.ProfileDataModel.UserName</p>
+                        
                         <p><strong>Email:</strong> @Model.ProfileDataModel.Email</p>
                         <p>
                             <strong>Email Confirmed:</strong>
@@ -47,25 +44,25 @@
                         </p>
                     </div>
                     <div class="col-md-6">
-
+                        <p><strong>User ID:</strong> @Model.ProfileDataModel.Id</p>
                         <p>
                             <strong>Two-Factor Enabled:</strong>
                             <span class="badge @(Model.ProfileDataModel.TwoFactorEnabled ? "bg-success" : "bg-danger")">
                                 @(Model.ProfileDataModel.TwoFactorEnabled ? "Yes" : "No")
                             </span>
                         </p>
-                        <p><strong>Lockout End:</strong> @(Model.ProfileDataModel.LockoutEnd?.ToString("g") ?? "Never")</p>
                         <p>
                             <strong>Lockout Enabled:</strong>
                             <span class="badge @(Model.ProfileDataModel.LockoutEnabled ? "bg-warning" : "bg-secondary")">
                                 @(Model.ProfileDataModel.LockoutEnabled ? "Yes" : "No")
                             </span>
                         </p>
+                        <p><strong>Lockout End:</strong> @(Model.ProfileDataModel.LockoutEnd?.ToString("g") ?? "Never")</p>
                         <p><strong>Access Failed Count:</strong> @Model.ProfileDataModel.AccessFailedCount</p>
                     </div>
                 </div>
             </div>
-            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <div class="tab-pane fade" id="2fa-tab-pane" role="tabpanel" aria-labelledby="2fa-tab" tabindex="0">
                 @if (Model.TwoFactorAuthModel.Is2faEnabled)
                 {
                     if (Model.TwoFactorAuthModel.RecoveryCodesLeft == 0)
@@ -107,7 +104,7 @@
                     <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-primary">Reset authenticator key</a>
                 }
             </div>
-            <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+            <div class="tab-pane fade" id="claims-tab-pane" role="tabpanel" aria-labelledby="claims-tab" tabindex="0">
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -125,9 +122,6 @@
                         }
                     </tbody>
                 </table>
-            </div>
-            <div class="tab-pane fade" id="accounts-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-                Linked Accounts
             </div>
         </div>
     </div>
