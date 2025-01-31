@@ -58,6 +58,11 @@ img.nav-logo {
   font-weight: bold;
 }
 
+div.qr-code-container img {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 table.table-hover td {
   cursor: pointer;
 }
@@ -104,6 +109,15 @@ div.toolbar-icons a.active svg {
 }
 div.toolbar-icons :hover {
   background-color: #FAFAFA !important;
+}
+
+div.recovery-codes code {
+  border: 1px solid;
+  padding: 5px;
+  border-radius: 5px;
+  margin-right: 0.5rem;
+  margin-bottom: 1rem;
+  display: inline-block;
 }
 
 div.card {

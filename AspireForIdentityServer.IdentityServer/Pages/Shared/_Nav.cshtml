@@ -100,13 +100,15 @@
             }
             else
             {
-                <div class="flex-shrink-0 float-end p-1">
-                    <a class="btn btn-sm btn-light rounded-start-5" id="login" asp-page="/Account/Login/Index">
-                        <i class="fa-solid fa-key text-muted"></i>
+                <div class="d-inline-flex gap-1 p-1 bg-white float-end rounded-pill toolbar-icons me-3 mt-1">
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center"
+                       id="login" asp-page="/Account/Login/Index" title="Login">
+                        <i class="fa-solid fa-fw fa-key text-muted me-1"></i>
                         Login
                     </a>
-                    <a class="btn btn-sm btn-light rounded-end-5" id="register" asp-page="/Account/Create/Index">
-                        <i class="fa-solid fa-user-plus text-muted"></i>
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center"
+                       id="register" asp-page="/Account/Create/Index" title="Register">
+                        <i class="fa-solid fa-user-plus text-muted me-1"></i>
                         Register
                     </a>
                 </div>
