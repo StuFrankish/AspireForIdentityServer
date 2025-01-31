@@ -11,20 +11,30 @@
     <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" />
     
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/lib/fontawesome/css/fontawesome.min.css" />
-    <link rel="stylesheet" href="~/lib/fontawesome/css/all.min.css" />
-    <link rel="stylesheet" href="~/css/main.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/main.min.css" asp-append-version="true" />
+
+    <!-- This FontAwesome Kit is available to localhost and stufrankish.dev domains only -->
+    <script src="https://kit.fontawesome.com/d8fcd1bfde.js" crossorigin="anonymous"></script>
+
+    <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
+
+    @{
+        var activePage = ViewData["ActivePage"] as string;
+    }
+
     <partial name="_Nav" />
 
     <div class="body-container px-3 py-3 h-100">
         @RenderBody()
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
     @RenderSection("scripts", required: false)
+
 </body>
 </html>

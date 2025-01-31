@@ -1,0 +1,18 @@
+.error-list-container {
+    font-size: 0.8rem;
+    background-color: #f7e8eb !important;
+    color: #B71C1C;
+
+    .error-list-title {
+        font-weight: 500 !important;
+    }
+
+    .error-list-icon {
+        position: relative;
+        left: 2px;
+    }
+
+    ul {
+        padding-left: 25px;
+    }
+}

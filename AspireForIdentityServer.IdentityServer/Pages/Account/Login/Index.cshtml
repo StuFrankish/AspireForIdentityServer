@@ -1,5 +1,5 @@
 @page
-@model IdentityServer.Pages.Login.Index
+@model IdentityServer.Pages.Account.Login.Index
 
 @{
     Layout = "_LayoutLogin";
@@ -56,12 +56,10 @@
                     <div class="form-floating mb-3">
                         <input class="form-control" asp-for="Input.Username" placeholder="Username" autofocus>
                         <label asp-for="Input.Username">Username</label>
-                        <span asp-validation-for="Input.Username" class="text-danger"></span>
                     </div>
                     <div class="form-floating">
                         <input type="password" class="form-control" asp-for="Input.Password" placeholder="Password">
                         <label asp-for="Input.Password">Password</label>
-                        <span asp-validation-for="Input.Password" class="text-danger"></span>
                     </div>
 
                     <div class="login-supplementary-text">
@@ -73,6 +71,8 @@
                         </p>
                     </div>
 
+                    <partial name="_ValidationSummary" />
+
                     <div class="d-flex gap-2">
                         <div class="d-flex gap-2">
                             <button class="btn btn-primary rounded-pill" name="Input.Button" value="login">Login</button>
@@ -80,8 +80,8 @@
                         </div>
                         @if (Model.View.EnablePasskeyLogin)
                         {
-                            <a class="btn btn-light d-flex align-items-center ms-auto text-muted rounded-pill">
-                                <img class="signin-partner-icon me-1" src="~/fido.webp" alt="Yubikey Icon" style="height:24px;" />
+                            <a class="btn btn-light d-flex align-items-center ms-auto text-muted rounded-pill" id="signin-fido">
+                                <img class="signin-partner-icon me-1" src="~/fido.webp" alt="Yubikey Icon" />
                                 Use a Passkey
                             </a>
                         }
@@ -142,3 +142,6 @@
     </div>
 
 </div>
+
+<script src="~/js/fido/helpers.js"></script>
+<script src="~/js/fido/login.js"></script>

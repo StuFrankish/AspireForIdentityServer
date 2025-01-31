@@ -1,5 +1,5 @@
 ﻿using Asp.Versioning;
-using IdentityServer.Dtos;
+using IdentityServer.Data.Models.API;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;

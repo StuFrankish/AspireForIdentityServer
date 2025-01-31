@@ -1,13 +1,14 @@
-using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
-using IdentityServer.Models;
+using IdentityServer.Data.Entities.Identity;
+using IdentityServer.Extensions;
+using IdentityServer.Pages.Create;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace IdentityServer.Pages.Create;
+namespace IdentityServer.Pages.Account.Create;
 
 [SecurityHeaders]
 [AllowAnonymous]

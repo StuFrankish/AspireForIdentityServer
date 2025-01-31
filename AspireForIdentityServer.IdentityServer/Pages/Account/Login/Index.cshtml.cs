@@ -1,16 +1,20 @@
+#nullable enable
+
 using Duende.IdentityServer;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
 using Duende.IdentityServer.Stores;
-using IdentityServer.Models;
+using IdentityServer.Data.Entities.Identity;
+using IdentityServer.Extensions;
+using IdentityServer.Pages.Login;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace IdentityServer.Pages.Login;
+namespace IdentityServer.Pages.Account.Login;
 
 [SecurityHeaders]
 [AllowAnonymous]
@@ -132,7 +136,7 @@ public class Index(
         return Page();
     }
 
-    private async Task BuildModelAsync(string returnUrl)
+    private async Task BuildModelAsync(string? returnUrl)
     {
         Input = new InputModel
         {
@@ -154,7 +158,7 @@ public class Index(
 
             if (!local)
             {
-                View.ExternalProviders = [new ViewModel.ExternalProvider(context.IdP)];
+                View.ExternalProviders = [new ViewModel.ExternalProvider(context!.IdP)];
             }
 
             return;
@@ -183,7 +187,7 @@ public class Index(
 
                 if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Count != 0)
                 {
-                    providers = providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
+                    providers = [.. providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme))];
                 }
             }
         }

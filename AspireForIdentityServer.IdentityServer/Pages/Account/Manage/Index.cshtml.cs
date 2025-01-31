@@ -1,5 +1,6 @@
-using IdentityServer.Models;
-using IdentityServer.Pages.Account.Manage.Models;
+using IdentityServer.Data.Entities.Identity;
+using IdentityServer.Data.Models.Account;
+using IdentityServer.Data.Models.TwoFactorAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;

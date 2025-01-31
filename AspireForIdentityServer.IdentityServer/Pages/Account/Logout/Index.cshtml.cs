@@ -1,17 +1,19 @@
+#nullable enable
+
 using Duende.IdentityModel;
 using Duende.IdentityServer.Events;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Services;
-using IdentityServer.Models;
+using IdentityServer.Data.Entities.Identity;
+using IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace IdentityServer.Pages.Logout;
+namespace IdentityServer.Pages.Account.Logout;
 
-[SecurityHeaders]
 [AllowAnonymous]
 public class Index(SignInManager<ApplicationUser> signInManager, IIdentityServerInteractionService interaction, IEventService events) : PageModel
 {

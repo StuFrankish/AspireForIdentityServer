@@ -1,7 +1,9 @@
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
-using IdentityServer.Data;
+using IdentityServer.Data.DbContexts;
+using IdentityServer.Data.Entities.Identity;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -50,7 +52,7 @@ internal static class HostingExtensions
 
         // Create an instance of the Configuration & Identity Db Contexts
         var configurationDbContext = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-
+        var applicationDbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         // Seed clients
         if (!configurationDbContext.Clients.Any())
@@ -80,6 +82,39 @@ internal static class HostingExtensions
             foreach (var resource in seedConfig.ApiScopes)
             {
                 configurationDbContext.ApiScopes.Add(resource.ToEntity());
+            }
+
+            saveChanges = true;
+        }
+
+        // Seed users
+        if (!applicationDbContext.Users.Any())
+        {
+            var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            roleManager.CreateAsync(new IdentityRole("user.admin"))
+                .GetAwaiter().GetResult();
+
+            foreach (var seedUser in seedConfig.Users)
+            {
+                var userToCreate = new ApplicationUser
+                {
+                    UserName = seedUser.Username,
+                    Email = seedUser.Email
+                };
+
+                var createdUser = userManager.CreateAsync(user: userToCreate, password: seedUser.Password)
+                    .GetAwaiter().GetResult();
+
+                userManager.AddClaimAsync(userToCreate, new("display_name", seedUser.DisplayName))
+                    .GetAwaiter().GetResult();
+
+                if (seedUser.IsAdmin)
+                {
+                    userManager.AddToRoleAsync(userToCreate, "user.admin")
+                        .GetAwaiter().GetResult();
+                }
             }
 
             saveChanges = true;

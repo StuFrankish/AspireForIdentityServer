@@ -1,3 +1,5 @@
+#nullable enable
+
 using Duende.IdentityServer.Models;
 
 namespace IdentityServer.Pages.Login;
@@ -12,9 +14,9 @@ public class ViewModel
     public IEnumerable<ExternalProvider> VisibleExternalProviders => ExternalProviders.Where(x => !String.IsNullOrWhiteSpace(x.DisplayName));
 
     public bool IsExternalLoginOnly => EnableLocalLogin == false && ExternalProviders?.Count() == 1;
-    public string ExternalLoginScheme => IsExternalLoginOnly ? ExternalProviders?.SingleOrDefault()?.AuthenticationScheme : null;
+    public string? ExternalLoginScheme => IsExternalLoginOnly ? ExternalProviders?.SingleOrDefault()?.AuthenticationScheme : null;
 
-    public Client ClientContext { get; set; } = null;
+    public Client? ClientContext { get; set; } = default;
 
     public class ExternalProvider(string authenticationScheme, string? displayName = null)
     {

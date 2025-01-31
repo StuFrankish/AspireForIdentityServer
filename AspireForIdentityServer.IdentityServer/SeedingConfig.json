@@ -35,6 +35,19 @@
     }
   ],
   "Users": [
-
+    {
+      "Username": "alice",
+      "DisplayName": "Alice Cooper",
+      "Email": "alice@test.com",
+      "Password": "Password123!",
+      "IsAdmin": true
+    },
+    {
+      "Username": "bob",
+      "DisplayName": "Bob Ross",
+      "Email": "bob@test.com",
+      "Password": "Password123!",
+      "IsAdmin": false
+    }
   ]
 }

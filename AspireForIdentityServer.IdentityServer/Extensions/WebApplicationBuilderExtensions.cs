@@ -2,10 +2,10 @@
 using Duende.IdentityServer;
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using IdentityServer.Configuration;
-using IdentityServer.Data;
+using IdentityServer.Data.DbContexts;
+using IdentityServer.Data.Entities.Identity;
+using IdentityServer.Data.Repositories.Clients;
 using IdentityServer.Extensions.Options;
-using IdentityServer.Models;
-using IdentityServer.SharedRepositories;
 using IdentityServer.SqlInterceptors;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
@@ -60,6 +60,12 @@ internal static class WebApplicationBuilderExtensions
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();
 
+        // Configure Application Cookie settings
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.AccessDeniedPath = "/home/accessdenied";
+        });
+
         builder.Services.AddIdentityServer(options =>
         {
             // Configure Cookie
@@ -113,9 +119,9 @@ internal static class WebApplicationBuilderExtensions
     public static void AddAndConfigurePolicyAuthorization(this WebApplicationBuilder builder)
     {
         builder.Services.AddAuthorizationBuilder()
-            .AddPolicy("Superuser", policy => {
-                policy.RequireRole("superuser");
-                policy.RequireClaim("permission", "admin");
+            .AddPolicy("UserAdmin", policy =>
+            {
+                policy.RequireRole("user.admin");
             });
     }
 

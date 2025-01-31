@@ -7,7 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Security.Claims;
-using IdentityServer.Models;
+using IdentityServer.Data.Entities.Identity;
+using IdentityServer.Extensions;
 
 namespace IdentityServer.Pages.ExternalLogin;
 

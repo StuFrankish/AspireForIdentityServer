@@ -1,5 +1,5 @@
 ﻿using Duende.IdentityServer.Models;
-using Duende.IdentityServer.Test;
+using IdentityServer.Data.Models.Account;
 using System.Text.Json;
 
 namespace IdentityServer;
@@ -43,10 +43,10 @@ public class SeedConfig
         return doc.RootElement.GetProperty(sectionName).GetRawText();
     }
 
-    private List<TestUser> LoadTestUsers()
+    private List<SeedUserModel> LoadTestUsers()
     {
         var json = JsonSectionData("Users");
-        return JsonSerializer.Deserialize<List<TestUser>>(json);
+        return JsonSerializer.Deserialize<List<SeedUserModel>>(json);
     }
 
     private List<ApiScope> LoadApiScopes()
@@ -71,7 +71,7 @@ public class SeedConfig
         return clients;
     }
 
-    public IEnumerable<TestUser> Users { get; init; } = [];
+    public IEnumerable<SeedUserModel> Users { get; init; } = [];
     public IEnumerable<ApiScope> ApiScopes { get; init; } = [];
     public IEnumerable<Client> Clients { get; init; } = [];
     public IEnumerable<IdentityResource> IdentityResources =>

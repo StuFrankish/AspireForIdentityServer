@@ -42,6 +42,7 @@ public class GetWeatherByLocationHandler(HybridCache hybridCache, ILogger<GetWea
         return responseObject;
 
         // Here for demo purposes
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         async Task<List<WeatherForecast>> getMockedDataAsync(CancellationToken cancellationToken)
         {
             logger.LogInformation(message: "Weather Forecast not found in cache");
@@ -58,6 +59,7 @@ public class GetWeatherByLocationHandler(HybridCache hybridCache, ILogger<GetWea
                 Summary = Summaries[Random.Shared.Next(Summaries.Length)]
             })];
         }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
     }
 
     /// <summary>

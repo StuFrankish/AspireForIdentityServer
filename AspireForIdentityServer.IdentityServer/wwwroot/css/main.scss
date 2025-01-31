@@ -1,7 +1,21 @@
 ﻿body {
     height: 100vh;
-    background-color: #EEE;
-    padding-top: 4.5rem;
+    background-color: #FFF;
+    padding-top: 63px;
+}
+
+div.header-bar {
+    height: 63px;
+    background-color: #f7f7f8 !important;
+
+    .nav-logo {
+        position: relative;
+        top: 5px;
+    }
+
+    .dropdown-item:active {
+        background-color: #c5c6c6;
+    }
 }
 
 .dropdown-toggle::after {
@@ -52,5 +66,83 @@ img.nav-logo {
         label {
             font-weight: bold;
         }
+    }
+}
+
+table.table-hover {
+    td {
+        cursor: pointer;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+.fs-small {
+    font-size: 0.6rem;
+}
+
+.fs-smaller {
+    font-size: 0.9rem;
+}
+
+div.input-group {
+    a {
+        border-color: #dee2e6;
+    }
+}
+
+div.btn-group {
+    a {
+        border-color: #dee2e6 !important;
+    }
+}
+
+.brand-color {
+    color: #764fc1 !important;
+}
+
+.brand-color-dark {
+    color: #633e9e;
+}
+
+div.toolbar-icons {
+    a {
+        height: 32px;
+        padding-right: 0.7rem;
+        padding-left: 0.7rem;
+
+        &.active {
+            background-color: whitesmoke;
+            border: 1px solid lightgrey;
+
+            svg {
+                color: #764fc1 !important;
+            }
+        }
+    }
+
+    :hover {
+        background-color: #FAFAFA !important;
+    }
+}
+
+div.card {
+    border: none;
+    background-color: #f7f7f8 !important;
+
+    div.card {
+        background-color: #FFF !important;
+    }
+}
+
+div.alert {
+
+    border: unset;
+
+    &.alert-slim {
+        padding: 8px;
+        padding-left: 10px;
     }
 }

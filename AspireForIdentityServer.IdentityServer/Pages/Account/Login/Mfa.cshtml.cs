@@ -2,7 +2,8 @@
 
 using Duende.IdentityServer.Models;
 using Duende.IdentityServer.Services;
-using IdentityServer.Models;
+using IdentityServer.Data.Entities.Identity;
+using IdentityServer.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

@@ -4,26 +4,82 @@
     ViewData["Title"] = "User Management";
 }
 
-<h2>User Management</h2>
+<h2 class="brand-color-dark border-bottom">User Management</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model.Users)
-        {
+<div class="d-flex gap-2 mb-2">
+    <div class="flex-grow-1">
+        <div class="input-group">
+            <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
+            <input type="text" class="form-control" aria-label="Sizing example input" placeholder="Search text...">
+            <a class="btn btn-light">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </a>
+        </div>
+    </div>
+    <div>
+        <div class="btn-group">
+            <a class="btn btn-light">
+                <i class="fa-solid fa-user-plus brand-color-dark"></i>
+                New User
+            </a>
+            <a class="btn btn-light">
+                <i class="fa-solid fa-arrow-right-to-bracket brand-color-dark"></i>
+            </a>
+            <a class="btn btn-light">
+                <i class="fa-solid fa-arrows-rotate brand-color-dark"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="border border-light p-1 rounded bg-white shadow-sm">
+    <table class="table table-hover mb-0">
+        <thead>
             <tr>
-                <td>@user.UserName</td>
-                <td>@user.Email</td>
-                <td>
-                    <a asp-page="/Admin/UserDetails/Index" asp-route-id="@user.Id" class="btn btn-info">View</a>
-                </td>
+                <th class="bg-light">Username</th>
+                <th class="bg-light">Display Name</th>
+                <th class="bg-light">Email</th>
+                <th class="bg-light text-center">Security Features</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr data-userdetail data-userid="@user.Id">
+                    <td class="align-middle">@user.UserName</td>
+                    <td class="align-middle">@user.UserName</td>
+                    <td class="align-middle">@user.Email</td>
+                    <td class="align-middle text-center">
+
+                        @if (user.TwoFactorEnabled)
+                        {
+                            <i class="fa-solid fa-shield-halved text-success"></i>
+                            <span class="text-muted fs-small">1 of 2</span>
+                        }
+
+                        @if (!user.TwoFactorEnabled)
+                        {
+                            <i class="fa-solid fa-triangle-exclamation text-danger"></i>
+                            <span class="text-muted fs-small">0 of 2</span>
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    $(function() {
+
+        $("table").on("click", "tr[data-userdetail] td", function () {
+            let userId = $(this).closest('tr').data('userid');
+            window.location.href = '@Url.Page("/Admin/UserDetails/Index")' + '/' + userId;
+        });
+
+    });
+
+
+</script>

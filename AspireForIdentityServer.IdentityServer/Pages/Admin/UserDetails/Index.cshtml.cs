@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages.Admin.UserDetails;
 
-[Authorize(policy: "Admin")]
+[Authorize(policy: "UserAdmin")]
 public class IndexModel : PageModel
 {
     [FromRoute]
@@ -12,6 +12,6 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-
+        ViewData["ActivePage"] = "Users";
     }
 }

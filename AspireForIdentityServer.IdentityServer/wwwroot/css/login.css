@@ -50,13 +50,6 @@ input[type=checkbox] {
 }
 
 /*
-    Error
-*/
-div.error-detail {
-  min-height: 15rem;
-}
-
-/*
     EULA
 */
 div.eula_content {
