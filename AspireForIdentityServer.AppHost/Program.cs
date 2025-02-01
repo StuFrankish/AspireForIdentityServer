@@ -5,6 +5,7 @@ var builder = DistributedApplication.CreateBuilder(args);
 var sqlServer = builder
     .AddSqlServer(name: "SqlServer", port: 62949)
     .WithContainerName("AfIdSrv-SqlServer")
+    .WithDataVolume(name: "AfIdSrv-SqlServer-Data")
     .WithLifetime(ContainerLifetime.Persistent);
 
 var identityServerDb = sqlServer
@@ -12,6 +13,7 @@ var identityServerDb = sqlServer
 
 var redis = builder
     .AddRedis(name: "RedisCache", port: 6379)
+    .WithVolume("AfIdSrv-RedisCache-Data", "/data")
     .WithContainerName("AfIdSrv-RedisCache")
     .WithRedisInsight()
     .WithLifetime(ContainerLifetime.Persistent);
