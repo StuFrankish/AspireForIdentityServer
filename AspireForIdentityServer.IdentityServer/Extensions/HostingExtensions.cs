@@ -2,6 +2,7 @@ using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using IdentityServer.Data.DbContexts;
 using IdentityServer.Data.Entities.Identity;
+using IdentityServer.Handlers;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -19,6 +20,7 @@ internal static class HostingExtensions
         builder.AddAndConfigureSqlServer();
         builder.AddAndConfigureRedisCache();
         builder.AddAndConfigureIdentityServer();
+        builder.AddAndConfigureFido2Services();
         builder.AddAndConfigurePolicyAuthorization();
         builder.AddAndConfigureApiVersioning();
         builder.AddAndConfigureDataProtection();
@@ -150,8 +152,16 @@ internal static class HostingExtensions
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.UseSession();
+
         app.MapRazorPages()
             .RequireAuthorization();
+
+        // Map the FIDO2 routes
+        app.MapPost("/fido2/createattestation", Fido2Handler.CreateAttestationAsync);
+        app.MapPost("/fido2/createattestationoptions", Fido2Handler.CreateAttestationOptionsAsync);
+        app.MapPost("/fido2/createassertion", Fido2Handler.CreateAssertionAsync);
+        app.MapPost("/fido2/createassertionoptions", Fido2Handler.CreateAssertionOptions);
 
         app.MapControllers();
 

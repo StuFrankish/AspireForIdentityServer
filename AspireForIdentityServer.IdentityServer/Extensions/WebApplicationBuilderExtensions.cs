@@ -162,4 +162,21 @@ internal static class WebApplicationBuilderExtensions
             );
     }
 
+    public static void AddAndConfigureFido2Services(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddFido2(options =>
+        {
+            options.Origins = builder.Configuration.GetSection("Fido2:Origins").Get<HashSet<string>>();
+            options.ServerDomain = builder.Configuration["Fido2:ServerDomain"];
+            options.ServerName = builder.Configuration["Fido2:ServerName"];
+            options.TimestampDriftTolerance = builder.Configuration.GetValue<int>("Fido2:TimestampDriftTolerance");
+        });
+
+        builder.Services.AddSession(options =>
+        {
+            options.Cookie.HttpOnly = true;
+            options.Cookie.SameSite = SameSiteMode.Strict;
+        });
+    }
+
 }

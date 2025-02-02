@@ -49,8 +49,8 @@
         @if (Model.View.EnableLocalLogin)
         {
             <div data-intent="local-login">
-                <form asp-page="/Account/Login/Index">
-                    <input type="hidden" asp-for="Input.ReturnUrl" />
+                <form asp-page="/Account/Login/Index" id="login-form">
+                    <input type="hidden" asp-for="Input.ReturnUrl" name="returnUrl" />
                     <input type="hidden" asp-for="Input.RememberLogin" />
 
                     <div class="form-floating mb-3">
