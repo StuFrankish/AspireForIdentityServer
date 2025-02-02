@@ -5,6 +5,7 @@ using IdentityServer.Configuration;
 using IdentityServer.Data.DbContexts;
 using IdentityServer.Data.Entities.Identity;
 using IdentityServer.Data.Repositories.Clients;
+using IdentityServer.Data.Repositories.Users;
 using IdentityServer.Extensions.Options;
 using IdentityServer.SqlInterceptors;
 using Microsoft.AspNetCore.DataProtection;
@@ -50,6 +51,10 @@ internal static class WebApplicationBuilderExtensions
                 // Resolve the interceptors and add them to the optionsBuilder
                 .AddInterceptors([.. serviceProvider.GetServices<ICustomInterceptor>()]);
         };
+
+        // Add support for additional shared repositories
+        builder.Services.AddScoped<IClientRepository, ClientRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
     }
 
     public static void AddAndConfigureIdentityServer(this IHostApplicationBuilder builder)
@@ -111,9 +116,6 @@ internal static class WebApplicationBuilderExtensions
 
         // Add support for local API authentication
         builder.Services.AddLocalApiAuthentication();
-
-        // Add support for additional shared repositories
-        builder.Services.AddScoped<IClientRepository, ClientRepository>();
     }
 
     public static void AddAndConfigurePolicyAuthorization(this WebApplicationBuilder builder)

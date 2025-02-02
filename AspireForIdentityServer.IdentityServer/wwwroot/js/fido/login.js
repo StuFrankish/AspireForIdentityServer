@@ -6,6 +6,8 @@ if (signInButton) {
 
         const { returnUrl } = Object.fromEntries(new FormData(loginForm));
 
+        console.log(returnUrl);
+
         let response = await fetch("/fido2/createassertionoptions", {
             headers: { "Content-Type": "application/json" },
             method: "POST"
@@ -44,9 +46,6 @@ if (signInButton) {
         if (!response.ok) {
             throw new Error("Failed to create the assertion.");
         }
-
-        console.log(returnUrl);
-
 
         window.location.assign(returnUrl ?? '/');
 

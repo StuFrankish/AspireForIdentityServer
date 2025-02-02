@@ -57,6 +57,9 @@ public class Index(
             return RedirectToPage("/ExternalLogin/Challenge", new { scheme = View.ExternalLoginScheme, returnUrl });
         }
 
+        // Default return URL is the home page
+        Input.ReturnUrl ??= Url.Content("~/");
+
         return Page();
     }
 

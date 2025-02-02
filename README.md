@@ -13,18 +13,17 @@ This Aspire based project contains and manages:
 - App Projects (IdentityServer, Client app, API Resource)
 
 ### Customisations
-- Custom Options handler and types (`ICustomOptions`).
 - Customised `HostingExtensions.cs` (provides new `ConfigureServices()`, `InitializeDatabase()` and `ConfigurePipeline()` methods).
 - Custom `WebApplicationBuilder` extensions to provide configuration of IdentityServer and Redis.
-- Cleaned up `Config.cs` into `SeedConfig.cs`
+- Cleaned up `Config.cs` into `SeedConfig.cs` to provider starter users and clients.
 - Added Redis and SQL Server resources to the Aspire AppHost project for use in the IdentityServer application.
 - Endpoint routing with MediatR.
   A customised instance of IdentityServer from Duende using version 7.1.0 configured to use SQL Server storage.
-- ASP.Net Identity with Two-Factor Authentication.
+- ASP.Net Identity with Two-Factor Authentication and Passkey support.
 - An MVC client application setup to use PAR (pushed authorisation requests) and configured to use Redis cache.
 - A protected API resource, also configured to use Redis for output caching.
 - Serilog integration in the above projects, output to console.
-- Endpoint routing with MediatR.
+- Samples using Endpoint routing & MediatR.
 - Sample unit tests using Moq & FluentAssertions.
 
 ## Cloning and Building this project
@@ -38,8 +37,10 @@ Before you start, make sure you have the following installed on your machine:
 - **Docker**: Preferablly Docker Desktop or Rancher for ease of use, but any installation of Docker should work fine.
 
 ### Planned Customisations
-- Passwordless Signin using WebAuthn
-- UI Refresh
+- Additional account management features.
+- Additional client and API resources management.
+
+The idea here is to create a simple, yet feature-rich, IdentityServer solution that can be used as a starting point for new projects.
 
 ### Steps to Clone and Build the Project
 

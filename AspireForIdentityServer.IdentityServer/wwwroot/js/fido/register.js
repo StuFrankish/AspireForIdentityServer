@@ -27,6 +27,8 @@ if (registerbutton) {
 
         const credential = await navigator.credentials.create({ publicKey });
 
+        console.log(credential);
+
         response = await fetch("/fido2/createattestation", {
             body: JSON.stringify({
                 id: credential.id,
@@ -47,7 +49,7 @@ if (registerbutton) {
             throw new Error("Failed to create the attestation.");
         }
 
-        alert("FIDO2 registration successful.");
+        window.location.reload();
 
     });
 } else {

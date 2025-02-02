@@ -137,6 +137,8 @@ public static class Fido2Handler
             throw new Exception(identityResult.ToString());
         }
 
+        httpContext.Session.Remove("Fido2AttestationOptions");
+
         return TypedResults.Ok(credentialResult);
     }
 
@@ -233,6 +235,7 @@ public static class Fido2Handler
         };
 
         await signInManager.SignInWithClaimsAsync(user, false, claims);
+        httpContext.Session.Remove("Fido2AssertionOptions");
 
         return TypedResults.Ok(assertionResult);
     }
