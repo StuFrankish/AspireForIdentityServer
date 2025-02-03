@@ -66,7 +66,7 @@
             {
                 <tr data-userdetail data-userid="@user.Id" class="border-start border-end">
                     <td class="align-middle">
-                        <img src="~/avatar.jpg" alt="mdo" width="24" height="24" class="rounded-circle">
+                        <img src="~/avatar_default.png" alt="mdo" width="24" height="24" class="rounded-circle">
                         @user.UserName
                     </td>
                     <td class="align-middle">@user.UserName</td>
@@ -88,7 +88,6 @@
                                 securityFeaturesEnabled++;
                             }
 
-
                         }
 
                         @if (securityFeaturesEnabled == totalSecurityFeatures)
@@ -108,7 +107,6 @@
 
                     </td>
                     <td class="align-middle text-end">
-                        @* <span class="d-inline-flex mb-0 px-2 py-1 fw-semibold text-success bg-success bg-opacity-10 border border-success border-opacity-10 rounded-2 reduce-font fs-smaller">Active</span> *@
                         Active
                     </td>
                 </tr>

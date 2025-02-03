@@ -107,7 +107,7 @@ public static class Fido2Handler
             AttestationFormat = credentialResult.AttestationFormat,
             Aaguid = credentialResult.AaGuid,
             UserId = new Guid(credentialResult.User.Id).ToString(),
-            CredentialName = "FIDO2 Provider",
+            CredentialName = "Unnamed FIDO2 Provider",
             CredentialCreatedDate = DateTime.Now,
             CredentialLastUsedDate = null
         };

@@ -27,15 +27,16 @@
 
     <partial name="_Nav" />
 
-    <div class="body-container px-3 py-3 h-100">
+    <div class="body-container p-3 h-100">
         @RenderBody()
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/lib/bstoast/bstoast.js" asp-append-version="true"></script>
+
+    <script src="~/lib/bstoast.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    
+
     @RenderSection("scripts", required: false)
 
 </body>
