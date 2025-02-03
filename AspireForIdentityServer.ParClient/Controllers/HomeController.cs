@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.Json;
@@ -15,7 +14,6 @@ using System.Threading.Tasks;
 namespace Client.Controllers;
 
 public class HomeController(
-    ILogger<HomeController> logger,
     IHttpClientFactory httpClientFactory,
     IUserTokenManagementService userTokenManagementService,
     RedisUserSessionStore redisUserSessionStore,

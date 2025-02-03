@@ -1,0 +1,134 @@
+﻿@page
+@model IdentityServer.Pages.Admin.Users.IndexModel
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div class="brand-color-dark mb-2 fs-2 border-bottom">
+    User Management
+</div>
+
+<div class="d-flex gap-2 mb-2 p-2 bg-light rounded-3">
+    <div class="flex-grow-1">
+        <div class="input-group">
+            <span class="input-group-text" id="inputGroup-sizing-default">Search</span>
+            <input type="text" class="form-control" aria-label="Sizing example input" placeholder="Search text...">
+            <a class="btn btn-light">
+                <i class="fa-solid fa-filter brand-color-dark"></i>
+            </a>
+            <a class="btn btn-light">
+                <i class="fa-solid fa-magnifying-glass brand-color-dark"></i>
+            </a>
+        </div>
+    </div>
+    <div>
+        <div class="btn-group">
+            <a class="btn btn-light">
+                <i class="fa-solid fa-user-plus brand-color-dark"></i>
+                New User
+            </a>
+            <a class="btn btn-light">
+                <i class="fa-solid fa-arrow-right-to-bracket brand-color-dark"></i>
+            </a>
+            <a class="btn btn-light">
+                <i class="fa-solid fa-arrows-rotate brand-color-dark"></i>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="border border-light p-2 pb-0 pt-0 rounded bg-light shadow-sm">
+    <table class="table table-hover mb-0 table-gapped">
+        <thead>
+            <tr>
+                <th class="bg-light">
+                    <span class="fw-medium">Username</span>
+                </th>
+                <th class="bg-light">
+                    <span class="fw-medium">Display Name</span>
+                </th>
+                <th class="bg-light">
+                    <span class="fw-medium">Email</span>
+                </th>
+                <th class="bg-light">
+                    <span class="fw-medium">Last Seen</span>
+                </th>
+                <th class="bg-light text-center">
+                    <span class="fw-medium">Security Features</span>
+                </th>
+                <th class="bg-light text-end">
+                    <span class="fw-medium">Status</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr data-userdetail data-userid="@user.Id" class="border-start border-end">
+                    <td class="align-middle">
+                        <img src="~/avatar_default.png" alt="mdo" width="24" height="24" class="rounded-circle">
+                        @user.UserName
+                    </td>
+                    <td class="align-middle">@user.UserName</td>
+                    <td class="align-middle">@user.Email</td>
+                    <td class="align-middle">Never</td>
+                    <td class="align-middle text-center">
+
+                        @{
+                            int totalSecurityFeatures = 2;
+                            int securityFeaturesEnabled = 0;
+
+                            if (user.TwoFactorEnabled)
+                            {
+                                securityFeaturesEnabled++;
+                            }
+
+                            if (user.PublicKeyCredentials.Count > 0)
+                            {
+                                securityFeaturesEnabled++;
+                            }
+
+                        }
+
+                        @if (securityFeaturesEnabled == totalSecurityFeatures)
+                        {
+                            <i class="fa-solid fa-shield-check text-success"></i>
+                        }
+                        else if (securityFeaturesEnabled > 0 && securityFeaturesEnabled < totalSecurityFeatures)
+                        {
+                            <i class="fa-solid fa-shield-halved text-success"></i>
+                        }
+                        else
+                        {
+                            <i class="fa-solid fa-triangle-exclamation text-danger"></i>
+                        }
+
+                        <span class="text-muted fs-small">@securityFeaturesEnabled of @totalSecurityFeatures</span>
+
+                    </td>
+                    <td class="align-middle text-end">
+                        Active
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+
+    <script>
+
+        $(function() {
+
+            $("table").on("click", "tr[data-userdetail] td", function () {
+                let userId = $(this).closest('tr').data('userid');
+                window.location.href = '@Url.Page("/Admin/UserDetails/Index")' + '/' + userId;
+            });
+
+        });
+
+
+    </script>
+
+}

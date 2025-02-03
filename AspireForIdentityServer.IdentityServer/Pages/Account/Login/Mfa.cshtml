@@ -1,0 +1,69 @@
+﻿@page
+@model IdentityServer.Pages.Account.Mfa.Index
+@{
+    ViewData["Title"] = "Two-factor authentication";
+    Layout = "_LayoutLogin";
+}
+
+<div class="row mb-1">
+    <div class="col">
+        <img src="~/logo_long.png" class="login-logo" />
+    </div>
+</div>
+
+<div class="row d-flex justify-content-center">
+
+    <div class="col-12 col-md-8">
+
+        <div class="mb-4">
+            <span class="fs-2">Two-Factor Authentication</span>
+            <p class="text-muted">
+                Your sign in is protected by two-factor authentication. Enter the one-time-passcode from your authenticator to continue.
+            </p>
+        </div>
+
+        <form method="post" asp-route-returnUrl="@Model.ReturnUrl">
+            <input type="hidden" asp-for="@Model.ReturnUrl" />
+
+            <div class="form-floating">
+                <input type="text"
+                       autocomplete="one-time-code"
+                       class="form-control"
+                       asp-for="Input.TwoFactorCode"
+                       id="tokenInput"
+                       pattern="[0-9]{6}"
+                       inputmode="numeric"
+                       title="Please enter a 6-digit passcode"
+                       oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                       maxlength="6">
+
+                <label asp-for="Input.TwoFactorCode">One-Time Passcode</label>
+                <span asp-validation-for="Input.TwoFactorCode" class="text-danger"></span>
+
+                <div class="login-supplementary-text">
+                    <p>
+                        Having trouble?
+                        <a class="mx-1 rounded-5 text-decoration-none" id="recovery-code-login" asp-page="./LoginWithRecoveryCode" asp-route-returnUrl="@Model.ReturnUrl">
+                            Use a recovery code
+                        </a>
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="d-flex gap-2 my-3">
+                <div class="d-flex gap-2">
+                    <button class="btn btn-primary mx-1 rounded-pill" name="Input.Button" value="confirm">Confirm</button>
+                    <button class="btn btn-light text-muted rounded-pill" name="Input.Button" value="decline">Cancel</button>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

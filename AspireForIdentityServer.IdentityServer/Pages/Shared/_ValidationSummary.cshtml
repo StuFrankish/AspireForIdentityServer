@@ -1,7 +1,22 @@
-﻿@if (ViewContext.ModelState.IsValid == false)
+﻿@if (!ViewContext.ModelState.IsValid)
 {
-    <div class="alert alert-danger">
-        <strong>Error</strong>
-        <div asp-validation-summary="All" class="danger"></div>
+    <div class="error-list-container d-flex flex-row p-2 mb-3 rounded">
+        <div>
+            <i class="fa-solid fa-fw fa-triangle-exclamation error-list-icon"></i>
+        </div>
+        <div>
+            <div class="ms-2 error-list-title">
+                Sorry, there was a problem:
+            </div>
+            <ul class="my-2">
+                @foreach (var state in ViewContext.ModelState)
+                {
+                    foreach (var error in state.Value.Errors)
+                    {
+                        <li class="custom-error-item">@error.ErrorMessage</li>
+                    }
+                }
+            </ul>
+        </div>
     </div>
 }

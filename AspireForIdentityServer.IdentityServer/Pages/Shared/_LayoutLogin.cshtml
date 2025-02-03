@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+
+    <title>Duende IdentityServer</title>
+    
+    <link rel="icon" type="image/x-icon" href="~/favicon.ico" />
+    <link rel="shortcut icon" type="image/x-icon" href="~/favicon.ico" />
+    
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
+    <!-- This FontAwesome Kit is available to localhost and stufrankish.dev domains only -->
+    <script src="https://kit.fontawesome.com/d8fcd1bfde.js" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/login.min.css" asp-append-version="true" />
+
+</head>
+<body>
+
+    <div class="container">
+        <div class="login-container">
+
+            <div class="login-container-content bg-white rounded-5 p-4 shadow-sm">
+
+                @RenderBody()
+
+            </div>
+
+            <partial name="_footer" />
+
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.slim.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

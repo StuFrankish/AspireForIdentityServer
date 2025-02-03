@@ -1,0 +1,271 @@
+﻿@page
+@model IdentityServer.Pages.Account.Manage.ManageAccountModel
+@{
+    ViewData["Title"] = "Manage Account";
+}
+
+<div class="d-flex justify-content-between border-bottom">
+    <div class="brand-color-dark fs-2">
+        Manage Your Account
+    </div>
+    <div class="d-inline">
+
+        <button type="button" class="btn brand-color-dark">
+            <i class="fa-solid fa-user-pen"></i>
+            Update Profile
+        </button>
+
+    </div>
+</div>
+
+<div class="row pb-5">
+    <div class="col-12 col-md-8 offset-md-2">
+
+        <div class="card mb-2 rounded-4 mt-4">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-muted mb-1">
+                    <i class="fa-solid fa-id-badge fa-fw"></i>
+                    Account Info
+                </h2>
+                <p class="text-body-secondary">
+                    View basic details about your account and current status.
+                </p>
+
+                <div class="card bg-white rounded-4">
+
+                    <div class="card-body py-1">
+
+                        <div class="d-flex align-content-between">
+                            <ul class="list-group list-group-flush w-50">
+                                <li class="list-group-item ps-0"><span class="fw-medium">Username:</span> @Model.ProfileDataModel.UserName</li>
+                                <li class="list-group-item ps-0"><span class="fw-medium">Email:</span> @Model.ProfileDataModel.Email</li>
+                                <li class="list-group-item ps-0">
+                                    <span class="fw-medium">Email Confirmed:</span>
+                                    <span class="badge @(Model.ProfileDataModel.EmailConfirmed ? "bg-success" : "bg-danger")">
+                                        @(Model.ProfileDataModel.EmailConfirmed ? "Yes" : "No")
+                                    </span>
+                                </li>
+                            </ul>
+                            <ul class="list-group list-group-flush w-50">
+                                <li class="list-group-item ps-0"><span class="fw-medium">Unique ID:</span> @Model.ProfileDataModel.Id</li>
+                                <li class="list-group-item ps-0"><span class="fw-medium">Phone Number:</span> @(Model.ProfileDataModel.PhoneNumber ?? "None")</li>
+                                <li class="list-group-item ps-0">
+                                    <span class="fw-medium">Phone Confirmed:</span>
+                                    <span class="badge @(Model.ProfileDataModel.PhoneNumberConfirmed ? "bg-success" : "bg-danger")">
+                                        @(Model.ProfileDataModel.PhoneNumberConfirmed ? "Yes" : "No")
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card mb-2 rounded-4 mt-4">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-muted mb-1">
+                    <i class="fa-solid fa-user-shield fa-fw"></i>
+                    Sign-in &amp; Security
+                </h2>
+                <p class="text-body-secondary">
+                    Manage your sign-in options, including Two-Factor Authentication (2FA) and Passwordless Sign-in.
+                </p>
+                <div class="card bg-white rounded-4">
+                    <div class="card-body">
+
+                        <div class="fw-medium mb-2 text-muted">
+                            Two-Factor Authentication
+
+                            @if (Model.TwoFactorAuthModel.Is2faEnabled)
+                            {
+                                <i class="fa-solid fa-check text-success"></i>
+                            }
+
+                        </div>
+                        <div>
+
+                            @if (Model.TwoFactorAuthModel.Is2faEnabled)
+                            {
+                                if (Model.TwoFactorAuthModel.RecoveryCodesLeft == 0)
+                                {
+                                    <div class="alert alert-danger">
+                                        <strong>You have no recovery codes left.</strong>
+                                        <div>You must <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a> before you can log in with a recovery code.</div>
+                                    </div>
+                                }
+                                else if (Model.TwoFactorAuthModel.RecoveryCodesLeft == 1)
+                                {
+                                    <div class="alert alert-danger">
+                                        <strong>You have 1 recovery code left.</strong>
+                                        <div>You can <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</div>
+                                    </div>
+                                }
+                                else if (Model.TwoFactorAuthModel.RecoveryCodesLeft <= 3)
+                                {
+                                    <div class="alert alert-warning">
+                                        <strong>You have @Model.TwoFactorAuthModel.RecoveryCodesLeft recovery codes left.</strong>
+                                        <div>You should <a asp-page="./GenerateRecoveryCodes">generate a new set of recovery codes</a>.</div>
+                                    </div>
+                                }
+
+                                <a asp-page="./GenerateRecoveryCodes" class="btn btn-sm btn-primary">Generate Recovery Codes</a>
+                                <a asp-page="./Disable2fa" class="btn btn-sm btn-danger">Disable 2FA</a>
+                            }
+                            else
+                            {
+                                <div class="alert alert-warning alert-slim">
+                                    <div class="fw-medium">You have not enabled Two-Factor Authentication.</div>
+                                    <div class="fs-smaller">We recommend using Two-Factor Authentication to help keep your account as secure as possible.</div>
+
+                                    <a asp-page="./EnableAuthenticator" class="btn btn-sm btn-primary mt-3">Setup Authenticator App</a>
+                                </div>
+                            }
+
+                            @if (Model.TwoFactorAuthModel.HasAuthenticator && Model.TwoFactorAuthModel.Is2faEnabled)
+                            {
+                                <a id="reset-authenticator" asp-page="./ResetAuthenticator" class="btn btn-sm btn-primary">Reset Authenticator Key</a>
+                            }
+
+                        </div>
+
+                        <hr class="text-body-secondary" />
+
+                        <div class="fw-medium mb-2 text-muted">
+                            Passwordless Sign-in
+
+                            @if (Model.Fido2AuthModel.RegisteredCredentialsCount > 0)
+                            {
+                                <i class="fa-solid fa-check text-success"></i>
+                            }
+
+                        </div>
+
+                        @if (Model.Fido2AuthModel.RegisteredCredentialsCount > 0)
+                        {
+                            <ul class="list-group list-group-flush border-bottom mb-2">
+
+                                @foreach (var credential in Model.Fido2AuthModel.PublicKeyCredentials)
+                                {
+                                    <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+
+                                        <div>
+                                            <span class="fw-medium">
+                                                @credential.CredentialName
+                                            </span>
+
+                                            @if (credential.IsBackedUp)
+                                            {
+                                                <i class="fa-light fa-cloud-check text-success"></i>
+                                            }
+
+                                            <div class="text-muted fs-small">
+                                                Created: @credential.CredentialCreatedDate.ToString("dd/MM/yyyy HH:mm")
+
+                                                @if (credential.CredentialLastUsedDate.HasValue)
+                                                {
+                                                    <span>
+                                                        | Last Used: @credential.CredentialLastUsedDate?.ToString("dd/MM/yyyy HH:mm")
+                                                    </span>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <a class="btn btn-sm btn-light text-success" data-bs-toggle="tooltip" data-bs-title="Edit Passkey Nickname">
+                                                <i class="fa-solid fa-pen"></i>
+                                            </a>
+                                            <a class="btn btn-sm btn-light text-danger" data-bs-toggle="tooltip" data-bs-title="Delete Passkey">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </div>
+
+                                    </li>
+                                }
+
+                            </ul>
+                        }
+
+                        <div>
+                            <a class="btn btn-primary btn-sm" id="register-fido">Setup a Passkey</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-2 rounded-4 mt-4">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-muted mb-1">
+                    <i class="fa-solid fa-list-ul fa-fw"></i>
+                    Other Data
+                </h2>
+                <p class="text-body-secondary">
+                    See additional information stored about you.
+                </p>
+
+                <div class="card bg-white rounded-4">
+
+                    <div class="card-body p-1">
+
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Claim Type</th>
+                                    <th>Claim Value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var claim in Model.UserClaimsModel.Claims)
+                                {
+                                    <tr>
+                                        <td>@claim.Type</td>
+                                        <td>@claim.Value</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="card mb-2 rounded-4 mt-4 card-danger">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-danger mb-1">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Close Account
+                </h2>
+                <p class="text-body-secondary">
+                    Close your account &amp; remove all data.
+                </p>
+
+                <div class="card bg-white rounded-4">
+
+                    <div class="card-body">
+
+                        <div class="alert alert-warning alert-slim">
+                            <div class="fw-medium">Closing your account is not enabled.</div>
+                            <div class="fs-smaller">You can download a copy of your data below.</div>
+                        </div>
+
+                        <a class="btn btn-primary btn-sm" id="register-fido">Download Data</a>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="~/js/fido/helpers.js"></script>
+<script src="~/js/fido/register.js"></script>

@@ -1,6 +1,10 @@
 using Duende.IdentityServer.EntityFramework.DbContexts;
 using Duende.IdentityServer.EntityFramework.Mappers;
+using IdentityServer.Data.DbContexts;
+using IdentityServer.Data.Entities.Identity;
+using IdentityServer.Handlers;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -10,11 +14,14 @@ internal static class HostingExtensions
 {
     public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddRazorPages();
+        builder.Services.AddRazorPages()
+            .AddRazorRuntimeCompilation();
 
         builder.AddAndConfigureSqlServer();
         builder.AddAndConfigureRedisCache();
         builder.AddAndConfigureIdentityServer();
+        builder.AddAndConfigureFido2Services();
+        builder.AddAndConfigurePolicyAuthorization();
         builder.AddAndConfigureApiVersioning();
         builder.AddAndConfigureDataProtection();
 
@@ -31,7 +38,8 @@ internal static class HostingExtensions
         // Create a list of contexts to loop through and migrate.
         List<Type> contexts = [
             typeof(PersistedGrantDbContext),
-            typeof(ConfigurationDbContext)
+            typeof(ConfigurationDbContext),
+            typeof(ApplicationDbContext)
         ];
 
         foreach (var context in contexts)
@@ -46,7 +54,7 @@ internal static class HostingExtensions
 
         // Create an instance of the Configuration & Identity Db Contexts
         var configurationDbContext = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
-
+        var applicationDbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         // Seed clients
         if (!configurationDbContext.Clients.Any())
@@ -76,6 +84,39 @@ internal static class HostingExtensions
             foreach (var resource in seedConfig.ApiScopes)
             {
                 configurationDbContext.ApiScopes.Add(resource.ToEntity());
+            }
+
+            saveChanges = true;
+        }
+
+        // Seed users
+        if (!applicationDbContext.Users.Any())
+        {
+            var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            roleManager.CreateAsync(new IdentityRole("user.admin"))
+                .GetAwaiter().GetResult();
+
+            foreach (var seedUser in seedConfig.Users)
+            {
+                var userToCreate = new ApplicationUser
+                {
+                    UserName = seedUser.Username,
+                    Email = seedUser.Email
+                };
+
+                var createdUser = userManager.CreateAsync(user: userToCreate, password: seedUser.Password)
+                    .GetAwaiter().GetResult();
+
+                userManager.AddClaimAsync(userToCreate, new("display_name", seedUser.DisplayName))
+                    .GetAwaiter().GetResult();
+
+                if (seedUser.IsAdmin)
+                {
+                    userManager.AddToRoleAsync(userToCreate, "user.admin")
+                        .GetAwaiter().GetResult();
+                }
             }
 
             saveChanges = true;
@@ -111,8 +152,16 @@ internal static class HostingExtensions
         app.UseAuthentication();
         app.UseAuthorization();
 
+        app.UseSession();
+
         app.MapRazorPages()
             .RequireAuthorization();
+
+        // Map the FIDO2 routes
+        app.MapPost("/fido2/createattestation", Fido2Handler.CreateAttestationAsync);
+        app.MapPost("/fido2/createattestationoptions", Fido2Handler.CreateAttestationOptionsAsync);
+        app.MapPost("/fido2/createassertion", Fido2Handler.CreateAssertionAsync);
+        app.MapPost("/fido2/createassertionoptions", Fido2Handler.CreateAssertionOptions);
 
         app.MapControllers();
 

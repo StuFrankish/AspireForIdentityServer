@@ -1,0 +1,73 @@
+﻿@page
+@model ShowRecoveryCodesModel
+
+
+<div class="d-flex border-bottom">
+    <div class="brand-color-dark fs-2">
+        Manage Your Account
+    </div>
+</div>
+
+<div class="row pb-5">
+    <div class="col-12 col-md-8 offset-md-2">
+
+        <div class="card mb-2 rounded-4 mt-4">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-danger mb-1">
+                    <i class="fa-solid fa-user-shield fa-fw"></i>
+                    Generate Recovery Codes
+                </h2>
+                <p class="text-body-secondary">
+                    New recovery codes have been created. Any previous codes are now invalid.
+                </p>
+                <div class="card bg-white rounded-4">
+                    <div class="card-body">
+
+                        <div>
+
+                            <div class="alert alert-warning alert-slim">
+                                <div class="fw-medium">Put these codes in a safe place.</div>
+                                <div class="fs-smaller">If you lose your device and don't have the recovery codes you will lose access to your account.</div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 recovery-codes">
+                                    @for (var row = 0; row < Model.RecoveryCodes.Length; row += 5)
+                                    {
+                                        <code class="recovery-code">@Model.RecoveryCodes[row]</code>
+
+                                        <text>&nbsp;</text>
+
+                                        <code class="recovery-code">@Model.RecoveryCodes[row + 1]</code>
+
+                                        <text>&nbsp;</text>
+
+                                        <code class="recovery-code">@Model.RecoveryCodes[row + 2]</code>
+
+                                        <text>&nbsp;</text>
+
+                                        <code class="recovery-code">@Model.RecoveryCodes[row + 3]</code>
+
+                                        <text>&nbsp;</text>
+
+                                        <code class="recovery-code">@Model.RecoveryCodes[row + 3]</code>
+
+                                        <br />
+
+                                    }
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <a asp-page="./Index" class="btn btn-primary btn-sm">I have stored these codes safely.</a>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

@@ -1,0 +1,96 @@
+﻿body {
+    background-color: #f0f4f9;
+    color: #212121;
+}
+
+.container {
+    display: flex; /* Use Flexbox */
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 100vh; /* Use the full height of the viewport */
+}
+
+.login-container {
+    width: 1070px;
+}
+
+.login-container-content {
+    background-image: url('/loginbg.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+@media (max-width: 576px) {
+    .container {
+        align-items: flex-start;
+        margin-top: 1rem;
+        height: unset;
+    }
+}
+
+.login-attribution {
+    font-size: 0.8rem;
+}
+
+.login-supplementary-text {
+    font-size: 0.8rem;
+    font-weight: lighter;
+}
+
+img.login-logo {
+    max-height: 48px;
+}
+
+div.consent-description {
+    font-size: 0.8rem;
+}
+
+
+input[type=checkbox] {
+    width: 16px;
+    margin-right: 0.3rem;
+}
+
+/*
+    EULA
+*/
+
+div.eula_content {
+    max-height: 50vh;
+
+    p {
+        font-size: 0.8rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+}
+
+/*
+    Consent
+*/
+
+div.page-consent {
+    span.section-description {
+        font-size: small;
+        font-weight: 400;
+        position: relative;
+        top: -10px;
+    }
+}
+
+/*
+    Content
+*/
+
+svg.signin-partner-icon,
+img.signin-partner-icon {
+    max-height: 24px;
+    max-width: 24px;
+
+    &.rotate-90 {
+        transform: rotate(90deg);
+    }
+}

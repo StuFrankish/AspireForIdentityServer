@@ -1,40 +1,66 @@
 @page
-@model IdentityServer.Pages.Create.Index
+@model IdentityServer.Pages.Account.Create.Index
 
-<div class="login-page">
-    <div class="lead">
-        <h1>Create Account</h1>
+@{
+    Layout = "_LayoutLogin";
+}
+
+<div class="row mb-1">
+    <div class="col">
+        <img src="~/logo_long.png" class="login-logo" />
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-12 col-md-6 mb-3 mb-md-0">
+        <span class="fs-2 d-block mb-1">Register</span>
+        <span class="d-block">Create your Local Account</span>
     </div>
 
-    <partial name="_ValidationSummary" />
+    <div class="col-12 col-md-6">
 
-    <div class="row">
+        <form asp-page="/Account/Create/Index">
 
-        <div class="col-sm-6">
-            <form asp-page="/Account/Create/Index">
-                <input type="hidden" asp-for="Input.ReturnUrl" />
+            <input type="hidden" asp-for="Input.ReturnUrl" />
 
-                <div class="form-group">
-                    <label asp-for="Input.Username"></label>
-                    <input class="form-control" placeholder="Username" asp-for="Input.Username" autofocus>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Password"></label>
-                    <input type="password" class="form-control" placeholder="Password" asp-for="Input.Password" autocomplete="off">
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Name"></label>
-                    <input type="text" class="form-control" placeholder="Name" asp-for="Input.Name">
-                </div>
-                <div class="form-group">
-                    <label asp-for="Input.Email"></label>
-                    <input type="email" class="form-control" placeholder="Email" asp-for="Input.Email" >
-                </div>
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" asp-for="Input.Username" placeholder="Username" autofocus>
+                <label asp-for="Input.Username">Username</label>
+            </div>
 
-                <button class="btn btn-primary" name="Input.Button" value="create">Create</button>
-                <button class="btn btn-secondary" name="Input.Button" value="cancel">Cancel</button>
-            </form>
-        </div>
-        
+            <div class="form-floating mb-3">
+                <input type="password" class="form-control" asp-for="Input.Password" placeholder="Password" autocomplete="off">
+                <label asp-for="Input.Password">Password</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" asp-for="Input.Name" placeholder="Display Name">
+                <label asp-for="Input.Name">Display Name</label>
+            </div>
+
+            <div class="form-floating mb-3">
+                <input type="email" class="form-control" asp-for="Input.Email" placeholder="Email">
+                <label asp-for="Input.Email"></label>
+            </div>
+
+            <partial name="_ValidationSummary" />
+
+            <div class="my-4 login-supplementary-text">
+                <p>
+                    This is some really short text that has no purpose yet.
+                    This is some really short text that has no purpose yet.
+                </p>
+            </div>
+
+            <div class="my-3">
+                <button class="btn btn-primary float-end mx-1 rounded-5" name="Input.Button" value="create">Register</button>
+                <button class="btn float-end mx-3 text-muted" name="Input.Button" value="cancel">Cancel</button>
+            </div>
+
+        </form>
+
     </div>
+
+
 </div>

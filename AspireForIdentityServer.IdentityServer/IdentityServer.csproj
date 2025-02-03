@@ -6,16 +6,30 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Remove="compilerconfig.json" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
 		<PackageReference Include="Azure.Identity" Version="1.13.2" />
-		<PackageReference Include="Duende.IdentityServer" Version="7.1.0" />
-		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.1.0" />
+		<PackageReference Include="Duende.IdentityServer" Version="7.2.0-preview.1" />
+		<PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="7.2.0-preview.1" />
+		<PackageReference Include="Duende.IdentityServer.EntityFramework" Version="7.2.0-preview.1" />
+		<PackageReference Include="Fido2.AspNet" Version="4.0.0-beta.16" />
 
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.1" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="9.0.1" />
 
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="9.0.1" />
 
 		<PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="9.0.1" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.1" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.1" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="9.0.1" />
 
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
 		  <PrivateAssets>all</PrivateAssets>
@@ -32,6 +46,13 @@
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="9.0.1" />
 
 		<PackageReference Include="Microsoft.Identity.Client" Version="4.67.2" />
+
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.7.1">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
 		<PackageReference Include="StackExchange.Redis" Version="2.8.24" />
 		<PackageReference Include="System.Formats.Asn1" Version="9.0.1" />
@@ -40,6 +61,14 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\AspireForIdentityServer.ServiceDefaults\AspireForIdentityServer.ServiceDefaults.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Migrations\ApplicationDb\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Include="compilerconfig.json" />
 	</ItemGroup>
 
 

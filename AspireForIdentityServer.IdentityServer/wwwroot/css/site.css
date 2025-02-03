@@ -1,39 +1,15 @@
-﻿.welcome-page .logo {
-  width: 64px;
+﻿.error-list-container {
+  font-size: 0.8rem;
+  background-color: #f7e8eb !important;
+  color: #B71C1C;
 }
-
-.icon-banner {
-  width: 32px;
+.error-list-container .error-list-title {
+  font-weight: 500 !important;
 }
-
-.body-container {
-  margin-top: 60px;
-  padding-bottom: 40px;
+.error-list-container .error-list-icon {
+  position: relative;
+  left: 2px;
 }
-
-.welcome-page li {
-  list-style: none;
-  padding: 4px;
-}
-
-.logged-out-page iframe {
-  display: none;
-  width: 0;
-  height: 0;
-}
-
-.grants-page .card {
-  margin-top: 20px;
-  border-bottom: 1px solid lightgray;
-}
-.grants-page .card .card-title {
-  font-size: 120%;
-  font-weight: bold;
-}
-.grants-page .card .card-title img {
-  width: 100px;
-  height: 100px;
-}
-.grants-page .card label {
-  font-weight: bold;
+.error-list-container ul {
+  padding-left: 25px;
 }

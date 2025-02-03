@@ -1,32 +1,119 @@
 @using Duende.IdentityServer.Extensions
+@using IdentityServer.Data.Entities.Identity
+@using IdentityServer.Data.Models
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 @{
-    string name = null;
-    if (!true.Equals(ViewData["signed-out"]))
-    {
-        name = Context.User?.GetDisplayName();
-    }
+    string displayName = User?.FindFirst("display_name")?.Value ?? UserManager.GetUserName(User);
+    var activePage = ViewData["ActivePage"] as string;
 }
 
-<div class="nav-page">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<div class="header-bar fixed-top border-bottom border-light-subtle p-2">
 
-        <a href="~/" class="navbar-brand">
-            <img src="~/duende-logo.svg" class="icon-banner">
-            Duende IdentityServer
-        </a>
+    <div class="d-flex justify-content-between">
+        <div>
 
-        @if (!string.IsNullOrWhiteSpace(name))
-        {
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item dropdown">
-                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">@name <b class="caret"></b></a>
-                    
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" asp-page="/Account/Logout/Index">Logout</a>
-                    </div>
-              </li>
-            </ul>
-        }
-    
-    </nav>
+            <a href="~/">
+                <img src="~/logo_long.png" class="me-2 nav-logo float-start" alt="Logo">
+            </a>
+            
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <div class="d-inline-flex gap-1 p-1 ms-2 bg-white rounded-pill toolbar-icons mt-1">
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Clients" ? "active" : "")"
+                       id="login" asp-page="/Admin/Clients/Index" title="Clients">
+                        <i class="fa-solid fa-rectangle-history-circle-user text-muted me-1"></i>
+                        Clients
+                    </a>
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Users" ? "active" : "")"
+                       id="login" asp-page="/Admin/Users/Index" title="Manage Users">
+                        <i class="fa-solid fa-fw fa-user-group text-muted me-1"></i>
+                        Users
+                    </a>
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Roles" ? "active" : "")"
+                       id="login" asp-page="/Admin/Roles/Index" title="Roles">
+                        <i class="fa-solid fa-scale-balanced text-muted me-1"></i>
+                        Roles
+                    </a>
+                </div>
+                <div class="d-inline-flex gap-1 p-1 bg-white rounded-pill toolbar-icons">
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Advanced" ? "active" : "")"
+                       id="login" asp-page="/Admin/System/Index" title="Advanced">
+                        <i class="fa-solid fa-screwdriver-wrench me-1 text-muted"></i>
+                        Advanced
+                    </a>
+                </div>
+            }
+
+        </div>
+        <div>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <div class="d-inline-flex gap-1 p-1 bg-white rounded-pill toolbar-icons me-3 mt-1">
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Advanced" ? "active" : "")"
+                       id="login" asp-page="/Admin/System/Index" title="Notifications">
+                        <i class="fa-solid fa-fw fa-bell-on text-muted"></i>
+                    </a>
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Advanced" ? "active" : "")"
+                       id="login" asp-page="/Admin/System/Index" title="Apps">
+                        <i class="fa-solid fa-grid text-secondary-emphasis"></i>
+                    </a>
+                </div>
+
+                <div class="flex-shrink-0 dropdown float-end p-1 mt-1 me-1">
+                    <a href="#" class="d-block link-body-emphasis d-flex flex-row align-items-center text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="me-2">@displayName</div>
+                        <img src="~/avatar_default.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                    </a>
+                    <ul class="dropdown-menu text-small gap-1 p-2 rounded-3 mx-0 shadow">
+                        <li><h6 class="dropdown-header">User Menu</h6></li>
+                        <li>
+                            <a class="dropdown-item ps-2 rounded" asp-page="/Account/Manage/Index">
+                                <i class="fa-solid fa-user fa-fw me-1 text-muted"></i>
+                                Manage Your Account
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item ps-2 rounded" asp-page="/Account/Manage/Index">
+                                <i class="fa-solid fa-gear fa-fw me-1 text-muted"></i>
+                                Settings &amp; Privacy
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item ps-2 rounded" asp-page="/Account/Manage/Index">
+                                <i class="fa-regular fa-circle-question fa-fw me-1 text-muted"></i>
+                                Help Center
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item ps-2 rounded" asp-page="/Account/Logout/Index">
+                                <i class="fa-solid fa-door-open fa-fw me-1 text-muted"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="d-inline-flex gap-1 p-1 bg-white float-end rounded-pill toolbar-icons me-3 mt-1">
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center"
+                       id="login" asp-page="/Account/Login/Index" title="Login">
+                        <i class="fa-solid fa-fw fa-key text-muted me-1"></i>
+                        Login
+                    </a>
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center"
+                       id="register" asp-page="/Account/Create/Index" title="Register">
+                        <i class="fa-solid fa-user-plus text-muted me-1"></i>
+                        Register
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+
 </div>

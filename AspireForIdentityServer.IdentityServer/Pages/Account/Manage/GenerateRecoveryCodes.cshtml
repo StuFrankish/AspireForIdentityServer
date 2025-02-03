@@ -1,0 +1,41 @@
+﻿@page
+@model GenerateRecoveryCodesModel
+
+<div class="d-flex border-bottom">
+    <div class="brand-color-dark fs-2">
+        Manage Your Account
+    </div>
+</div>
+
+<div class="row pb-5">
+    <div class="col-12 col-md-8 offset-md-2">
+
+        <div class="card mb-2 rounded-4 mt-4">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-danger mb-1">
+                    <i class="fa-solid fa-user-shield fa-fw"></i>
+                    Generate Recovery Codes
+                </h2>
+                <p class="text-body-secondary">
+                    Generating new recovery codes does not change the keys used in authenticator apps.<br />
+                    If you wish to change the key used in an authenticator app you should <a asp-page="./ResetAuthenticator">reset your authenticator keys.</a>
+                </p>
+                <div class="card bg-white rounded-4">
+                    <div class="card-body">
+
+                        <div>
+
+                            <form method="post">
+                                <button class="btn btn-danger btn-sm" type="submit">Generate Recovery Codes</button>
+                                <a id="reset-authenticator" asp-page="./Index" class="btn btn-light btn-sm">Cancel</a>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

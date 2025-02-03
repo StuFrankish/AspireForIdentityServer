@@ -1,0 +1,43 @@
+﻿@page
+@model ResetAuthenticatorModel
+
+<div class="d-flex border-bottom">
+    <div class="brand-color-dark fs-2">
+        Manage Your Account
+    </div>
+</div>
+
+<div class="row pb-5">
+    <div class="col-12 col-md-8 offset-md-2">
+
+        <div class="card mb-2 rounded-4 mt-4">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-danger mb-1">
+                    <i class="fa-solid fa-user-shield fa-fw"></i>
+                    Reset Authenticator Key
+                </h2>
+                <p class="text-body-secondary">
+                    This process disables 2FA until you verify your authenticator app.<br />
+                    If you do not complete your authenticator app configuration you may lose access to your account.
+                </p>
+                <div class="card bg-white rounded-4">
+                    <div class="card-body">
+
+                        <div>
+
+                            <partial name="_StatusMessage" for="StatusMessage" />
+
+                            <form id="reset-authenticator-form" method="post">
+                                <button id="reset-authenticator-button" class="btn btn-danger btn-sm" type="submit">Reset authenticator key</button>
+                                <a id="reset-authenticator" asp-page="./Index" class="btn btn-light btn-sm">Cancel</a>
+                            </form>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

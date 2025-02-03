@@ -1,0 +1,196 @@
+﻿body {
+    height: 100vh;
+    background-color: #FFF;
+    padding-top: 63px;
+}
+
+div.header-bar {
+    height: 63px;
+    background-color: #f7f7f8 !important;
+
+    .nav-logo {
+        position: relative;
+        top: 5px;
+    }
+
+    .dropdown-item:active {
+        background-color: #c5c6c6;
+    }
+}
+
+.dropdown-toggle::after {
+    content: none;
+}
+
+img.nav-logo {
+    max-height: 40px;
+}
+
+.icon-banner {
+    width: 32px;
+}
+
+.welcome-page {
+    li {
+        list-style: none;
+        padding: 4px;
+    }
+
+    img.logo {
+        max-width: 64px;
+    }
+}
+
+.logged-out-page {
+    iframe {
+        display: none;
+        width: 0;
+        height: 0;
+    }
+}
+
+.grants-page {
+    .card {
+        margin-top: 20px;
+        border-bottom: 1px solid lightgray;
+
+        .card-title {
+            img {
+                width: 100px;
+                height: 100px;
+            }
+
+            font-size: 120%;
+            font-weight: bold;
+        }
+
+        label {
+            font-weight: bold;
+        }
+    }
+}
+
+div.qr-code-container {
+    img {
+        margin-left: auto;
+        margin-right: auto;
+    }
+}
+
+table.table-hover {
+    td {
+        cursor: pointer;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+.fs-small {
+    font-size: 0.6rem;
+}
+
+.fs-smaller {
+    font-size: 0.9rem;
+}
+
+div.input-group {
+    a {
+        border-color: #dee2e6;
+    }
+}
+
+div.btn-group {
+    a {
+        border-color: #dee2e6 !important;
+    }
+}
+
+.brand-color {
+    color: #764fc1 !important;
+}
+
+.brand-color-dark {
+    color: #633e9e;
+}
+
+div.toolbar-icons {
+    a {
+        height: 32px;
+        padding-right: 0.7rem;
+        padding-left: 0.7rem;
+
+        &.active {
+            background-color: whitesmoke;
+            border: 1px solid lightgrey;
+
+            svg {
+                color: #764fc1 !important;
+            }
+        }
+    }
+
+    :hover {
+        background-color: #FAFAFA !important;
+    }
+}
+
+div.recovery-codes {
+    code {
+        border: 1px solid;
+        padding: 5px;
+        border-radius: 5px;
+        margin-right: 0.5rem;
+        margin-bottom: 1rem;
+        display: inline-block;
+    }
+}
+
+div.card {
+    border: none;
+    background-color: #f7f7f8 !important;
+
+    div.card {
+        background-color: #FFF !important;
+    }
+}
+
+div.alert {
+    border: unset;
+
+    &.alert-slim {
+        padding: 8px;
+        padding-left: 10px;
+    }
+}
+
+table.table-gapped {
+    border-collapse: separate;
+    border: none;
+    border-spacing: 0 10px;
+    width: 100%;
+    background-color: transparent;
+
+    tr {
+        background-color: #fff;
+
+        th,
+        td {
+            border: none;
+            padding: 10px;
+        }
+
+        th:first-child,
+        td:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+    }
+}

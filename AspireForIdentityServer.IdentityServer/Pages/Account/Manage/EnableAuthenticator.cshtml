@@ -1,0 +1,113 @@
+﻿@page
+@model EnableAuthenticatorModel
+
+<div class="d-flex border-bottom">
+    <div class="brand-color-dark fs-2">
+        Manage Your Account
+    </div>
+</div>
+
+<div class="row pb-5">
+    <div class="col-12 col-md-8 offset-md-2">
+
+        <div class="card mb-2 rounded-4 mt-4">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-muted mb-1">
+                    <i class="fa-solid fa-mobile-screen-button fa-fw"></i>
+                    Setup Authenticator App
+                </h2>
+                <p class="text-body-secondary">
+                    To use an authenticator app go through the following steps:
+                </p>
+                <div class="card bg-white rounded-4">
+                    <div class="card-body">
+
+                        <partial name="_StatusMessage" for="StatusMessage" />
+
+                        <div class="alert alert-light alert-slim">
+                            <div class="d-flex">
+                                <div>
+                                    <i class="fa-solid fa-1 fs-2 p-2 me-2"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-medium">
+                                        Download a Two-Factor Authenticator app.
+                                    </div>
+                                    <div class="fs-smaller">
+                                        We recommend using either the Microsoft Authenticator for
+                                        <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
+                                        <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or
+                                        Google Authenticator for
+                                        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&amp;hl=en">Android</a> and
+                                        <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605?mt=8">iOS</a>.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-light alert-slim">
+                            <div class="d-flex">
+                                <div>
+                                    <i class="fa-solid fa-2 fs-2 p-2 me-2"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-medium">
+                                        Scan the QR Code using your chosen authenticator app to get your One-Time Passcode.
+                                    </div>
+                                    <div class="fs-smaller">
+                                        If you are having difficulties scanning the QR Code, you can enter the code below it too.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center mb-3">
+                            <div id="qrCode" class="qr-code-container d-inline-block"></div>
+                            <div id="qrCodeData" data-url="@Model.AuthenticatorUri"></div>
+                            <code class="d-inline-block mt-3 px-3 py-2 bg-light border border-secondary-subtle rounded">@Model.SharedKey</code>
+                        </div>
+
+                        <div class="alert alert-light alert-slim">
+                            <div class="d-flex">
+                                <div>
+                                    <i class="fa-solid fa-3 fs-2 p-2 me-2"></i>
+                                </div>
+                                <div>
+                                    <div class="fw-medium">
+                                        Confirm your One-Time Passcode
+                                    </div>
+                                    <div class="fs-smaller">
+                                        Enter the code from the app in the confirmation box below, then click Verify.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form id="send-code" method="post">
+                                    <div class="form-floating mb-3">
+                                        <input asp-for="Input.Code" class="form-control" autocomplete="off" placeholder="Please enter the code." />
+                                        <label asp-for="Input.Code" class="control-label form-label">Verification Code</label>
+                                        <span asp-validation-for="Input.Code" class="text-danger"></span>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Verify</button>
+                                    <a id="reset-authenticator" asp-page="./Index" class="btn btn-light">Cancel</a>
+                                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script type="text/javascript" src="~/lib/qrcode.js"></script>
+    <script type="text/javascript" src="~/js/qr.js"></script>
+}

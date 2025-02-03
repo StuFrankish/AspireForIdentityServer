@@ -7,33 +7,26 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace IdentityServer.Pages.Ciba
+namespace IdentityServer.Pages.Ciba;
+
+[AllowAnonymous]
+[SecurityHeaders]
+public class IndexModel(IBackchannelAuthenticationInteractionService backchannelAuthenticationInteractionService, ILogger<IndexModel> logger) : PageModel
 {
-    [AllowAnonymous]
-    [SecurityHeaders]
-    public class IndexModel : PageModel
+    public BackchannelUserLoginRequest LoginRequest { get; set; }
+
+    private readonly IBackchannelAuthenticationInteractionService _backchannelAuthenticationInteraction = backchannelAuthenticationInteractionService;
+    private readonly ILogger<IndexModel> _logger = logger;
+
+    public async Task<IActionResult> OnGet(string id)
     {
-        public BackchannelUserLoginRequest LoginRequest { get; set; }
-
-        private readonly IBackchannelAuthenticationInteractionService _backchannelAuthenticationInteraction;
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(IBackchannelAuthenticationInteractionService backchannelAuthenticationInteractionService, ILogger<IndexModel> logger)
+        LoginRequest = await _backchannelAuthenticationInteraction.GetLoginRequestByInternalIdAsync(id);
+        if (LoginRequest == null)
         {
-            _backchannelAuthenticationInteraction = backchannelAuthenticationInteractionService;
-            _logger = logger;
+            _logger.LogWarning("Invalid backchannel login id {id}", id);
+            return RedirectToPage("/Home/Error/Index");
         }
 
-        public async Task<IActionResult> OnGet(string id)
-        {
-            LoginRequest = await _backchannelAuthenticationInteraction.GetLoginRequestByInternalIdAsync(id);
-            if (LoginRequest == null)
-            {
-                _logger.LogWarning("Invalid backchannel login id {id}", id);
-                return RedirectToPage("/Home/Error/Index");
-            }
-
-            return Page();
-        }
+        return Page();
     }
 }
