@@ -106,7 +106,10 @@ public static class Fido2Handler
             AttestationClientDataJson = credentialResult.AttestationClientDataJson,
             AttestationFormat = credentialResult.AttestationFormat,
             Aaguid = credentialResult.AaGuid,
-            UserId = new Guid(credentialResult.User.Id).ToString()
+            UserId = new Guid(credentialResult.User.Id).ToString(),
+            CredentialName = "FIDO2 Provider",
+            CredentialCreatedDate = DateTime.Now,
+            CredentialLastUsedDate = null
         };
 
         foreach (var authenticatorTransport in credentialResult.Transports)
@@ -221,6 +224,7 @@ public static class Fido2Handler
             cancellationToken);
 
         credential.SignatureCounter = assertionResult.SignCount;
+        credential.CredentialLastUsedDate = DateTime.Now;
 
         applicationDbContext.PublicKeyCredentials.Update(credential);
 

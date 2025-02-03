@@ -13,6 +13,10 @@ public sealed class PublicKeyCredential
     public required Guid Aaguid { get; set; }
     public required string UserId { get; set; }
 
+    public string CredentialName { get; set; } = "Unnamed";
+    public DateTime CredentialCreatedDate { get; set; }
+    public DateTime? CredentialLastUsedDate { get; set; }
+
     public ICollection<AuthenticatorTransport> AuthenticatorTransports { get; set; } = [];
     public ICollection<DevicePublicKey> DevicePublicKeys { get; set; } = [];
 }

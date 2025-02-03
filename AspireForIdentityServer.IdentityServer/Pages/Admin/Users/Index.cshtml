@@ -38,7 +38,7 @@
 </div>
 
 <div class="border border-light p-2 pt-0 rounded bg-light shadow-sm">
-    <table class="table table-hover mb-0">
+    <table class="table table-hover mb-0 table-rounded">
         <thead>
             <tr>
                 <th class="bg-light">
@@ -59,22 +59,45 @@
             @foreach (var user in Model.Users)
             {
                 <tr data-userdetail data-userid="@user.Id" class="border-start border-end">
-                    <td class="align-middle">@user.UserName</td>
+                    <td class="align-middle">
+                        <img src="~/avatar.jpg" alt="mdo" width="24" height="24" class="rounded-circle">
+                        @user.UserName
+                    </td>
                     <td class="align-middle">@user.UserName</td>
                     <td class="align-middle">@user.Email</td>
                     <td class="align-middle text-center">
 
-                        @if (user.TwoFactorEnabled)
-                        {
-                            <i class="fa-solid fa-shield-halved text-success"></i>
-                            <span class="text-muted fs-small">1 of 2</span>
+                        @{
+                            int totalSecurityFeatures = 2;
+                            int securityFeaturesEnabled = 0;
+
+                            if (user.TwoFactorEnabled)
+                            {
+                                securityFeaturesEnabled++;
+                            }
+
+                            if (user.PublicKeyCredentials.Count > 0)
+                            {
+                                securityFeaturesEnabled++;
+                            }
+
+
                         }
 
-                        @if (!user.TwoFactorEnabled)
+                        @if (securityFeaturesEnabled == totalSecurityFeatures)
+                        {
+                            <i class="fa-solid fa-shield-check text-success"></i>
+                        }
+                        else if (securityFeaturesEnabled > 0 && securityFeaturesEnabled < totalSecurityFeatures)
+                        {
+                            <i class="fa-solid fa-shield-halved text-success"></i>
+                        }
+                        else
                         {
                             <i class="fa-solid fa-triangle-exclamation text-danger"></i>
-                            <span class="text-muted fs-small">0 of 2</span>
                         }
+
+                        <span class="text-muted fs-small">@securityFeaturesEnabled of @totalSecurityFeatures</span>
 
                     </td>
                 </tr>
