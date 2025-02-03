@@ -164,3 +164,33 @@ div.alert {
         padding-left: 10px;
     }
 }
+
+table.table-gapped {
+    border-collapse: separate;
+    border: none;
+    border-spacing: 0 10px;
+    width: 100%;
+    background-color: transparent;
+
+    tr {
+        background-color: #fff;
+
+        th,
+        td {
+            border: none;
+            padding: 10px;
+        }
+
+        th:first-child,
+        td:first-child {
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+    }
+}

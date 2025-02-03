@@ -135,3 +135,29 @@ div.alert.alert-slim {
   padding: 8px;
   padding-left: 10px;
 }
+
+table.table-gapped {
+  border-collapse: separate;
+  border: none;
+  border-spacing: 0 10px;
+  width: 100%;
+  background-color: transparent;
+}
+table.table-gapped tr {
+  background-color: #fff;
+}
+table.table-gapped tr th,
+table.table-gapped tr td {
+  border: none;
+  padding: 10px;
+}
+table.table-gapped tr th:first-child,
+table.table-gapped tr td:first-child {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+table.table-gapped tr th:last-child,
+table.table-gapped tr td:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}

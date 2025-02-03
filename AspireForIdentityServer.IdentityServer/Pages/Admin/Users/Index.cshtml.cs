@@ -13,7 +13,10 @@ public class IndexModel(UserManager<ApplicationUser> userManager) : PageModel
 
     public async Task OnGetAsync()
     {
-        ViewData["ActivePage"] = "Users"; // Ensure this is set
-        Users = await Task.Run(() => userManager.Users.Include(u => u.PublicKeyCredentials).ToList());
+        ViewData["ActivePage"] = "Users";
+
+        Users = await userManager.Users
+            .Include(u => u.PublicKeyCredentials)
+            .ToListAsync();
     }
 }
