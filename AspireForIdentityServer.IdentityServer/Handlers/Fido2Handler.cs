@@ -16,8 +16,8 @@ public static class Fido2Handler
 {
     public class CreateAttestationOptionsInputModel
     {
-        public string AttestationType { get; set; } = "none";
-        public AuthenticatorAttachment AuthenticatorAttachment { get; set; }
+        public string AttestationType { get; set; } = "enterprise";
+        public AuthenticatorAttachment AuthenticatorAttachment { get; set; } = AuthenticatorAttachment.Platform;
         public ResidentKeyRequirement ResidentKey { get; set; } = ResidentKeyRequirement.Discouraged;
         public UserVerificationRequirement UserVerification { get; set; } = UserVerificationRequirement.Preferred;
     }
@@ -93,7 +93,6 @@ public static class Fido2Handler
                     .AllAsync(credential => credential.Id != @params.CredentialId, cancellationToken)
         },
             cancellationToken) ?? throw new Exception("CredentialResult was null -- fix this");
-
 
         var credential = new PublicKeyCredential
         {
@@ -195,7 +194,7 @@ public static class Fido2Handler
         var credential = await userManager.Users
             .SelectMany(user => user.PublicKeyCredentials)
             .Include(credential => credential.DevicePublicKeys)
-            .SingleOrDefaultAsync(credential => credential.Id == assertionResponse.Id, cancellationToken);
+            .SingleOrDefaultAsync(pkc => pkc.Id == assertionResponse.Id, cancellationToken);
 
         if (credential is null)
         {
