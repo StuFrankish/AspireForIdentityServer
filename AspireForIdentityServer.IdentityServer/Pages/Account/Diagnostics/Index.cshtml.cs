@@ -1,11 +1,11 @@
+using IdentityServer.Pages.Account.Diagnostics;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace IdentityServer.Pages.Diagnostics;
+namespace IdentityServer.Pages.Account.Diagnostics;
 
-[SecurityHeaders]
 [Authorize]
 public class Index : PageModel
 {

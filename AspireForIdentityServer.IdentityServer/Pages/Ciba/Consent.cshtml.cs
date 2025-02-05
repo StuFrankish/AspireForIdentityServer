@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace IdentityServer.Pages.Ciba;
 
 [Authorize]
-[SecurityHeaders]
 public class Consent(
     IBackchannelAuthenticationInteractionService interaction,
     IEventService events,

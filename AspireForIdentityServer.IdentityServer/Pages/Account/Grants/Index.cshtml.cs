@@ -7,9 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
-namespace IdentityServer.Pages.Grants;
+namespace IdentityServer.Pages.Account.Grants;
 
-[SecurityHeaders]
 [Authorize]
 public class Index(IIdentityServerInteractionService interaction,
     IClientStore clients,

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,10 +16,13 @@
     <link rel="stylesheet" href="~/css/main.min.css" asp-append-version="true" />
 
     <!-- This FontAwesome Kit is available to localhost and stufrankish.dev domains only -->
-    <script src="https://kit.fontawesome.com/d8fcd1bfde.js" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/d8fcd1bfde.js"
+            crossorigin="anonymous">
+    </script>
+
 
 </head>
-<body>
+<body class="d-flex flex-column h-100">
 
     @{
         var activePage = ViewData["ActivePage"] as string;
@@ -27,14 +30,15 @@
 
     <partial name="_Nav" />
 
-    <div class="body-container p-3 h-100">
+    <div class="body-container p-3">
         @RenderBody()
     </div>
+
+    @* <partial name="_LayoutFooter" /> *@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="~/lib/bstoast.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @RenderSection("scripts", required: false)

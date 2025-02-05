@@ -1,141 +1,161 @@
 @page
 @model IdentityServer.Pages.Device.Index
-@{
-}
+
+<div class="d-flex border-bottom">
+    <div class="brand-color-dark fs-2">
+        Authorize a Device
+    </div>
+</div>
 
 @if (Model.Input.UserCode == null)
 {
-    @*We need to collect the user code*@
-    <div class="page-device-code">
-        <div class="lead">
-            <h1>User Code</h1>
-            <p>Please enter the code displayed on your device.</p>
-        </div>
+    <div class="row pb-5">
+        <div class="col-12 col-md-8 offset-md-2">
 
-        <div class="row">
-            <div class="col-sm-8">
-                <partial name="_ValidationSummary" />
-            </div>
-        </div>
+            <div class="card mb-2 rounded-4 mt-4">
+                <div class="card-body p-3">
+                    <h2 class="fw-medium fs-5 text-muted mb-1">
+                        <i class="fa-solid fa-tv fa-fw"></i>
+                        User Code
+                    </h2>
+                    <p class="text-body-secondary">
+                        Please enter the code displayed on your device.
+                    </p>
+                    <div class="card bg-white rounded-4">
+                        <div class="card-body">
 
-        <div class="row">
-            <div class="col-sm-6">
-                <form asp-page="/Device/Index" method="get">
-                    <div class="form-group">
-                        <label for="userCode">User Code:</label>
-                        <input class="form-control" for="userCode" name="userCode" autofocus />
+                            <partial name="_ValidationSummary" />
+
+                            <form asp-page="/Device/Index" method="get">
+
+                                <div class="form-floating mb-3">
+                                    <input for="userCode" name="userCode" class="form-control" autocomplete="off" placeholder="Please enter the code." />
+                                    <label for="userCode" class="control-label form-label">User Code</label>
+                                </div>
+
+                                <button class="btn btn-primary" name="button">Confirm</button>
+                            </form>
+
+                        </div>
                     </div>
-
-                    <button class="btn btn-primary" name="button">Submit</button>
-                </form>
+                </div>
             </div>
+
         </div>
     </div>
 }
 else
 {
-    @*collect consent for the user code provided*@
-    <div class="page-device-confirmation">
-        <div class="lead">
-            @if (Model.View.ClientLogoUrl != null)
-            {
-                <div class="client-logo"><img src="@Model.View.ClientLogoUrl"></div>
-            }
-            <h1>
-                @Model.View.ClientName
-                <small class="text-muted">is requesting your permission</small>
-            </h1>
-            <p>Please confirm that the authorization request matches the code: <strong>@Model.Input.UserCode</strong>.</p>
-            <p>Uncheck the permissions you do not wish to grant.</p>
-        </div>
+    <div class="row pb-5">
+        <div class="col-12 col-md-8 offset-md-2">
 
-        <div class="row">
-            <div class="col-sm-8">
-                <partial name="_ValidationSummary" />
-            </div>
-        </div>
+            <div class="card mb-2 rounded-4 mt-4">
+                <div class="card-body p-3">
+                    <h2 class="fw-medium fs-5 text-danger mb-1">
+                        <i class="fa-solid fa-user-shield fa-fw"></i>
+                        Consent Needed - @Model.View.ClientName
+                        <small class="text-muted">is requesting your permission</small>
+                    </h2>
+                    <p class="text-body-secondary">
+                        Please confirm that the authorization request matches the code: <strong>@Model.Input.UserCode</strong>.
+                        Uncheck the permissions you do not wish to grant.
+                    </p>
+                    <div class="card bg-white rounded-4">
+                        <div class="card-body">
 
-        <form asp-page="/Device/Index">
-            <input asp-for="Input.UserCode" type="hidden" />
-            <div class="row">
-                <div class="col-sm-8">
-                    @if (Model.View.IdentityScopes.Any())
-                    {
-                        <div class="form-group">
-                            <div class="card">
-                                <div class="card-header">
-                                    <span class="glyphicon glyphicon-user"></span>
-                                    Personal Information
+                            <partial name="_ValidationSummary" />
+
+                            <form asp-page="/Device/Index">
+                                <input asp-for="Input.UserCode" type="hidden" />
+                                <div class="row mb-2">
+                                    <div class="col-12">
+                                        @if (Model.View.IdentityScopes.Any())
+                                        {
+                                            <div class="form-group">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <span class="glyphicon glyphicon-user"></span>
+                                                        Personal Information
+                                                    </div>
+                                                    <ul class="list-group list-group-flush">
+                                                        @foreach (var scope in Model.View.IdentityScopes)
+                                                        {
+                                                            <partial name="_ScopeListItem" model="@scope" />
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        @if (Model.View.ApiScopes.Any())
+                                        {
+                                            <div class="form-group">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <span class="glyphicon glyphicon-tasks"></span>
+                                                        Application Access
+                                                    </div>
+                                                    <ul class="list-group list-group-flush">
+                                                        @foreach (var scope in Model.View.ApiScopes)
+                                                        {
+                                                            <partial name="_ScopeListItem" model="scope" />
+                                                        }
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        }
+
+                                        <div class="form-group">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <span class="glyphicon glyphicon-pencil"></span>
+                                                    Description
+                                                </div>
+                                                <div class="card-body">
+                                                    <input class="form-control" placeholder="Description or name of device" asp-for="Input.Description" autofocus>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @if (Model.View.AllowRememberConsent)
+                                        {
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" asp-for="Input.RememberConsent">
+                                                    <label class="form-check-label" asp-for="Input.RememberConsent">
+                                                        <strong>Remember My Decision</strong>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
-                                <ul class="list-group list-group-flush">
-                                    @foreach (var scope in Model.View.IdentityScopes)
-                                    {
-                                        <partial name="_ScopeListItem" model="@scope" />
-                                    }
-                                </ul>
-                            </div>
-                        </div>
-                    }
 
-                    @if (Model.View.ApiScopes.Any())
-                    {
-                        <div class="form-group">
-                            <div class="card">
-                                <div class="card-header">
-                                    <span class="glyphicon glyphicon-tasks"></span>
-                                    Application Access
+                                <hr />
+
+                                <div class="row">
+                                    <div class="col-12">
+                                        <button name="Input.button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
+                                        <button name="Input.button" value="no" class="btn btn-secondary">No, Do Not Allow</button>
+                                    </div>
+                                    <div class="col-sm-4 col-lg-auto">
+                                        @if (Model.View.ClientUrl != null)
+                                        {
+                                            <a class="btn btn-outline-info" href="@Model.View.ClientUrl">
+                                                <span class="glyphicon glyphicon-info-sign"></span>
+                                                <strong>@Model.View.ClientName</strong>
+                                            </a>
+                                        }
+                                    </div>
                                 </div>
-                                <ul class="list-group list-group-flush">
-                                    @foreach (var scope in Model.View.ApiScopes)
-                                    {
-                                        <partial name="_ScopeListItem" model="scope" />
-                                    }
-                                </ul>
-                            </div>
-                        </div>
-                    }
+                            </form>
 
-                    <div class="form-group">
-                        <div class="card">
-                            <div class="card-header">
-                                <span class="glyphicon glyphicon-pencil"></span>
-                                Description
-                            </div>
-                            <div class="card-body">
-                                <input class="form-control" placeholder="Description or name of device" asp-for="Input.Description" autofocus>
-                            </div>
                         </div>
                     </div>
-
-                    @if (Model.View.AllowRememberConsent)
-                    {
-                        <div class="form-group">
-                            <div class="form-check">
-                                <input class="form-check-input" asp-for="Input.RememberConsent">
-                                <label class="form-check-label" asp-for="Input.RememberConsent">
-                                    <strong>Remember My Decision</strong>
-                                </label>
-                            </div>
-                        </div>
-                    }
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-sm-4">
-                    <button name="Input.button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
-                    <button name="Input.button" value="no" class="btn btn-secondary">No, Do Not Allow</button>
-                </div>
-                <div class="col-sm-4 col-lg-auto">
-                    @if (Model.View.ClientUrl != null)
-                    {
-                        <a class="btn btn-outline-info" href="@Model.View.ClientUrl">
-                            <span class="glyphicon glyphicon-info-sign"></span>
-                            <strong>@Model.View.ClientName</strong>
-                        </a>
-                    }
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
+
 }

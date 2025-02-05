@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace IdentityServer.Pages.Device;
 
-[SecurityHeaders]
 [Authorize]
 public class Index(
     IDeviceFlowInteractionService interaction,

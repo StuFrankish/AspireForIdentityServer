@@ -1,12 +1,38 @@
 @page
 @model IdentityServer.Pages.Device.SuccessModel
-@{
-}
 
+<div class="d-flex border-bottom">
+    <div class="brand-color-dark fs-2">
+        Authorize a Device
+    </div>
+</div>
 
-<div class="page-device-success">
-    <div class="lead">
-        <h1>Success</h1>
-        <p>You have successfully authorized the device</p>
+<div class="row pb-5">
+    <div class="col-12 col-md-8 offset-md-2">
+
+        <div class="card mb-2 rounded-4 mt-4">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-success mb-1">
+                    <i class="fa-solid fa-tv fa-fw"></i>
+                    Success
+                </h2>
+                <p class="text-body-secondary">
+                    Device sucessfully authorized.
+                </p>
+                <div class="card bg-white rounded-4">
+                    <div class="card-body">
+
+                        <div class="alert alert-success alert-slim">
+                            <div class="fw-medium">You have successfully authorized the device.</div>
+                            <div class="fs-smaller">You can now close this page and proceed on your device.</div>
+                        </div>
+
+                        <a class="btn btn-primary btn-sm" href="/">Go Home</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>

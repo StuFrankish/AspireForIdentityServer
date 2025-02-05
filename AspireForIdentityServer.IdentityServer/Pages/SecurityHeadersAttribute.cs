@@ -26,10 +26,14 @@ public class SecurityHeadersAttribute : ActionFilterAttribute
                 context.HttpContext.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
             }
 
-            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy
-            var csp = "default-src 'self'; object-src 'none'; frame-ancestors 'none'; sandbox allow-forms allow-same-origin allow-scripts; base-uri 'self'; upgrade-insecure-requests;";
-            // also an example if you need client images to be displayed from twitter
-            // csp += "img-src 'self' https://pbs.twimg.com;";
+            var csp = "default-src 'self'; " +
+                  "connect-src 'self' " +
+                  "script-src 'self' " +
+                  "object-src 'none'; " +
+                  "frame-ancestors 'none'; " +
+                  "sandbox allow-forms allow-same-origin allow-scripts; " +
+                  "base-uri 'self'; " +
+                  "upgrade-insecure-requests;";
 
             // once for standards compliant browsers
             if (!context.HttpContext.Response.Headers.ContainsKey("Content-Security-Policy"))

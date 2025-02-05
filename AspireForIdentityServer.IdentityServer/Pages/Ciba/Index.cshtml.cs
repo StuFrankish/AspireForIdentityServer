@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace IdentityServer.Pages.Ciba;
 
 [AllowAnonymous]
-[SecurityHeaders]
 public class IndexModel(IBackchannelAuthenticationInteractionService backchannelAuthenticationInteractionService, ILogger<IndexModel> logger) : PageModel
 {
     public BackchannelUserLoginRequest LoginRequest { get; set; }

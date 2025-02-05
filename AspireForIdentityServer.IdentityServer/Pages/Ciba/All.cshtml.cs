@@ -10,7 +10,6 @@ using System.ComponentModel.DataAnnotations;
 
 namespace IdentityServer.Pages.Ciba;
 
-[SecurityHeaders]
 [Authorize]
 public class AllModel(IBackchannelAuthenticationInteractionService backchannelAuthenticationInteractionService) : PageModel
 {
