@@ -35,7 +35,7 @@
     },
     {
       "ClientId": "device_emu",
-      "ClientName": "Device Emulator",
+      "ClientName": "Device Emulator Client",
       "ClientSecrets": [
         {
           "Value": "secret"

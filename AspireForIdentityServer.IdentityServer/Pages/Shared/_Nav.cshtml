@@ -53,10 +53,10 @@
             }
 
         </div>
-        <div>
+        <div class="hstack">
             @if (SignInManager.IsSignedIn(User))
             {
-                <div class="d-inline-flex gap-1 p-1 bg-white rounded-pill toolbar-icons me-3 mt-1">
+                <div class="hstack gap-1 p-1 bg-white rounded-pill toolbar-icons mt-1 me-3">
                     <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center"
                        data-bs-toggle="tooltip" data-bs-title="Notification Center" data-bs-placement="bottom"
                        id="login" asp-page="/Admin/System/Index" title="Notifications">
