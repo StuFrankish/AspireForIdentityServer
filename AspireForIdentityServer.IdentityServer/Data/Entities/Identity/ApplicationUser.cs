@@ -5,5 +5,7 @@ namespace IdentityServer.Data.Entities.Identity;
 
 public class ApplicationUser : IdentityUser
 {
+    public string DisplayName { get; set; } = string.Empty;
+
     public ICollection<PublicKeyCredential> PublicKeyCredentials { get; set; } = [];
 }

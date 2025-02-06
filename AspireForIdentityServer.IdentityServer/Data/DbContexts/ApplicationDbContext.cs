@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using IdentityServer.Data.Entities.Fido;
+﻿using IdentityServer.Data.Entities.Fido;
 using IdentityServer.Data.Entities.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace IdentityServer.Data.DbContexts;
 
@@ -28,5 +28,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
             .HasOne<ApplicationUser>()
             .WithMany(user => user.PublicKeyCredentials)
             .HasForeignKey(credential => credential.UserId);
+
     }
 }

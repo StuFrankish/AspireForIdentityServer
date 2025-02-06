@@ -32,6 +32,22 @@
       "PostLogoutRedirectUris": [ "https://localhost:5002/signout-callback-oidc" ],
       "AllowOfflineAccess": true,
       "AllowedScopes": [ "openid", "profile", "api", "IdentityServerApi", "Weather.Read" ]
+    },
+    {
+      "ClientId": "device_emu",
+      "ClientName": "Device Emulator",
+      "ClientSecrets": [
+        {
+          "Value": "secret"
+        }
+      ],
+      "CoordinateLifetimeWithUserSession": true,
+      "RequireConsent": true,
+      "AllowedGrantTypes": [ "urn:ietf:params:oauth:grant-type:device_code" ],
+      "RequirePkce": true,
+      "RequirePushedAuthorization": true,
+      "AllowOfflineAccess": true,
+      "AllowedScopes": [ "openid", "profile", "api", "Weather.Read" ]
     }
   ],
   "Users": [

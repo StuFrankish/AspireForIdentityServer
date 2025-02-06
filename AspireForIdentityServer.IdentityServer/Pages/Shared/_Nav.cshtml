@@ -7,7 +7,7 @@
 @inject UserManager<ApplicationUser> UserManager
 
 @{
-    string displayName = User?.FindFirst("display_name")?.Value ?? UserManager.GetUserName(User);
+    string displayName = SignInManager.IsSignedIn(User) ? UserManager.GetUserAsync(User).Result.DisplayName : "";
     var activePage = ViewData["ActivePage"] as string;
 }
 
@@ -19,29 +19,33 @@
             <a href="~/">
                 <img src="~/logo_long.png" class="me-2 nav-logo float-start" alt="Logo">
             </a>
-            
+
             @if (SignInManager.IsSignedIn(User))
             {
                 <div class="d-inline-flex gap-1 p-1 ms-2 bg-white rounded-pill toolbar-icons mt-1">
                     <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Clients" ? "active" : "")"
+                       data-bs-toggle="tooltip" data-bs-title="Manage Clients" data-bs-placement="bottom"
                        id="login" asp-page="/Admin/Clients/Index" title="Clients">
                         <i class="fa-solid fa-rectangle-history-circle-user text-muted me-1"></i>
                         Clients
                     </a>
                     <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Users" ? "active" : "")"
-                       id="login" asp-page="/Admin/Users/Index" title="Manage Users">
+                       id="login" asp-page="/Admin/Users/Index" title="Manage Users"
+                       data-bs-toggle="tooltip" data-bs-title="Manage Users" data-bs-placement="bottom">
                         <i class="fa-solid fa-fw fa-user-group text-muted me-1"></i>
                         Users
                     </a>
                     <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Roles" ? "active" : "")"
-                       id="login" asp-page="/Admin/Roles/Index" title="Roles">
+                       id="login" asp-page="/Admin/Roles/Index" title="Roles"
+                       data-bs-toggle="tooltip" data-bs-title="Manage Roles" data-bs-placement="bottom">
                         <i class="fa-solid fa-scale-balanced text-muted me-1"></i>
                         Roles
                     </a>
                 </div>
                 <div class="d-inline-flex gap-1 p-1 bg-white rounded-pill toolbar-icons">
                     <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Advanced" ? "active" : "")"
-                       id="login" asp-page="/Admin/System/Index" title="Advanced">
+                       id="login" asp-page="/Admin/System/Index" title="Advanced"
+                       data-bs-toggle="tooltip" data-bs-title="Advanced" data-bs-placement="bottom">
                         <i class="fa-solid fa-screwdriver-wrench me-1 text-muted"></i>
                         Advanced
                     </a>
@@ -53,12 +57,14 @@
             @if (SignInManager.IsSignedIn(User))
             {
                 <div class="d-inline-flex gap-1 p-1 bg-white rounded-pill toolbar-icons me-3 mt-1">
-                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Advanced" ? "active" : "")"
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center"
+                       data-bs-toggle="tooltip" data-bs-title="Notification Center" data-bs-placement="bottom"
                        id="login" asp-page="/Admin/System/Index" title="Notifications">
                         <i class="fa-solid fa-fw fa-bell-on text-muted"></i>
                     </a>
-                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center @(activePage == "Advanced" ? "active" : "")"
-                       id="login" asp-page="/Admin/System/Index" title="Apps">
+                    <a class="btn btn-sm rounded-pill d-flex align-items-center justify-content-center"
+                       data-bs-toggle="tooltip" data-bs-title="Apps Portal" data-bs-placement="bottom"
+                       id="login" asp-page="/portal/index" title="Apps">
                         <i class="fa-solid fa-grid text-secondary-emphasis"></i>
                     </a>
                 </div>
@@ -77,9 +83,9 @@
                             </a>
                         </li>
                         <li>
-                            <a class="dropdown-item ps-2 rounded" asp-page="/Account/Manage/Index">
-                                <i class="fa-solid fa-gear fa-fw me-1 text-muted"></i>
-                                Settings &amp; Privacy
+                            <a class="dropdown-item ps-2 rounded" asp-page="/Account/Manage/Security">
+                                <i class="fa-solid fa-shield-check fa-fw me-1 text-muted"></i>
+                                Account Security
                             </a>
                         </li>
                         <li>

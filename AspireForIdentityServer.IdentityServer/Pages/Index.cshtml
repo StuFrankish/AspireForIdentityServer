@@ -16,34 +16,63 @@
 
             <hr />
 
-            <ul>
-                <li>
-                    IdentityServer publishes a
-                    <a href="~/.well-known/openid-configuration">discovery document</a>
-                    where you can find metadata and links to all the endpoints, key material, etc.
-                </li>
-                <li>
-                    Click <a href="~/portal">here</a> to see the client portal.
-                </li>
-                <li>
-                    Click <a href="~/account/diagnostics">here</a> to see the claims for your current session.
-                </li>
-                <li>
-                    Click <a href="~/admin/serversidesessions">here</a> to view the server side sessions.
-                </li>
-                <li>
-                    Click <a href="~/account/grants">here</a> to manage your stored grants.
-                </li>
-                <li>
-                    Click <a href="~/device">here</a> to authorize a pending device flow.
-                </li>
-                <li>
-                    Click <a href="~/ciba/all">here</a> to view your pending CIBA login requests.
-                </li>
-                <li>
-                    Click <a href="~/_health">here</a> to access the healthchecks data.
-                </li>
-            </ul>
+            <h3 class="brand-color-dark">User Actions</h3>
+
+            <div class="d-flex gap-2 mb-4">
+
+                <a class="btn btn-light" style="width: 18rem;" href="~/account/diagnostics">
+                    <div class="p-3">
+                        <i class="fa-light fa-user-tag fs-1"></i>
+                    </div>
+                    <div class="border-top p-3">
+                        Click here to see the claims for your current session.
+                    </div>
+                </a>
+
+                <a class="btn btn-light" style="width: 18rem;" href="~/device">
+                    <div class="p-3">
+                        <i class="fa-light fa-display-code fs-1"></i>
+                    </div>
+                    <div class="border-top p-3">
+                        Click here to authorize a pending device flow.
+                    </div>
+                </a>
+
+                <a class="btn btn-light" style="width: 18rem;" href="~/ciba/all">
+                    <div class="p-3">
+                        <i class="fa-light fa-comments-question-check fs-1"></i>
+                    </div>
+                    <div class="border-top p-3">
+                        Click here to view your pending CIBA login requests.
+                    </div>
+                </a>
+
+            </div>
+
+            <h3 class="brand-color-dark">Hidden &amp; Admin Actions</h3>
+
+            <div class="d-flex gap-2 mb-4">
+
+                <a class="btn btn-light" style="width: 18rem;" href="~/.well-known/openid-configuration">
+                    <div class="p-3">
+                        <i class="fa-light fa-bullhorn fs-1"></i>
+                    </div>
+                    <div class="border-top p-3">
+                        Click here to view the discovery document.
+                    </div>
+                </a>
+
+                <a class="btn btn-light" style="width: 18rem;" href="~/admin/serversidesessions">
+                    <div class="p-3">
+                        <i class="fa-light fa-server fs-1"></i>
+                    </div>
+                    <div class="border-top p-3">
+                        Click here to view Server-side Session info.
+                    </div>
+                </a>
+
+            </div>
+
 
             @if (Model.License != null)
             {

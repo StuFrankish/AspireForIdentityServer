@@ -67,6 +67,7 @@ public class Index(
         // Create the user
         var userToCreate = new ApplicationUser
         {
+            DisplayName = Input.Name ?? Input.Username,
             UserName = Input.Username,
             Email = Input.Email
         };
@@ -81,8 +82,6 @@ public class Index(
             }
             return Page();
         }
-
-        await _userManager.AddClaimAsync(userToCreate, new System.Security.Claims.Claim("display_name", Input.Name));
 
         await _signInManager.SignInAsync(userToCreate, false);
 

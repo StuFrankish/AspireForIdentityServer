@@ -1,0 +1,96 @@
+﻿@page
+@model IdentityServer.Pages.Account.Manage.SecurityModel
+
+<div class="d-flex border-bottom">
+    <div class="brand-color-dark fs-2">
+        Account Security
+    </div>
+</div>
+
+<div class="row pb-5">
+    <div class="col-12 col-md-8 offset-md-2">
+
+        <div class="card mb-2 rounded-4 mt-4">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-muted mb-1">
+                    <i class="fa-solid fa-user-shield fa-fw"></i>
+                    Connections to Apps &amp; Services
+                </h2>
+                <p class="text-body-secondary">
+                    Keep track of your connections to third-party apps &amp; services.
+                </p>
+                <div class="card bg-white rounded-4">
+                    <div class="card-body">
+
+                        @if (!Model.View.Grants.Any())
+                        {
+                            <div class="row">
+                                <div class="col-sm-8">
+                                    <div class="alert alert-info">
+                                        You have not given access to any applications
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="d-flex flex-column gap-2">
+                            @foreach (var grant in Model.View.Grants)
+                            {
+                                grant.Description ??= "Unknown";
+
+                                <a href="#" role="button" class="text-decoration-none text-muted">
+                                    <div class="d-flex justify-content-between align-items-center bg-light p-2 rounded-4">
+                                        <div class="d-flex">
+
+                                            <img src="~/duende-logo.svg" style="max-width: 32px;" />
+
+                                            <span class="fw-medium flex-shrink-0 ms-2">
+                                                @if (grant.ClientLogoUrl != null)
+                                                {
+                                                    <img src="@grant.ClientLogoUrl">
+                                                }
+
+                                                <strong class="d-block">@grant.ClientName</strong>
+                                                <span class="fs-smaller">
+                                                    <label class="fw-bold">Description:</label> @grant.Description
+                                                </span>
+                                            </span>
+                                        </div>
+                                        <div class="text-end pe-3">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-2 rounded-4 mt-4">
+            <div class="card-body p-3">
+                <h2 class="fw-medium fs-5 text-muted mb-1">
+                    <i class="fa-solid fa-location-dot fa-fw"></i>
+                    Where You're Signed-in
+                </h2>
+                <p class="text-body-secondary">
+                    Keep an eye on where your account is being used.
+                </p>
+
+                <div class="card bg-white rounded-4">
+
+                    <div class="card-body">
+
+                        Coming Soon...
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
